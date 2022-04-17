@@ -7,6 +7,8 @@ import com.amazon.ata.advertising.service.model.EmptyGeneratedAdvertisement;
 import com.amazon.ata.advertising.service.model.GeneratedAdvertisement;
 import com.amazon.ata.advertising.service.model.translator.AdvertisementTranslator;
 
+import java.util.concurrent.*;
+import java.util.function.Supplier;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -21,6 +23,8 @@ public class GenerateAdActivity {
     private static final Logger LOG = LogManager.getLogger(GenerateAdActivity.class);
 
     private final AdvertisementSelectionLogic adSelector;
+
+    private ExecutorService executor = Executors.newFixedThreadPool(2);
 
     /**
      * A Coral activity for the GenerateAdvertisement API.
@@ -43,25 +47,63 @@ public class GenerateAdActivity {
         String customerId = request.getCustomerId();
         String marketplaceId = request.getMarketplaceId();
         LOG.info(System.out.printf("Generating ad for customerId: %s in marketplace: %s", customerId, marketplaceId));
-
-        GenerateAdvertisementResponse response;
         try {
-            final GeneratedAdvertisement generatedAd = adSelector.selectAdvertisement(customerId,
-                marketplaceId);
+            Supplier<GeneratedAdvertisement> adSelectorSupplier =
+                    adSelector.getSupplier(customerId, marketplaceId);
 
-            response = GenerateAdvertisementResponse.builder()
-                    .withAdvertisement(AdvertisementTranslator.toCoral(generatedAd))
-                    .build();
-        } catch (Exception e) {
+            CompletableFuture<Object> response =
+                    CompletableFuture.supplyAsync(adSelectorSupplier, executor).handle((ad, throwable) -> {
+                                if (throwable != null) { LOG.error(throwable.getMessage()); }
+                                return GenerateAdvertisementResponse.builder().withAdvertisement(
+                                                       AdvertisementTranslator.toCoral(ad))
+                                               .build();
+            });
+
+            return (GenerateAdvertisementResponse) response.get();
+
+        } catch (InterruptedException | ExecutionException e) {
+            throw new RuntimeException(e);
+        } catch (RuntimeException e) {
             LOG.error(System.out.printf(
                 "Something unexpected happened when calling GenerateAdvertisement for customer, %s, in marketplace %s.",
                 request.getCustomerId(),
                 request.getMarketplaceId()), e);
-            response = GenerateAdvertisementResponse.builder()
-                    .withAdvertisement(AdvertisementTranslator.toCoral(new EmptyGeneratedAdvertisement()))
+            return GenerateAdvertisementResponse.builder()
+                    .withAdvertisement(AdvertisementTranslator.toCoral(
+                            new EmptyGeneratedAdvertisement()))
                     .build();
         }
 
-        return response;
     }
 }
+
+
+
+
+
+
+//    public GenerateAdvertisementResponse generateAd(GenerateAdvertisementRequest request) {
+//        String customerId = request.getCustomerId();
+//        String marketplaceId = request.getMarketplaceId();
+//        LOG.info(System.out.printf("Generating ad for customerId: %s in marketplace: %s", customerId, marketplaceId));
+//
+//        GenerateAdvertisementResponse response;
+//        try {
+//            final GeneratedAdvertisement generatedAd = adSelector.selectAdvertisement(customerId,
+//                    marketplaceId);
+//
+//            response = GenerateAdvertisementResponse.builder()
+//                               .withAdvertisement(AdvertisementTranslator.toCoral(generatedAd))
+//                               .build();
+//        } catch (Exception e) {
+//            LOG.error(System.out.printf(
+//                    "Something unexpected happened when calling GenerateAdvertisement for customer, %s, in marketplace %s.",
+//                    request.getCustomerId(),
+//                    request.getMarketplaceId()), e);
+//            response = GenerateAdvertisementResponse.builder()
+//                               .withAdvertisement(AdvertisementTranslator.toCoral(new EmptyGeneratedAdvertisement()))
+//                               .build();
+//        }
+//
+//        return response;
+//    }

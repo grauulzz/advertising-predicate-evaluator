@@ -13,6 +13,7 @@ import java.util.List;
 import java.util.Random;
 import java.util.function.Function;
 import java.util.function.Predicate;
+import java.util.function.Supplier;
 import java.util.stream.Collectors;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.LogManager;
@@ -23,7 +24,7 @@ import javax.inject.Inject;
 /**
  * This class is responsible for picking the advertisement to be rendered.
  */
-public class AdvertisementSelectionLogic {
+public class AdvertisementSelectionLogic{
 
     private static final Logger LOG = LogManager.getLogger(AdvertisementSelectionLogic.class);
 
@@ -80,6 +81,9 @@ public class AdvertisementSelectionLogic {
         return new EmptyGeneratedAdvertisement();
     }
 
+    public Supplier<GeneratedAdvertisement> getSupplier(String s1, String s2) {
+        return () -> selectAdvertisement(s1, s2);
+    }
 }
 
 
