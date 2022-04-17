@@ -10,6 +10,7 @@ import com.amazon.ata.advertising.service.targeting.predicate.TargetingPredicate
 
 import dagger.MembersInjector;
 
+import java.lang.reflect.Method;
 import javax.inject.Inject;
 
 public class TargetingPredicateInjector {
@@ -66,4 +67,46 @@ public class TargetingPredicateInjector {
             recognizedPredicateInjector.injectMembers((RecognizedTargetingPredicate) targetingPredicate);
         }
     }
+
+    // make a switch statement for all different cases of targetingPredicate instanceof TargetingPredicate
+    // subclasses inherited from TargetingPredicate
+
+//        Class<? extends TargetingPredicate> subClazz = targetingPredicate.getClass().asSubclass(
+//                targetingPredicate.getClass());
+//
+//        injectMembers(subClazz, targetingPredicate);
+
+//    private void injectMembers(Class<? extends TargetingPredicate> clazz, TargetingPredicate targetingPredicate) {
+//        switch (clazz.getSimpleName()) {
+//            case "AgeTargetingPredicate":
+//                agePredicateInjector.injectMembers((AgeTargetingPredicate) targetingPredicate);
+//                break;
+//            case "CategorySpendFrequencyTargetingPredicate":
+//                spendFrequencyPredicateInjector.injectMembers(
+//                        (CategorySpendFrequencyTargetingPredicate) targetingPredicate);
+//                break;
+//            case "CategorySpendValueTargetingPredicate":
+//                spendValuePredicateInjector.injectMembers((CategorySpendValueTargetingPredicate) targetingPredicate);
+//                break;
+//            case "PrimeBenefitTargetingPredicate":
+//                primePredicateInjector.injectMembers((PrimeBenefitTargetingPredicate) targetingPredicate);
+//                break;
+//            case "ParentPredicate":
+//                parentPredicateInjector.injectMembers((ParentPredicate) targetingPredicate);
+//                break;
+//            case "RecognizedTargetingPredicate":
+//                recognizedPredicateInjector.injectMembers((RecognizedTargetingPredicate) targetingPredicate);
+//                break;
+//            default:
+//                throw new IllegalArgumentException("Unknown predicate type: " + clazz.getSimpleName());
+//        }
+//    }
 }
+
+//        if (clazz.isAnnotationPresent(Inject.class)) {
+//            try {
+//                Method method = clazz.getMethod("injectDependencies", TargetingPredicate.class);
+//            } catch (NoSuchMethodException e) {
+//                throw new RuntimeException(e);
+//            }
+//        }

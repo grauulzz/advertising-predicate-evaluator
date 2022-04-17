@@ -12,8 +12,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
 
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.verifyZeroInteractions;
+import static org.mockito.Mockito.*;
 import static org.mockito.MockitoAnnotations.initMocks;
 
 public class TargetingPredicateInjectorTest {
@@ -59,11 +58,11 @@ public class TargetingPredicateInjectorTest {
 
         // THEN
         verify(agePredicateInjector).injectMembers((AgeTargetingPredicate) predicate);
-        verifyZeroInteractions(spendFrequencyPredicateInjector);
-        verifyZeroInteractions(spendValuePredicateInjector);
-        verifyZeroInteractions(primePredicateInjector);
-        verifyZeroInteractions(parentPredicateInjector);
-        verifyZeroInteractions(recognizedPredicateInjector);
+        verifyNoInteractions(spendFrequencyPredicateInjector);
+        verifyNoInteractions(spendValuePredicateInjector);
+        verifyNoInteractions(primePredicateInjector);
+        verifyNoInteractions(parentPredicateInjector);
+        verifyNoInteractions(recognizedPredicateInjector);
     }
 
     @Test
@@ -76,11 +75,11 @@ public class TargetingPredicateInjectorTest {
 
         // THEN
         verify(spendFrequencyPredicateInjector).injectMembers((CategorySpendFrequencyTargetingPredicate) predicate);
-        verifyZeroInteractions(agePredicateInjector);
-        verifyZeroInteractions(spendValuePredicateInjector);
-        verifyZeroInteractions(primePredicateInjector);
-        verifyZeroInteractions(parentPredicateInjector);
-        verifyZeroInteractions(recognizedPredicateInjector);
+        verifyNoInteractions(agePredicateInjector);
+        verifyNoInteractions(spendValuePredicateInjector);
+        verifyNoInteractions(primePredicateInjector);
+        verifyNoInteractions(parentPredicateInjector);
+        verifyNoInteractions(recognizedPredicateInjector);
     }
 
     @Test
@@ -93,11 +92,11 @@ public class TargetingPredicateInjectorTest {
 
         // THEN
         verify(spendValuePredicateInjector).injectMembers((CategorySpendValueTargetingPredicate) predicate);
-        verifyZeroInteractions(spendFrequencyPredicateInjector);
-        verifyZeroInteractions(agePredicateInjector);
-        verifyZeroInteractions(primePredicateInjector);
-        verifyZeroInteractions(parentPredicateInjector);
-        verifyZeroInteractions(recognizedPredicateInjector);
+        verifyNoInteractions(spendFrequencyPredicateInjector);
+        verifyNoInteractions(agePredicateInjector);
+        verifyNoInteractions(primePredicateInjector);
+        verifyNoInteractions(parentPredicateInjector);
+        verifyNoInteractions(recognizedPredicateInjector);
     }
 
     @Test
@@ -110,11 +109,11 @@ public class TargetingPredicateInjectorTest {
 
         // THEN
         verify(primePredicateInjector).injectMembers((PrimeBenefitTargetingPredicate) predicate);
-        verifyZeroInteractions(spendFrequencyPredicateInjector);
-        verifyZeroInteractions(spendValuePredicateInjector);
-        verifyZeroInteractions(agePredicateInjector);
-        verifyZeroInteractions(parentPredicateInjector);
-        verifyZeroInteractions(recognizedPredicateInjector);
+        verifyNoInteractions(spendFrequencyPredicateInjector);
+        verifyNoInteractions(spendValuePredicateInjector);
+        verifyNoInteractions(agePredicateInjector);
+        verifyNoInteractions(parentPredicateInjector);
+        verifyNoInteractions(recognizedPredicateInjector);
     }
 
     @Test
@@ -127,11 +126,11 @@ public class TargetingPredicateInjectorTest {
 
         // THEN
         verify(parentPredicateInjector).injectMembers((ParentPredicate) predicate);
-        verifyZeroInteractions(spendFrequencyPredicateInjector);
-        verifyZeroInteractions(spendValuePredicateInjector);
-        verifyZeroInteractions(primePredicateInjector);
-        verifyZeroInteractions(agePredicateInjector);
-        verifyZeroInteractions(recognizedPredicateInjector);
+        verifyNoInteractions(spendFrequencyPredicateInjector);
+        verifyNoInteractions(spendValuePredicateInjector);
+        verifyNoInteractions(primePredicateInjector);
+        verifyNoInteractions(agePredicateInjector);
+        verifyNoInteractions(recognizedPredicateInjector);
     }
 
     @Test
@@ -144,11 +143,11 @@ public class TargetingPredicateInjectorTest {
 
         // THEN
         verify(recognizedPredicateInjector).injectMembers((RecognizedTargetingPredicate) predicate);
-        verifyZeroInteractions(spendFrequencyPredicateInjector);
-        verifyZeroInteractions(spendValuePredicateInjector);
-        verifyZeroInteractions(primePredicateInjector);
-        verifyZeroInteractions(parentPredicateInjector);
-        verifyZeroInteractions(agePredicateInjector);
+        verifyNoInteractions(spendFrequencyPredicateInjector);
+        verifyNoInteractions(spendValuePredicateInjector);
+        verifyNoInteractions(primePredicateInjector);
+        verifyNoInteractions(parentPredicateInjector);
+        verifyNoInteractions(agePredicateInjector);
     }
 
 }

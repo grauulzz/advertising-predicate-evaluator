@@ -3,7 +3,12 @@ package com.amazon.ata.advertising.service.dependency;
 //import com.amazon.coral.dagger.annotations.CoralComponent;
 //import com.amazon.coral.service.lambda.LambdaEndpoint;
 
-import com.amazon.ata.advertising.service.activity.*;
+import com.amazon.ata.advertising.service.activity.AddTargetingGroupActivity;
+import com.amazon.ata.advertising.service.activity.CreateContentActivity;
+import com.amazon.ata.advertising.service.activity.DeleteContentActivity;
+import com.amazon.ata.advertising.service.activity.GenerateAdActivity;
+import com.amazon.ata.advertising.service.activity.UpdateClickThroughRateActivity;
+import com.amazon.ata.advertising.service.activity.UpdateContentActivity;
 import dagger.Component;
 import dagger.Module;
 
@@ -25,7 +30,7 @@ public interface LambdaComponent {
      * The LambdaEndpoint to connect the lambda to Coral.
      * @return a LambdaEndpoint
      */
-    //LambdaEndpoint getLambdaEndpoint();
+//    LambdaEndpoint getLambdaEndpoint();
 
     /**
      * Inject's targeting predicates with the DAOs they require.

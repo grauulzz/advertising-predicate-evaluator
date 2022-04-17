@@ -42,7 +42,7 @@ public class GenerateAdActivity {
     public GenerateAdvertisementResponse generateAd(GenerateAdvertisementRequest request) {
         String customerId = request.getCustomerId();
         String marketplaceId = request.getMarketplaceId();
-        LOG.info(String.format("Generating ad for customerId: %s in marketplace: %s", customerId, marketplaceId));
+        LOG.info(System.out.printf("Generating ad for customerId: %s in marketplace: %s", customerId, marketplaceId));
 
         GenerateAdvertisementResponse response;
         try {
@@ -53,7 +53,7 @@ public class GenerateAdActivity {
                     .withAdvertisement(AdvertisementTranslator.toCoral(generatedAd))
                     .build();
         } catch (Exception e) {
-            LOG.error(String.format(
+            LOG.error(System.out.printf(
                 "Something unexpected happened when calling GenerateAdvertisement for customer, %s, in marketplace %s.",
                 request.getCustomerId(),
                 request.getMarketplaceId()), e);
