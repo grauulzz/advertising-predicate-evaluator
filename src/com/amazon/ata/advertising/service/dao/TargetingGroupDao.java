@@ -1,21 +1,30 @@
 package com.amazon.ata.advertising.service.dao;
 
+import com.amazon.ata.advertising.service.activity.GenerateAdActivity;
 import com.amazon.ata.advertising.service.dependency.TargetingPredicateInjector;
 import com.amazon.ata.advertising.service.exceptions.AdvertisementClientException;
+import com.amazon.ata.advertising.service.model.Advertisement;
+import com.amazon.ata.advertising.service.model.responses.GenerateAdvertisementResponse;
 import com.amazon.ata.advertising.service.targeting.TargetingGroup;
 import com.amazon.ata.advertising.service.targeting.predicate.TargetingPredicate;
 
 import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBMapper;
+import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBMappingException;
 import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBQueryExpression;
 
+import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBScanExpression;
 import java.util.List;
 import java.util.UUID;
+import java.util.function.Function;
 import javax.inject.Inject;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 /**
  * Gets the TargetingGroups for a piece of ATA ad content.
  */
 public class TargetingGroupDao implements ReadableDao<String, List<TargetingGroup>> {
+    private static final Logger LOG = LogManager.getLogger(TargetingGroupDao.class);
     private final TargetingPredicateInjector targetingPredicateInjector;
     private final DynamoDBMapper mapper;
 
@@ -46,6 +55,19 @@ public class TargetingGroupDao implements ReadableDao<String, List<TargetingGrou
         return mapper.query(TargetingGroup.class, queryExpression);
     }
 
+    TargetingGroup loadAdsCorrespondingTargetGroup(GenerateAdvertisementResponse ad) {
+        try {
+            TargetingGroup tg = mapper.load(TargetingGroup.class, ad.getAdvertisement().getId());
+            if (tg == null) {
+                LOG.info("No targeting group found for advertisement {}", ad.getAdvertisement().getId());
+            }
+            return tg;
+        } catch (DynamoDBMappingException e) {
+            LOG.error("db mapper failed to load: {}", ad.getAdvertisement().getId(), e);
+        }
+        return null;
+    }
+
     /**
      * Create a new targeting group and persist it.
      * @param contentId The content to associate with the new targeting group.
@@ -53,6 +75,7 @@ public class TargetingGroupDao implements ReadableDao<String, List<TargetingGrou
      * @return The newly created group
      */
     public TargetingGroup create(String contentId, List<TargetingPredicate> targetingPredicates) {
+        targetingPredicates.forEach(targetingPredicateInjector::inject);
         TargetingGroup group = new TargetingGroup(UUID.randomUUID().toString(), contentId, 1.0, targetingPredicates);
         mapper.save(group);
         return group;

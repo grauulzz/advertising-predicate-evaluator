@@ -7,6 +7,9 @@ import com.amazon.ata.advertising.service.model.EmptyGeneratedAdvertisement;
 import com.amazon.ata.advertising.service.model.GeneratedAdvertisement;
 import com.amazon.ata.advertising.service.model.translator.AdvertisementTranslator;
 
+import com.google.gson.Gson;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.concurrent.*;
 import java.util.function.Supplier;
 import org.apache.logging.log4j.LogManager;
@@ -24,7 +27,7 @@ public class GenerateAdActivity {
 
     private final AdvertisementSelectionLogic adSelector;
 
-    private ExecutorService executor = Executors.newFixedThreadPool(2);
+    private ExecutorService executor = Executors.newCachedThreadPool();
 
     /**
      * A Coral activity for the GenerateAdvertisement API.
@@ -46,23 +49,29 @@ public class GenerateAdActivity {
     public GenerateAdvertisementResponse generateAd(GenerateAdvertisementRequest request) {
         String customerId = request.getCustomerId();
         String marketplaceId = request.getMarketplaceId();
-        LOG.info(System.out.printf("Generating ad for customerId: %s in marketplace: %s", customerId, marketplaceId));
+//        LOG.info(System.out.printf("Generating ad for customerId: %s in marketplace: %s", customerId, marketplaceId));
+        List<GenerateAdvertisementResponse> results = new ArrayList<>();
         try {
-            Supplier<GeneratedAdvertisement> adSelectorSupplier =
-                    adSelector.getSupplier(customerId, marketplaceId);
-
-            CompletableFuture<Object> response =
-                    CompletableFuture.supplyAsync(adSelectorSupplier, executor).handle((ad, throwable) -> {
-                                if (throwable != null) { LOG.error(throwable.getMessage()); }
-                                return GenerateAdvertisementResponse.builder().withAdvertisement(
-                                                       AdvertisementTranslator.toCoral(ad))
-                                               .build();
+            GeneratedAdvertisement adSelectorSupplier = adSelector.selectAdvertisement(customerId, marketplaceId);
+            CompletableFuture<GenerateAdvertisementResponse> response =
+                    CompletableFuture.supplyAsync(() -> adSelectorSupplier, executor)
+                            .handle((ad, throwable) -> {
+                                if (throwable != null) {
+                                    LOG.error("Error generating advertisement", throwable);
+                                }
+                                return GenerateAdvertisementResponse.builder()
+                                       .withAdvertisement(AdvertisementTranslator.toCoral(ad))
+                                       .build();
             });
 
-            return (GenerateAdvertisementResponse) response.get();
+            return response.whenComplete((r, t) -> {
+                if (t != null) {
+                    LOG.error("Error generating advertisement", t);
+                }
+                results.add(r);
+                LOG.info(System.out.printf(new Gson().toJson(results)));
+            }).get();
 
-        } catch (InterruptedException | ExecutionException e) {
-            throw new RuntimeException(e);
         } catch (RuntimeException e) {
             LOG.error(System.out.printf(
                 "Something unexpected happened when calling GenerateAdvertisement for customer, %s, in marketplace %s.",
@@ -72,38 +81,9 @@ public class GenerateAdActivity {
                     .withAdvertisement(AdvertisementTranslator.toCoral(
                             new EmptyGeneratedAdvertisement()))
                     .build();
+        } catch (ExecutionException | InterruptedException e) {
+            throw new RuntimeException(e);
         }
 
     }
 }
-
-
-
-
-
-
-//    public GenerateAdvertisementResponse generateAd(GenerateAdvertisementRequest request) {
-//        String customerId = request.getCustomerId();
-//        String marketplaceId = request.getMarketplaceId();
-//        LOG.info(System.out.printf("Generating ad for customerId: %s in marketplace: %s", customerId, marketplaceId));
-//
-//        GenerateAdvertisementResponse response;
-//        try {
-//            final GeneratedAdvertisement generatedAd = adSelector.selectAdvertisement(customerId,
-//                    marketplaceId);
-//
-//            response = GenerateAdvertisementResponse.builder()
-//                               .withAdvertisement(AdvertisementTranslator.toCoral(generatedAd))
-//                               .build();
-//        } catch (Exception e) {
-//            LOG.error(System.out.printf(
-//                    "Something unexpected happened when calling GenerateAdvertisement for customer, %s, in marketplace %s.",
-//                    request.getCustomerId(),
-//                    request.getMarketplaceId()), e);
-//            response = GenerateAdvertisementResponse.builder()
-//                               .withAdvertisement(AdvertisementTranslator.toCoral(new EmptyGeneratedAdvertisement()))
-//                               .build();
-//        }
-//
-//        return response;
-//    }
