@@ -3,5 +3,3 @@ aws dynamodb batch-write-item --request-items file://configurations/cloudFormati
 aws dynamodb batch-write-item --request-items file://configurations/cloudFormation/targeting_group_table.json
 
 
-
-"StackId": "arn:aws:cloudformation:us-west-2:420509969810:stack/advertisingservice-createtables/098714f0-bb9d-11ec-9075-067e40931a89"
