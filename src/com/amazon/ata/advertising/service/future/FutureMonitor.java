@@ -1,6 +1,7 @@
 package com.amazon.ata.advertising.service.future;
 
 
+import com.amazon.ata.advertising.service.exceptions.AdvertisementClientException;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import java.util.Arrays;
@@ -23,49 +24,29 @@ public interface FutureMonitor<G> {
     };
 
     final GsonBuilder builder = new GsonBuilder();
-    final Gson gsonPty = builder.setPrettyPrinting().create();
+    final Gson gson = builder.setPrettyPrinting().create();
+    final String TEAL = "\u001B[36m";
 
-    Consumer<Object> printJsonPty = o -> {
-        String teal = "\u001B[36m"; String json = gsonPty.toJson(o); String[] lines = json.split("\n");
-        StringBuilder sb = new StringBuilder();
-        sb.append(teal);
-        for (String line : lines) {
-            sb.append(line).append("\n").append(teal);
-        }
-        System.out.println(sb + "\u001B[0m");
+    Consumer<Object> toJson = o -> {
+        String[] lines = gson.toJson(o).split("\n");
+
+        Arrays.stream(lines).map(
+                line -> new StringBuilder().append(TEAL).append(line).append("\n").append(TEAL)).forEach(
+                        line -> { ThreadSleep.SHORT.sleep(); System.out.println(line);
+        });
     };
 
-    default void monitor(CompletableFuture<G> completableFuture, ForkJoinPool forkJoinPool) {
+    default void monitor(CompletableFuture<G> completableFuture) {
         while (!completableFuture.isDone()) {
-            try {
-                LOG.info(System.out.printf("Monitoring future %s", completableFuture));
-                ThreadSleep.SHORT.sleep();
-            } finally {
-                forkJoinPool.execute(() -> {
-                    try {
-                        LOG.info(System.out.printf("Monitoring future %s", completableFuture));
-                    } finally {
-                        try {
-                            completableFuture.complete(completableFuture.get());
-                        } catch (InterruptedException | ExecutionException e) {
-                            throw new RuntimeException(e);
-                        }
-                    }
-                });
-            }
+            ThreadSleep.SHORT.sleep();
+            String threadName = Thread.currentThread().getName();
+            System.out.printf("Waiting for {%s} to complete... {%s} %n", completableFuture, threadName);
         }
     }
+    <T> void onComplete(CompletableFuture<T> onComplete);
 
-    default void monitor() {
-        ForkJoinPool.commonPool().execute(() -> {
-            while (!Thread.currentThread().isInterrupted()) {
-                Thread.State currentState = Thread.currentThread().getState();
-                System.out.println(Arrays.stream(STATES).allMatch(s -> s == currentState));
-            }
-        });
-    }
 
-    void onComplete(Consumer<G> onComplete);
+//    void onComplete(Consumer<G> onComplete);
 }
 
 

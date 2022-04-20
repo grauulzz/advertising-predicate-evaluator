@@ -2,20 +2,17 @@ package com.amazon.ata.advertising.service.activity;
 
 import com.amazon.ata.advertising.service.exceptions.AdvertisementClientException;
 import com.amazon.ata.advertising.service.future.FutureMonitor;
+import com.amazon.ata.advertising.service.future.ThreadSleep;
 import com.amazon.ata.advertising.service.model.requests.GenerateAdvertisementRequest;
 import com.amazon.ata.advertising.service.model.responses.GenerateAdvertisementResponse;
 import com.amazon.ata.advertising.service.businesslogic.AdvertisementSelectionLogic;
-import com.amazon.ata.advertising.service.model.EmptyGeneratedAdvertisement;
 import com.amazon.ata.advertising.service.model.GeneratedAdvertisement;
 import com.amazon.ata.advertising.service.model.translator.AdvertisementTranslator;
 
 import com.google.gson.Gson;
 import java.util.ArrayList;
-import java.util.Comparator;
 import java.util.List;
-import java.util.NoSuchElementException;
 import java.util.concurrent.*;
-import java.util.function.Consumer;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -55,77 +52,51 @@ public class GenerateAdActivity implements FutureMonitor<GenerateAdvertisementRe
      * @return the response will contain the generated advertisement. It's content will be an empty String if no
      *      advertisement could be generated.
      */
+    private static final List<GenerateAdvertisementResponse> results = new ArrayList<>();
     public GenerateAdvertisementResponse generateAd(GenerateAdvertisementRequest request) {
         String customerId = request.getCustomerId();
         String marketplaceId = request.getMarketplaceId();
-//        LOG.info(System.out.printf("Generating ad for customerId: %s in marketplace: %s", customerId, marketplaceId));
-        List<GenerateAdvertisementResponse> results = new ArrayList<>();
-        try {
-            GeneratedAdvertisement adSelectorSupplier = adSelector.selectAdvertisement(customerId, marketplaceId);
-            CompletableFuture<GenerateAdvertisementResponse> response =
-                    CompletableFuture.supplyAsync(() -> adSelectorSupplier, forkJoinPool)
-                            .handle((ad, throwable) -> {
-                                if (throwable != null) LOG.error("Error generating advertisement", throwable);
+        GeneratedAdvertisement adSelectorSupplier = adSelector.selectAdvertisement(customerId, marketplaceId);
+        CompletableFuture<GenerateAdvertisementResponse> future =
+                CompletableFuture.supplyAsync(() -> adSelectorSupplier, forkJoinPool)
+                        .handle((ad, throwable) -> {
+                            if (throwable != null) LOG.error("Error generating advertisement", throwable);
 
-                                return GenerateAdvertisementResponse.builder()
-                                               .withAdvertisement(AdvertisementTranslator.toCoral(ad))
-                                               .build();
-                            });
+                            return GenerateAdvertisementResponse.builder()
+                                           .withAdvertisement(AdvertisementTranslator.toCoral(ad))
+                                           .build();
+                        });
+        monitor(future);
 
-            monitor(response, forkJoinPool);
+        onComplete(future);
 
-            results.add(response.whenComplete((r, t) -> {
-                if (t != null) LOG.error("Error generating advertisement", t);
-                LOG.info(System.out.printf("Generated ad: %s for customerId: %s in marketplace: %s", r, customerId, marketplaceId));
-            }).get());
-
-        } catch (RuntimeException e) {
-            LOG.error(System.out.printf(
-                    "Something unexpected happened when calling GenerateAdvertisement for customer, %s, in marketplace %s.",
-                    request.getCustomerId(),
-                    request.getMarketplaceId()), e);
-        } catch (ExecutionException | InterruptedException e) {
-            Thread.currentThread().interrupt();
-            LOG.error(e.getCause());
-            throw new AdvertisementClientException(e);
-        }
-
-        LOG.info(System.out.printf("Results List: %s",  new Gson().toJson(results)));
         return results.get(0);
     }
 
     @Override
-    public void monitor(CompletableFuture<GenerateAdvertisementResponse> completableFuture, ForkJoinPool forkJoinPool) {
-        FutureMonitor.super.monitor(completableFuture, forkJoinPool);
+    public void monitor(CompletableFuture<GenerateAdvertisementResponse> completableFuture) {
+        FutureMonitor.super.monitor(completableFuture);
     }
 
     @Override
-    public void monitor() {
-        FutureMonitor.super.monitor();
+    public <T> void onComplete(CompletableFuture<T> onComplete) {
+        ForkJoinPool.commonPool().execute(() -> {
+            try {
+                GenerateAdvertisementResponse ad = (GenerateAdvertisementResponse) onComplete.get();
+                results.add(ad);
+                LOG.info(System.out.printf("ForkJoinPool.execute(() -> %n{%s}%n" , results));
+                toJson.accept(ad);
+            } catch (InterruptedException | ExecutionException e) {
+                Thread.currentThread().interrupt();
+                throw new AdvertisementClientException(e);
+            }
+        });
+        boolean r = ForkJoinPool.commonPool().awaitQuiescence(1, TimeUnit.SECONDS);
+        if (!r) {
+            throw new AdvertisementClientException("Timeout waiting for advertisement generation to complete");
+        }
+        ForkJoinPool.commonPool().shutdown();
     }
 
-    @Override
-    public void onComplete(Consumer<GenerateAdvertisementResponse> onComplete) {}
-
-//    @Override
-//    public void monitorFutureObject(CompletableFuture<GenerateAdvertisementResponse> future) {
-//        FutureMonitor.super.monitorFutureObject(future);
-//    }
 }
-//        try {
-//            return results.stream().sorted().findFirst()
-//                           .orElse(GenerateAdvertisementResponse.builder()
-//                                           .withAdvertisement(AdvertisementTranslator.toCoral(
-//                                                   new EmptyGeneratedAdvertisement()))
-//                                           .build());
-//
-//        } catch (NoSuchElementException | ClassCastException e) {
-//            LOG.error(System.out.printf(
-//                    "Something unexpected happened when calling GenerateAdvertisement for customer, %s, in marketplace %s.",
-//                    request.getCustomerId(),
-//                    request.getMarketplaceId()), e);
-//            return GenerateAdvertisementResponse.builder()
-//                           .withAdvertisement(AdvertisementTranslator.toCoral(
-//                                   new EmptyGeneratedAdvertisement()))
-//                           .build();
-//        }
+

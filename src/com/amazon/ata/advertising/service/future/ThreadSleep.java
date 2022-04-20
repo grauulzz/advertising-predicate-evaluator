@@ -2,6 +2,7 @@ package com.amazon.ata.advertising.service.future;
 
 public enum ThreadSleep {
     NONE(0),
+    TINY(100),
     SHORT(1000),
     MEDIUM(2000),
     LONG(3000);
