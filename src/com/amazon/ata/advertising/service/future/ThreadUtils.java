@@ -1,6 +1,6 @@
 package com.amazon.ata.advertising.service.future;
 
-public enum ThreadSleep {
+public enum ThreadUtils {
     NONE(0),
     TINY(100),
     SHORT(1000),
@@ -9,13 +9,10 @@ public enum ThreadSleep {
 
     private final long mSleepTime;
 
-    private ThreadSleep(long sleepTime) {
+    private ThreadUtils(long sleepTime) {
         mSleepTime = sleepTime;
     }
 
-    public long getSleepTime() {
-        return mSleepTime;
-    }
     public void sleep() {
         try {
             Thread.sleep(mSleepTime);
@@ -24,4 +21,5 @@ public enum ThreadSleep {
             e.printStackTrace();
         }
     }
+
 }

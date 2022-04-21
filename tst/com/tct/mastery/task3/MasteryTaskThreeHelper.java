@@ -27,7 +27,7 @@ public class MasteryTaskThreeHelper {
     }
 
     public static GenerateAdvertisementRequest createGenAdRequest(String marketplaceId, String customerId) {
-        return new GenerateAdvertisementRequest().builder()
+        return  new GenerateAdvertisementRequest().builder()
                 .withMarketplaceId(marketplaceId)
                 .withCustomerId(customerId)
                 .build();
