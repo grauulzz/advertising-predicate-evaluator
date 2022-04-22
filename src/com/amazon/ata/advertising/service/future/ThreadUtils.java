@@ -22,8 +22,4 @@ public enum ThreadUtils {
         }
     }
 
-    public static void logSleepDuration() {
-        System.out.println("Sleeping for " + LONG + "ms");
-    }
-
 }

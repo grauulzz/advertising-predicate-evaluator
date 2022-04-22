@@ -3,8 +3,10 @@ package com.amazon.ata.advertising.service.activity;
 import com.amazon.ata.App;
 import com.amazon.ata.ConsoleColors;
 import com.amazon.ata.advertising.service.exceptions.AdvertisementClientException;
+import com.amazon.ata.advertising.service.future.AsyncUtils;
 import com.amazon.ata.advertising.service.future.FutureMonitor;
 import com.amazon.ata.advertising.service.model.AdvertisementContent;
+import com.amazon.ata.advertising.service.model.GeneratedAdvertisement;
 import com.amazon.ata.advertising.service.model.requests.GenerateAdvertisementRequest;
 import com.amazon.ata.advertising.service.model.responses.GenerateAdvertisementResponse;
 import com.amazon.ata.advertising.service.businesslogic.AdvertisementSelectionLogic;
@@ -31,18 +33,16 @@ import javax.inject.Inject;
  */
 public class GenerateAdActivity implements FutureMonitor<GenerateAdvertisementResponse> {
     private static final Logger LOG = LogManager.getLogger(GenerateAdActivity.class);
-    private static final List<GenerateAdvertisementResponse> generatedAdResponses = new ArrayList<>();
-    private static final List<AdvertisementContent> adContentResults = new ArrayList<>();
-    private Consumer<AdvertisementContent> addAdConent = adContentResults::add;
-    private static Consumer<GenerateAdvertisementResponse> addGeneratedAd = generatedAdResponses::add;
-
+    public static final ExecutorService executorService = Executors.newFixedThreadPool(Runtime.getRuntime().availableProcessors());
+//    private final List<GeneratedAdvertisement> generatedAds = new ArrayList<>();
+    public static List<GenerateAdvertisementResponse> generatedAdResponses = new ArrayList<>();
+    public static List<AdvertisementContent> adContents = new ArrayList<>();
+    private static List<AdvertisementContent> adContentResults = new ArrayList<>();
     private final AdvertisementSelectionLogic adSelector;
 
-    public static final ExecutorService executorService = Executors.newFixedThreadPool(Runtime.getRuntime().availableProcessors());
-    final UnaryOperator<List<TargetingGroup>> ctr =
-                    targetGroup -> targetGroup.stream().sorted(
-                                    Comparator.comparing(TargetingGroup::getClickThroughRate))
-                                           .collect(Collectors.toList());
+    UnaryOperator<List<TargetingGroup>> ctr =
+            tg -> tg.stream().sorted(Comparator.comparing(TargetingGroup::getClickThroughRate))
+                          .collect(Collectors.toList());
 
     private LoadingCache<String, Map<String, List<TargetingGroup>>> loadingCache;
 
@@ -53,24 +53,8 @@ public class GenerateAdActivity implements FutureMonitor<GenerateAdvertisementRe
     @Inject
     public GenerateAdActivity(AdvertisementSelectionLogic advertisementSelector) {
         this.adSelector = advertisementSelector;
-//        targetingGroupMap = loadingCache.asMap();
     }
 
-    GenerateAdvertisementResponse sortSelectedAdByCtr(List<TargetingGroup> tgs) {
-        List<TargetingGroup> sortedTgs = adSelector.getCtrOf(tgs);
-        String key = sortedTgs.get(0).getContentId();
-
-        List<AdvertisementContent> advertisementContents = adContentResults;
-
-        return generatedAdResponses.stream().filter(r -> r.getAdvertisement().getId().equals(key)).findFirst().orElse(null);
-    }
-
-    private List<TargetingGroup> loadCachedRes(String key) {
-        ConcurrentMap<String, Map<String, List<TargetingGroup>>> res = loadingCache.asMap();
-
-        return res.get(key).values().stream().flatMap(List::stream).collect(Collectors.toList());
-    }
-    private AdvertisementContent adContent;
     /**
      * Decides on the ad most likely to be clicked on by the provided customer, from the group of ads a customer is
      * eligible to see.
@@ -86,19 +70,79 @@ public class GenerateAdActivity implements FutureMonitor<GenerateAdvertisementRe
         CompletableFuture<GenerateAdvertisementResponse> future =
                 CompletableFuture.supplyAsync(() -> adSelector.selectAdvertisement(
                         customerId, marketplaceId), executorService).handle((generatedAd, throwable) -> {
-                            if (throwable != null) LOG.error("Error generating advertisement", throwable);
-                            this.adContent = generatedAd.getContent();
-                            GenerateAdvertisementResponse r = GenerateAdvertisementResponse.builder().withAdvertisement(AdvertisementTranslator.toCoral(generatedAd)).build();
-                            return new GenerateAdvertisementResponse(r.getAdvertisement());
+                            if (throwable != null) {
+                                LOG.error("Error generating advertisement", throwable);
+                            }
+                            AdvertisementContent content = generatedAd.getContent();
+                            adContents.add(content);
+                            return new GenerateAdvertisementResponse(AdvertisementTranslator.toCoral(generatedAd));
                         });
         monitor(future);
-        onComplete(future);
-        CompletableFuture<Void> lastStage = future.thenAcceptAsync(gen -> addGeneratedAd.accept(gen));
-        return generatedAdResponses.get(0);
+        future.whenCompleteAsync((response, throwable) -> {
+            if (throwable != null) {
+                ConsoleColors.pR.accept(String.format("{%s} {%s} %n", throwable, response));
+            }
+//            generatedAdResponses.add(response);
+            TargetingGroup tg = adContents.stream().map(adSelector::getTGfromAdContent).flatMap(List::stream)
+                                         .max(Comparator.comparing(TargetingGroup::getClickThroughRate)).orElse(null);
+
+            if (tg != null) {
+                ConsoleColors.pM.accept(String.format("found corresponding tg {%s}  %n", tg));
+
+                adContentResults.add(adSelector.getAdContentFromTG(tg));
+                ConsoleColors.pM.accept(String.format("adContentResults (sorted by ctr) {%s}  %n", adContentResults));
+            }
+
+            ConsoleColors.pG.accept(String.format("added generatedAdResponse to list {%s}  %n", generatedAdResponses));
+        });
+
+        try {
+            return future.get();
+        } catch (InterruptedException | ExecutionException e) {
+            throw new RuntimeException(e);
+        }
     }
 
-    private void extractedCacheComparison(String customerId) {
-//        extractedCacheComparison(customerId);
+    public static <R> CompletableFuture<List<R>> sequenceFuture(List<CompletableFuture<R>> futures) {
+        return CompletableFuture.allOf(futures.toArray(new CompletableFuture[0]))
+                       .thenApply(v -> futures.stream().map(AsyncUtils::getValue).filter(Objects::nonNull)
+                                               .collect(Collectors.toList())
+                       );
+    }
+
+    @Override
+    public void monitor(CompletableFuture<GenerateAdvertisementResponse> completableFuture) {
+        FutureMonitor.super.monitor(completableFuture);
+    }
+
+    @Override
+    public void onComplete(CompletableFuture<GenerateAdvertisementResponse> onComplete) {
+        executorService.execute(() -> {
+            try {
+                GenerateAdvertisementResponse ad = onComplete.get();
+                generatedAdResponses.add(ad);
+                ConsoleColors.pG.accept(String.format("Completed Async {%s} %n", generatedAdResponses));
+            } catch (InterruptedException | ExecutionException e) {
+                Thread.currentThread().interrupt();
+                throw new AdvertisementClientException(e);
+            }
+        });
+    }
+
+    public GenerateAdvertisementResponse sortSelectedAdByCtr(List<TargetingGroup> tgs) {
+        List<TargetingGroup> sortedTgs = adSelector.getCtrOf(tgs);
+        String key = sortedTgs.get(0).getContentId();
+
+        List<AdvertisementContent> advertisementContents = adContentResults;
+
+        return generatedAdResponses.stream().filter(r -> r.getAdvertisement().getId().equals(key)).findFirst().orElse(null);
+    }
+    private List<TargetingGroup> loadCachedRes(String key) {
+        ConcurrentMap<String, Map<String, List<TargetingGroup>>> res = loadingCache.asMap();
+
+        return res.get(key).values().stream().flatMap(List::stream).collect(Collectors.toList());
+    }
+    private void cacheComparison(String customerId) {
         CacheLoader<String, Map<String, List<TargetingGroup>>> cached = adSelector.getCache();
         try {
             Map<String, List<TargetingGroup>> tgFromCache = cached.load(customerId);
@@ -106,12 +150,39 @@ public class GenerateAdActivity implements FutureMonitor<GenerateAdvertisementRe
             tgFromCache.forEach((k, v) -> {
                 System.out.println(k + " -> " + v);
                 System.out.println(v.get(0).getContentId());
-
             });
 
             List<TargetingGroup> tgsList = tgFromCache.values().stream().flatMap(List::stream).collect(Collectors.toList());
 
-            App.toJson.accept(tgsList);
+
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+    }
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+//        CompletableFuture<Void> lastStage = future.thenAcceptAsync(gen -> addGeneratedAd.accept(gen));
+//                ConsoleColors.pG.accept(String.format("Completed Async {%s} {%s} %n", adContentResults, App.getCurrentTime()));
+
 
 //            Stream<Double> stream = tgFromCache.values().stream().flatMap(Collection::stream)
 //                                            .map(TargetingGroup::getClickThroughRate)
@@ -127,34 +198,4 @@ public class GenerateAdActivity implements FutureMonitor<GenerateAdvertisementRe
 
 //            System.out.println("cached map ->  ");
 //            App.toJson.accept(tgFromCache);
-
-
-
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
-    }
-
-    @Override
-    public void monitor(CompletableFuture<GenerateAdvertisementResponse> completableFuture) {
-        FutureMonitor.super.monitor(completableFuture);
-    }
-
-    @Override
-    public void onComplete(CompletableFuture<GenerateAdvertisementResponse> onComplete) {
-        executorService.execute(() -> {
-            try {
-                GenerateAdvertisementResponse ad = onComplete.get();
-                addAdConent.accept(adContent);
-                addGeneratedAd.accept(ad);
-                ConsoleColors.pG.accept(String.format("Completed Async {%s} {%s} %n", generatedAdResponses, App.getCurrentTime()));
-                ConsoleColors.pG.accept(String.format("Completed Async {%s} {%s} %n", adContentResults, App.getCurrentTime()));
-            } catch (InterruptedException | ExecutionException e) {
-                Thread.currentThread().interrupt();
-                throw new AdvertisementClientException(e);
-            }
-        });
-    }
-
-}
 

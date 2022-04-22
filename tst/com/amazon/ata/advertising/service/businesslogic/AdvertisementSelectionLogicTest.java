@@ -95,20 +95,4 @@ public class AdvertisementSelectionLogicTest {
         assertEquals(CONTENT_ID2, ad.getContent().getContentId());
     }
 
-    @Test
-    void getCtrOf() {
-        List<AdvertisementContent> contents = Arrays.asList(CONTENT1, CONTENT2, CONTENT3);
-
-
-
-        System.out.println(contents);
-    }
-
-    @Test
-    void selectAdvertisement() {
-    }
-
-    @Test
-    void getCache() {
-    }
 }

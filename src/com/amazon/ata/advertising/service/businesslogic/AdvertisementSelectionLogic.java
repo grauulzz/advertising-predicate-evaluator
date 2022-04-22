@@ -7,6 +7,7 @@ import com.amazon.ata.advertising.service.targeting.TargetingEvaluator;
 import com.amazon.ata.advertising.service.targeting.TargetingGroup;
 import com.amazon.ata.advertising.service.targeting.predicate.TargetingPredicateResult;
 import com.google.common.cache.CacheLoader;
+import com.google.common.collect.Maps;
 import java.util.*;
 import java.util.function.Function;
 import java.util.function.Predicate;
@@ -14,6 +15,7 @@ import java.util.function.UnaryOperator;
 import java.util.stream.Collectors;
 import javax.annotation.ParametersAreNonnullByDefault;
 import javax.inject.Inject;
+import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -24,34 +26,32 @@ import org.apache.logging.log4j.Logger;
 public class AdvertisementSelectionLogic {
 
     private static final Logger LOG = LogManager.getLogger(AdvertisementSelectionLogic.class);
+    private final Maps.EntryTransformer<String, String, TargetingEvaluator> transformer = (customerId1, marketplaceId1) -> {
+        RequestContext context = new RequestContext(customerId1, marketplaceId1);
+        return new TargetingEvaluator(context);
+    };
     private CacheLoader<String, Map<String, List<TargetingGroup>>> cache;
     private final ReadableDao<String, List<AdvertisementContent>> contentDao;
-    private final ReadableDao<String, List<TargetingGroup>> tgdao;
+    private final ReadableDao<String, List<TargetingGroup>> targetingGroupDao;
     private final UnaryOperator<List<TargetingGroup>> ctr =
             targetGroup -> targetGroup.stream().sorted(
                             Comparator.comparing(TargetingGroup::getClickThroughRate))
                                    .collect(Collectors.toList());
-    private final Function<List<AdvertisementContent>, Map<String, List<TargetingGroup>>> cacheFunc;
+    private final Function<List<AdvertisementContent>, Map<String, List<TargetingGroup>>> tgMap;
     private Random r = new Random();
 
     @Inject
     public AdvertisementSelectionLogic(ReadableDao<String, List<AdvertisementContent>> contentDao,
                                        ReadableDao<String, List<TargetingGroup>> targetingGroupDao) {
         this.contentDao = contentDao;
-        this.tgdao = targetingGroupDao;
+        this.targetingGroupDao = targetingGroupDao;
 
-        this.cacheFunc = ads -> ads.stream().map(AdvertisementContent::getContentId).collect(
-                Collectors.toMap(k -> k, v -> new ArrayList<TargetingGroup>(tgdao.get(v))));
+        this.tgMap = ads -> ads.stream().map(AdvertisementContent::getContentId).collect(
+                Collectors.toMap(k -> k, v -> new ArrayList<TargetingGroup>(targetingGroupDao.get(v))));
 
     }
 
-    public UnaryOperator<List<TargetingGroup>> getCtrOperator() {
-        return ctr;
-    }
 
-    public List<TargetingGroup> getCtrOf(List<TargetingGroup> targetingGroups) {
-        return ctr.apply(targetingGroups);
-    }
 
     public void setRandom(Random random) {
         this.r = random;
@@ -69,38 +69,60 @@ public class AdvertisementSelectionLogic {
      * not be generated.
      */
     public GeneratedAdvertisement selectAdvertisement(String customerId, String marketplaceId) {
+        GeneratedAdvertisement generatedAdvertisement = new EmptyGeneratedAdvertisement();
         if (StringUtils.isEmpty(marketplaceId)) {
             LOG.info("Marketplace id is empty, returning empty advertisement");
+        } else {
+            final List<AdvertisementContent> contents = contentDao.get(marketplaceId);
+
+            if (CollectionUtils.isNotEmpty(contents)) {
+                TargetingEvaluator targetingEvaluator = transformer.transformEntry(customerId, marketplaceId);
+
+                logg1(customerId, marketplaceId);
+
+                Predicate<TargetingGroup> filterAllTrue =
+                        p ->  targetingEvaluator.evaluate(p).equals(TargetingPredicateResult.TRUE);
+
+                Function<Predicate<TargetingGroup>, Predicate<AdvertisementContent>> predChain =
+                        p1 -> p2 -> targetingGroupDao.get(p2.getContentId()).stream().anyMatch(p1);
+
+                List<AdvertisementContent> eligibleAds = contents.stream().filter(predChain.apply(filterAllTrue))
+                                                                     .collect(Collectors.toList());
+                if (!eligibleAds.isEmpty()) {
+                    int index = r.nextInt(eligibleAds.size());
+                    AdvertisementContent randomAd = eligibleAds.get(index);
+                    generatedAdvertisement = new GeneratedAdvertisement(randomAd);
+                }
+
+            }
+
         }
-
-        RequestContext context = new RequestContext(customerId, marketplaceId);
-        TargetingEvaluator targetingEvaluator = new TargetingEvaluator(context);
-
-        logg1(customerId, marketplaceId);
-
-        List<AdvertisementContent> marketPlaceContent = contentDao.get(marketplaceId);
-//        cache = cache(marketPlaceContent);
-
-        Predicate<TargetingGroup> allTrue =
-                p ->  targetingEvaluator.evaluate(p).equals(TargetingPredicateResult.TRUE);
-
-        Function<Predicate<TargetingGroup>, Predicate<AdvertisementContent>> predChain =
-                p1 -> p2 -> getTGfromAdContent(p2).stream().anyMatch(p1);
-
-        List<AdvertisementContent> adContentFromTG = marketPlaceContent.stream().filter(predChain.apply(allTrue))
-                                                    .collect(Collectors.toList());
-//        cache = cache(adContentFromTG);
-
-
-        GeneratedAdvertisement res = adContentFromTG.stream().map(GeneratedAdvertisement::new)
-                                             .findFirst().orElse(new EmptyGeneratedAdvertisement());
-
-        logg2(customerId, res);
-
-        return res;
-
+        return generatedAdvertisement;
     }
 
+
+    public List<TargetingGroup> getCtrOf(List<TargetingGroup> targetingGroups) {
+        return ctr.apply(targetingGroups);
+    }
+
+    public List<TargetingGroup> getTGfromAdContent(AdvertisementContent adContent) {
+        return targetingGroupDao.get(adContent.getContentId());
+    }
+
+    private CacheLoader<String, Map<String, List<TargetingGroup>>> cache(
+            List<AdvertisementContent> contents) {
+        return new CacheLoader<>() {
+            @Override
+            @ParametersAreNonnullByDefault
+            public Map<String, List<TargetingGroup>> load(String key) throws Exception {
+                return tgMap.apply(contents);
+            }
+        };
+    }
+
+    public CacheLoader<String, Map<String, List<TargetingGroup>>> getCache() {
+        return cache;
+    }
     private void logg2(String customerId, GeneratedAdvertisement res) {
         String log = String.format("generated ad for: {%s} -> %n{%s}%n ", customerId, res);
         ConsoleColors.pM.accept(log);
@@ -111,23 +133,7 @@ public class AdvertisementSelectionLogic {
         ConsoleColors.pM.accept(log);
     }
 
-    private List<TargetingGroup> getTGfromAdContent(AdvertisementContent adContent) {
-        return tgdao.get(adContent.getContentId());
+    public AdvertisementContent getAdContentFromTG(TargetingGroup tg) {
+        return contentDao.get(tg.getContentId()).stream().findFirst().orElse(null);
     }
-
-    private CacheLoader<String, Map<String, List<TargetingGroup>>> cache(
-            List<AdvertisementContent> contents) {
-        return new CacheLoader<>() {
-            @Override
-            @ParametersAreNonnullByDefault
-            public Map<String, List<TargetingGroup>> load(String key) throws Exception {
-                return cacheFunc.apply(contents);
-            }
-        };
-    }
-
-    public CacheLoader<String, Map<String, List<TargetingGroup>>> getCache() {
-        return cache;
-    }
-
 }

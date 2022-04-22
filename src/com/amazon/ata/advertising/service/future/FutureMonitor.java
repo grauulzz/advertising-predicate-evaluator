@@ -12,14 +12,16 @@ public interface FutureMonitor<G> {
 
     default void monitor(CompletableFuture<G> completableFuture) {
         while (!completableFuture.isDone()) {
-            ConsoleColors.pY.accept(String.format("Waiting for {%s} {%s} %n",
-                    completableFuture, App.getCurrentTime()));
-            ThreadUtils.LONG.sleep();
-            ThreadUtils.logSleepDuration();
-
-
-//            ThreadState.listen();
+            ThreadUtils.SHORT.sleep();
+            ConsoleColors.pY.accept(String.format("Waiting for {%s} %n", completableFuture));
         }
+        completableFuture.whenComplete((result, throwable) -> {
+            if (throwable != null) {
+                ConsoleColors.pR.accept(String.format("{%s} {%s} %n", throwable, completableFuture));
+            }
+            boolean b = completableFuture.isDone() && !completableFuture.isCompletedExceptionally() && completableFuture.join() != null;
+            ConsoleColors.pG.accept(String.format("Completed Async {%s} %nisComplete?{%s}%n", result, b));
+        });
     }
     void onComplete(CompletableFuture<G> onComplete);
 }

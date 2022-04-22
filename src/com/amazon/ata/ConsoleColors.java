@@ -45,11 +45,4 @@ public enum ConsoleColors {
         pB.accept(s2);
         return pY;
     };
-
-    public static void main(String[] args) {
-//        pYBFunc.apply("Hello").accept("World");
-//        biPYB.accept("bi", "hello world");
-//        biPYF.apply("biFunction", "ello worldz");
-
-    }
 }
