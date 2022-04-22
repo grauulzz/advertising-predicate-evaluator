@@ -12,6 +12,7 @@ import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBTypeConverted;
 
 import com.google.common.base.Objects;
 import java.util.List;
+import java.util.function.Consumer;
 
 /**
  * A targeting group for an advertisement, required to show if this advertisement should be rendered.
@@ -19,6 +20,12 @@ import java.util.List;
 @DynamoDBTable(tableName = "TargetingGroups")
 public class TargetingGroup implements Comparable<TargetingGroup> {
     public static final String CONTENT_ID_INDEX = "ContentIdIndex";
+
+    public Consumer<TargetingGroup> get_setter() {
+        return _setter;
+    }
+
+    private Consumer<TargetingGroup> _setter = null;
 
     @DynamoDBHashKey(attributeName = "TargetingGroupId")
     private String targetingGroupId;

@@ -7,10 +7,10 @@ import java.util.concurrent.CompletableFuture;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-public interface FutureMonitor<G> {
+public interface FutureMonitor<T> {
     static final Logger LOG = LogManager.getLogger(FutureMonitor.class);
 
-    default void monitor(CompletableFuture<G> completableFuture) {
+    default void monitor(CompletableFuture<T> completableFuture) {
         while (!completableFuture.isDone()) {
             ThreadUtils.SHORT.sleep();
             ConsoleColors.pY.accept(String.format("Waiting for {%s} %n", completableFuture));
@@ -23,5 +23,5 @@ public interface FutureMonitor<G> {
             ConsoleColors.pG.accept(String.format("Completed Async {%s} %nisComplete?{%s}%n", result, b));
         });
     }
-    void onComplete(CompletableFuture<G> onComplete);
+//    void onComplete(CompletableFuture<G> onComplete);
 }
