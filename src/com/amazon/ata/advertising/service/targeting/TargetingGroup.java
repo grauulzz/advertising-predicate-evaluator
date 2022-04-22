@@ -10,13 +10,14 @@ import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBIndexHashKey;
 import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBTable;
 import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBTypeConverted;
 
+import com.google.common.base.Objects;
 import java.util.List;
 
 /**
  * A targeting group for an advertisement, required to show if this advertisement should be rendered.
  */
 @DynamoDBTable(tableName = "TargetingGroups")
-public class TargetingGroup {
+public class TargetingGroup implements Comparable<TargetingGroup> {
     public static final String CONTENT_ID_INDEX = "ContentIdIndex";
 
     @DynamoDBHashKey(attributeName = "TargetingGroupId")
@@ -85,5 +86,33 @@ public class TargetingGroup {
 
     public void setTargetingPredicates(List<TargetingPredicate> targetingPredicates) {
         this.targetingPredicates = targetingPredicates;
+    }
+
+    @Override
+    public String toString() {
+        return "tg {" +
+                       "groupId='" + targetingGroupId + '\'' +
+                       "contentId=" + contentId + '\'' +
+                       "ctr=" + clickThroughRate + '\'' +
+                       "pred=" + targetingPredicates +
+                       '}';
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        TargetingGroup group = (TargetingGroup) o;
+        return Double.compare(group.getClickThroughRate(), getClickThroughRate()) == 0 && Objects.equal(getTargetingGroupId(), group.getTargetingGroupId()) && Objects.equal(getContentId(), group.getContentId()) && Objects.equal(getTargetingPredicates(), group.getTargetingPredicates());
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hashCode(getTargetingGroupId(), getContentId(), getClickThroughRate(), getTargetingPredicates());
+    }
+
+    @Override
+    public int compareTo(TargetingGroup o) {
+        return Double.compare( getClickThroughRate(), o.getClickThroughRate() );
     }
 }

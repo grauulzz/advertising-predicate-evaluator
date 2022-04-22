@@ -136,4 +136,17 @@ public class AdvertisementContent {
             return this;
         }
     }
+
+    @Override
+    public String toString() {
+        return "AdvertisementContent{" +
+                       "contentId='" + contentId + '\'' +
+                       ", renderableContent='" + renderableContent + '\'' +
+                       ", marketplaceId='" + marketplaceId + '\'' +
+                       '}';
+    }
+
+
+
+
 }

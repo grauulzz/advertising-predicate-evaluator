@@ -2,6 +2,7 @@ package com.amazon.ata.advertising.service.future;
 
 
 import com.amazon.ata.App;
+import com.amazon.ata.ConsoleColors;
 import java.util.concurrent.CompletableFuture;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -11,9 +12,13 @@ public interface FutureMonitor<G> {
 
     default void monitor(CompletableFuture<G> completableFuture) {
         while (!completableFuture.isDone()) {
-            LOG.info(System.out.printf("ThreadCount: %s%n", Thread.activeCount()));
-            ThreadUtils.SHORT.sleep();
-            LOG.info("Waiting for {} to complete... {} %n", completableFuture, App.getCurrentTime());
+            ConsoleColors.pY.accept(String.format("Waiting for {%s} {%s} %n",
+                    completableFuture, App.getCurrentTime()));
+            ThreadUtils.LONG.sleep();
+            ThreadUtils.logSleepDuration();
+
+
+//            ThreadState.listen();
         }
     }
     void onComplete(CompletableFuture<G> onComplete);
