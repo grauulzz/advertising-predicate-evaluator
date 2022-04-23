@@ -21,12 +21,6 @@ import java.util.function.Consumer;
 public class TargetingGroup implements Comparable<TargetingGroup> {
     public static final String CONTENT_ID_INDEX = "ContentIdIndex";
 
-    public Consumer<TargetingGroup> get_setter() {
-        return _setter;
-    }
-
-    private Consumer<TargetingGroup> _setter = null;
-
     @DynamoDBHashKey(attributeName = "TargetingGroupId")
     private String targetingGroupId;
 

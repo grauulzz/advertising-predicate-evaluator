@@ -81,6 +81,16 @@ public class AdvertisementContent {
         return this.contentId.equals(otherAdvertisementContent.contentId);
     }
 
+    @Override
+    public String toString() {
+        return "AdvertisementContent{" +
+                       "contentId='" + contentId + '\'' +
+                       ", renderableContent='" + renderableContent + '\'' +
+                       ", marketplaceId='" + marketplaceId + '\'' +
+                       '}';
+    }
+
+
     /**
      * A builder to create a new AdvertisementContent.
      * @return The fluent builder
@@ -136,17 +146,5 @@ public class AdvertisementContent {
             return this;
         }
     }
-
-    @Override
-    public String toString() {
-        return "AdvertisementContent{" +
-                       "contentId='" + contentId + '\'' +
-                       ", renderableContent='" + renderableContent + '\'' +
-                       ", marketplaceId='" + marketplaceId + '\'' +
-                       '}';
-    }
-
-
-
 
 }

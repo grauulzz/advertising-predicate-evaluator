@@ -31,7 +31,7 @@ class GenerateAdActivityFutureTest {
 
     @Test
     void generateAd() {
-        GenerateAdvertisementResponse response = dagger.handleRequest(request1, null);
+        GenerateAdvertisementResponse response = dagger.handleRequest(request2, null);
         System.out.println(response);
     }
 
