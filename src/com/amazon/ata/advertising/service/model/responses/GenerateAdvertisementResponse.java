@@ -1,6 +1,7 @@
 package com.amazon.ata.advertising.service.model.responses;
 
 import com.amazon.ata.advertising.service.model.Advertisement;
+import com.amazon.ata.advertising.service.model.AdvertisementContent;
 import com.google.common.base.Objects;
 
 public class GenerateAdvertisementResponse {

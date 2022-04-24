@@ -10,7 +10,7 @@ import static com.tct.helper.TestConstants.*;
 import static org.testng.Assert.*;
 
 public class MasteryTaskOneLogicTests {
-    // passing
+
     @Test
     public void generateAdvertisement_withTargetCustomerIdInMarketplace_returnsAdvertisement() {
         GenerateAdvertisementRequest request = GenerateAdvertisementRequest.builder()
@@ -43,7 +43,6 @@ public class MasteryTaskOneLogicTests {
             "in marketplace ID: " + request.getMarketplaceId());
     }
 
-    // passing
     @Test
     public void generateAdvertisement_withNonExistantMarketplace_returnsEmptyContent() {
         GenerateAdvertisementRequest request = GenerateAdvertisementRequest.builder()

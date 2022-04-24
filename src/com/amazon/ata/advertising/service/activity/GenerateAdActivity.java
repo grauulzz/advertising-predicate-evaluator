@@ -1,25 +1,20 @@
 package com.amazon.ata.advertising.service.activity;
 
-import com.amazon.ata.App;
-import com.amazon.ata.advertising.service.exceptions.AdvertisementClientException;
+import com.amazon.ata.advertising.service.future.AsyncUtils;
 import com.amazon.ata.advertising.service.future.FutureMonitor;
-import com.amazon.ata.advertising.service.model.Advertisement;
 import com.amazon.ata.advertising.service.model.requests.GenerateAdvertisementRequest;
 import com.amazon.ata.advertising.service.model.responses.GenerateAdvertisementResponse;
 import com.amazon.ata.advertising.service.businesslogic.AdvertisementSelectionLogic;
 import com.amazon.ata.advertising.service.model.translator.AdvertisementTranslator;
 
-import com.amazon.ata.advertising.service.targeting.TargetingGroup;
-import com.google.common.cache.*;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
 import java.util.concurrent.*;
-import java.util.stream.Collectors;
+import java.util.function.Consumer;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import javax.inject.Inject;
+
+import static com.amazon.ata.ConsoleColors.*;
 
 /**
  *
@@ -28,12 +23,7 @@ import javax.inject.Inject;
  */
 public class GenerateAdActivity implements FutureMonitor<GenerateAdvertisementResponse> {
     private static final Logger LOG = LogManager.getLogger(GenerateAdActivity.class);
-    private static final List<GenerateAdvertisementResponse> results = new ArrayList<>();
     private final AdvertisementSelectionLogic adSelector;
-
-    public static final ExecutorService executorService = Executors.newCachedThreadPool();
-
-    private LoadingCache<String, Map<String, List<TargetingGroup>>> loadingCache;
 
     /**
      * A Coral activity for the GenerateAdvertisement API.
@@ -42,22 +32,8 @@ public class GenerateAdActivity implements FutureMonitor<GenerateAdvertisementRe
     @Inject
     public GenerateAdActivity(AdvertisementSelectionLogic advertisementSelector) {
         this.adSelector = advertisementSelector;
-//        targetingGroupMap = loadingCache.asMap();
     }
 
-    GenerateAdvertisementResponse sortSelectedAdByCtr(List<TargetingGroup> tgs) {
-        List<TargetingGroup> sortedTgs = adSelector.getCtrOf(tgs);
-        String key = sortedTgs.get(0).getContentId();
-        List<Advertisement> ads = results.stream().map(GenerateAdvertisementResponse::getAdvertisement).collect(Collectors.toList());
-
-        return results.stream().filter(r -> r.getAdvertisement().getId().equals(key)).findFirst().orElse(null);
-    }
-
-    private List<TargetingGroup> loadCachedRes(String key) {
-        ConcurrentMap<String, Map<String, List<TargetingGroup>>> res = loadingCache.asMap();
-
-        return res.get(key).values().stream().flatMap(List::stream).collect(Collectors.toList());
-    }
     /**
      * Decides on the ad most likely to be clicked on by the provided customer, from the group of ads a customer is
      * eligible to see.
@@ -71,23 +47,15 @@ public class GenerateAdActivity implements FutureMonitor<GenerateAdvertisementRe
         String marketplaceId = request.getMarketplaceId();
 
         CompletableFuture<GenerateAdvertisementResponse> future =
-                CompletableFuture.supplyAsync(() -> adSelector.selectAdvertisement(
-                        customerId, marketplaceId), executorService).handle((ad, throwable) -> {
-                            if (throwable != null) LOG.error("Error generating advertisement", throwable);
-                            return new GenerateAdvertisementResponse(AdvertisementTranslator.toCoral(ad));
-                        });
-        monitor(future);
-        onComplete(future);
-
-        CacheLoader<String, Map<String, List<TargetingGroup>>> cached = adSelector.getCache();
-        try {
-            cached.load(customerId);
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
-
-
-        return results.get(0);
+                CompletableFuture.supplyAsync(() -> adSelector.selectAdvertisement(customerId, marketplaceId), AsyncUtils.getExecutor
+        ).handleAsync((generatedAd, throwable) -> {
+            if (throwable != null) {
+                LOG.error("Error generating advertisement", throwable);
+            }
+            return new GenerateAdvertisementResponse(AdvertisementTranslator.toCoral(generatedAd));
+        });
+        monitor(future, pG);
+        return onCompleted(future);
     }
 
     @Override
@@ -96,19 +64,22 @@ public class GenerateAdActivity implements FutureMonitor<GenerateAdvertisementRe
     }
 
     @Override
-    public void onComplete(CompletableFuture<GenerateAdvertisementResponse> onComplete) {
-        executorService.execute(() -> {
-            try {
-                GenerateAdvertisementResponse ad = onComplete.get();
-                results.add(ad);
-                LOG.info(System.out.printf("result -> %n{%s}%n" , ad));
-                App.toJson.accept(results);
-            } catch (InterruptedException | ExecutionException e) {
-                Thread.currentThread().interrupt();
-                throw new AdvertisementClientException(e);
-            }
-        });
+    public void monitor(CompletableFuture<GenerateAdvertisementResponse> completableFuture, Consumer<String> color) {
+        FutureMonitor.super.monitor(completableFuture, color);
     }
 
+    private GenerateAdvertisementResponse onCompleted(CompletableFuture<GenerateAdvertisementResponse> future) {
+        try {
+            return future.whenComplete((result, throwable) -> {
+                if (throwable != null) {
+                    pR.accept(String.format("{%s} {%s} %n", throwable, future));
+                }
+                boolean b = future.isDone() && !future.isCompletedExceptionally() && future.join() != null;
+                pM.accept(String.format("Completed future -> {%s} ...completed with no errors!? -> {%s}%n", result, b));
+            }).get();
+        } catch (InterruptedException | ExecutionException e) {
+            throw new RuntimeException(e);
+        }
+    }
 }
 

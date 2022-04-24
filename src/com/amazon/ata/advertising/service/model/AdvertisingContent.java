@@ -1,5 +1,7 @@
 package com.amazon.ata.advertising.service.model;
 
+import com.google.common.base.Objects;
+
 public class AdvertisingContent {
     private String id;
     private String marketplaceId;
@@ -68,5 +70,27 @@ public class AdvertisingContent {
         }
 
         public AdvertisingContent build() { return new AdvertisingContent(this); }
+    }
+
+    @Override
+    public String toString() {
+        return "AdvertisingContent{" +
+                       "id='" + id + '\'' +
+                       ", marketplaceId='" + marketplaceId + '\'' +
+                       ", content='" + content + '\'' +
+                       '}';
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        AdvertisingContent content1 = (AdvertisingContent) o;
+        return Objects.equal(getId(), content1.getId()) && Objects.equal(getMarketplaceId(), content1.getMarketplaceId()) && Objects.equal(getContent(), content1.getContent());
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hashCode(getId(), getMarketplaceId(), getContent());
     }
 }

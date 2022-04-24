@@ -1,8 +1,7 @@
 package com.amazon.ata.advertising.service.future;
 
-
-import com.amazon.ata.App;
 import java.util.concurrent.CompletableFuture;
+import java.util.function.Consumer;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -10,11 +9,14 @@ public interface FutureMonitor<G> {
     static final Logger LOG = LogManager.getLogger(FutureMonitor.class);
 
     default void monitor(CompletableFuture<G> completableFuture) {
-        while (!completableFuture.isDone()) {
-            LOG.info(System.out.printf("ThreadCount: %s%n", Thread.activeCount()));
-            ThreadUtils.SHORT.sleep();
-            LOG.info("Waiting for {} to complete... {} %n", completableFuture, App.getCurrentTime());
+        if (!completableFuture.isDone()) {
+            System.out.printf("Waiting for {%s} %n", completableFuture);
         }
     }
-    void onComplete(CompletableFuture<G> onComplete);
+    default void monitor(CompletableFuture<G> completableFuture, Consumer<String> color) {
+        if (!completableFuture.isDone()) {
+            color.accept(String.format("Waiting for {%s} %n", completableFuture));
+        }
+    }
+
 }

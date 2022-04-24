@@ -34,6 +34,10 @@ public class Advertisement {
 
     public static Builder builder() {return new Builder();}
 
+//    public static <U extends Comparable<? super U>, T> U getCtr(T t) {
+//        return
+//    }
+
     public static final class Builder {
         private String id;
         private String content;
