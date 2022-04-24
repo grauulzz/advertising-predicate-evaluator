@@ -1,25 +1,14 @@
 package com.amazon.ata.advertising.service.activity;
 
-import com.amazon.ata.ConsoleColors;
-import com.amazon.ata.advertising.service.dao.ReadableDao;
-import com.amazon.ata.advertising.service.exceptions.AdvertisementClientException;
 import com.amazon.ata.advertising.service.future.AsyncUtils;
 import com.amazon.ata.advertising.service.future.FutureMonitor;
-import com.amazon.ata.advertising.service.future.ThreadUtilities;
-import com.amazon.ata.advertising.service.model.AdvertisementContent;
-import com.amazon.ata.advertising.service.model.GeneratedAdvertisement;
 import com.amazon.ata.advertising.service.model.requests.GenerateAdvertisementRequest;
 import com.amazon.ata.advertising.service.model.responses.GenerateAdvertisementResponse;
 import com.amazon.ata.advertising.service.businesslogic.AdvertisementSelectionLogic;
 import com.amazon.ata.advertising.service.model.translator.AdvertisementTranslator;
 
-import com.amazon.ata.advertising.service.targeting.TargetingGroup;
-import com.google.common.cache.*;
-import java.util.*;
 import java.util.concurrent.*;
 import java.util.function.Consumer;
-import java.util.function.UnaryOperator;
-import java.util.stream.Collectors;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -57,22 +46,16 @@ public class GenerateAdActivity implements FutureMonitor<GenerateAdvertisementRe
         String customerId = request.getCustomerId();
         String marketplaceId = request.getMarketplaceId();
 
-        CompletableFuture<GenerateAdvertisementResponse> future = CompletableFuture.supplyAsync(() -> adSelector.selectAdvertisement(
-                customerId, marketplaceId), AsyncUtils.getExecutor
-        ).handle((generatedAd, throwable) -> {
+        CompletableFuture<GenerateAdvertisementResponse> future =
+                CompletableFuture.supplyAsync(() -> adSelector.selectAdvertisement(customerId, marketplaceId), AsyncUtils.getExecutor
+        ).handleAsync((generatedAd, throwable) -> {
             if (throwable != null) {
                 LOG.error("Error generating advertisement", throwable);
             }
             return new GenerateAdvertisementResponse(AdvertisementTranslator.toCoral(generatedAd));
         });
         monitor(future, pG);
-        try {
-            GenerateAdvertisementResponse r = future.get();
-            AsyncUtils.getExecutor.shutdown();
-            return r;
-        } catch (InterruptedException | ExecutionException e) {
-            throw new RuntimeException(e);
-        }
+        return onCompleted(future);
     }
 
     @Override
@@ -85,17 +68,18 @@ public class GenerateAdActivity implements FutureMonitor<GenerateAdvertisementRe
         FutureMonitor.super.monitor(completableFuture, color);
     }
 
-    @Override
-    public void onCompleteMonitor(CompletableFuture<GenerateAdvertisementResponse> onComplete) {
-        ThreadUtilities.currentThreadLogger(onComplete);
-        monitor(onComplete);
-        onComplete.whenComplete((result, throwable) -> {
-            if (throwable != null) {
-                pR.accept(String.format("{%s} {%s} %n", throwable, onComplete));
-            }
-            boolean b = onComplete.isDone() && !onComplete.isCompletedExceptionally() && onComplete.join() != null;
-            pM.accept(String.format("Completed future -> {%s} ...completed with no errors!? -> {%s}%n", result, b));
-        });
+    private GenerateAdvertisementResponse onCompleted(CompletableFuture<GenerateAdvertisementResponse> future) {
+        try {
+            return future.whenComplete((result, throwable) -> {
+                if (throwable != null) {
+                    pR.accept(String.format("{%s} {%s} %n", throwable, future));
+                }
+                boolean b = future.isDone() && !future.isCompletedExceptionally() && future.join() != null;
+                pM.accept(String.format("Completed future -> {%s} ...completed with no errors!? -> {%s}%n", result, b));
+            }).get();
+        } catch (InterruptedException | ExecutionException e) {
+            throw new RuntimeException(e);
+        }
     }
 }
 

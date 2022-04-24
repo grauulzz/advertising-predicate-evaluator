@@ -18,7 +18,7 @@ import java.util.function.Consumer;
  * A targeting group for an advertisement, required to show if this advertisement should be rendered.
  */
 @DynamoDBTable(tableName = "TargetingGroups")
-public class TargetingGroup implements Comparable<TargetingGroup> {
+public class TargetingGroup {
     public static final String CONTENT_ID_INDEX = "ContentIdIndex";
 
     @DynamoDBHashKey(attributeName = "TargetingGroupId")
@@ -104,16 +104,12 @@ public class TargetingGroup implements Comparable<TargetingGroup> {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         TargetingGroup group = (TargetingGroup) o;
-        return Double.compare(group.getClickThroughRate(), getClickThroughRate()) == 0 && Objects.equal(getTargetingGroupId(), group.getTargetingGroupId()) && Objects.equal(getContentId(), group.getContentId()) && Objects.equal(getTargetingPredicates(), group.getTargetingPredicates());
+        return Double.compare(group.getClickThroughRate(), getClickThroughRate()) == 0 &&
+                       Objects.equal(getTargetingGroupId(), group.getTargetingGroupId());
     }
 
     @Override
     public int hashCode() {
-        return Objects.hashCode(getTargetingGroupId(), getContentId(), getClickThroughRate(), getTargetingPredicates());
-    }
-
-    @Override
-    public int compareTo(TargetingGroup o) {
-        return Double.compare( getClickThroughRate(), o.getClickThroughRate() );
+        return Objects.hashCode(getTargetingGroupId(), getClickThroughRate());
     }
 }

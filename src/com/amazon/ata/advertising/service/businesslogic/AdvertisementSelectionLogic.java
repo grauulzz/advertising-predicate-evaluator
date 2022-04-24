@@ -11,10 +11,17 @@ import com.amazon.ata.advertising.service.targeting.TargetingEvaluator;
 import com.amazon.ata.advertising.service.targeting.TargetingGroup;
 import com.amazon.ata.advertising.service.targeting.predicate.TargetingPredicateResult;
 import com.google.common.cache.CacheLoader;
-import java.util.*;
+import java.util.Comparator;
+import java.util.List;
+import java.util.Map;
+import java.util.Random;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutionException;
-import java.util.function.*;
+import java.util.function.BiConsumer;
+import java.util.function.BiFunction;
+import java.util.function.Consumer;
+import java.util.function.Predicate;
+import java.util.function.UnaryOperator;
 import java.util.stream.Collectors;
 import javax.annotation.ParametersAreNonnullByDefault;
 import javax.inject.Inject;
@@ -28,9 +35,6 @@ import org.checkerframework.checker.nullness.Opt;
 
 import static com.amazon.ata.ConsoleColors.*;
 
-/**
- * This class is responsible for picking the advertisement to be rendered.
- */
 public class AdvertisementSelectionLogic implements FutureMonitor<List<Advertisement>> {
 
     private static final Logger LOG = LogManager.getLogger(AdvertisementSelectionLogic.class);
@@ -54,18 +58,19 @@ public class AdvertisementSelectionLogic implements FutureMonitor<List<Advertise
 
     private final BiConsumer<String, String> predicatesInit = (customerId1, marketplaceId1) -> {
         RequestContext context = new RequestContext(customerId1, marketplaceId1);
-        TargetingEvaluator eval = new TargetingEvaluator(context);
-        this.filterByTrue = pred -> eval.evaluate(pred).equals(TargetingPredicateResult.TRUE);
-        this.filterByFalse = pred -> eval.evaluate(pred).equals(TargetingPredicateResult.FALSE);
-        this.filterByIntr = pred -> eval.evaluate(pred).equals(TargetingPredicateResult.INDETERMINATE);
+        TargetingEvaluator evaluator = new TargetingEvaluator(context);
+        this.filterByTrue = pred -> evaluator.evaluate(pred).equals(TargetingPredicateResult.TRUE);
+        this.filterByFalse = pred -> evaluator.evaluate(pred).equals(TargetingPredicateResult.FALSE);
+        this.filterByIntr = pred -> evaluator.evaluate(pred).equals(TargetingPredicateResult.INDETERMINATE);
     };
 
     private final BiFunction<String, List<TargetingGroup>, Advertisement> eval = (customerId, targetingGroups) -> {
         TargetingGroup tg = targetingGroups.stream().filter(filterByTrue).reduce(
                                     (a, b) -> a.getClickThroughRate() > b.getClickThroughRate() ? a : b
         ).orElse(null);
-        return (tg != null) ? // not likely to be null
-                       Advertisement.builder().withId(customerId).withContent(tg.getContentId()).build() : null;
+        return (tg != null) ?
+                       Advertisement.builder().withId(customerId).withContent(tg.getContentId()).build() :
+                       Advertisement.builder().withId(customerId).build();
     };
 
     @Inject
@@ -74,10 +79,7 @@ public class AdvertisementSelectionLogic implements FutureMonitor<List<Advertise
         this.contentDao = contentDao;
         this.targetingGroupDao = targetingGroupDao;
     }
-//    public CompletableFuture<Stack<Advertisement>> getEligibleADS() {
-//        return eligibleADS;
-//    }
-//    private CompletableFuture<Stack<Advertisement>> eligibleADS;
+
     private List<CompletableFuture<Advertisement>> futureAdContents;
 
     /**
@@ -96,19 +98,18 @@ public class AdvertisementSelectionLogic implements FutureMonitor<List<Advertise
             LOG.info("Marketplace id is empty, returning empty advertisement");
         } else {
             final List<AdvertisementContent> contents = contentDao.get(marketplaceId);
-            List<TargetingGroup> allMatchingTgForContentId =
-                    contents.stream().map(AdvertisementContent::getContentId)
-                            .map(targetingGroupDao::get).flatMap(List::stream)
-                            .collect(Collectors.toList());
             if (CollectionUtils.isNotEmpty(contents)) {
-                predicatesInit.accept(customerId,marketplaceId);
+                List<TargetingGroup> allMatchingTgForContentId = contents.stream().map(AdvertisementContent::getContentId).map(targetingGroupDao::get)
+                                                                         .flatMap(List::stream).collect(Collectors.toList());
+                predicatesInit.accept(customerId, marketplaceId);
                 this.futureAdContents = contents.stream().map(
                         c -> CompletableFuture.supplyAsync(() -> eval.apply(
                                 customerId, allMatchingTgForContentId), AsyncUtils.getExecutor))
                                                 .collect(Collectors.toList());
+            } else {
+                return new EmptyGeneratedAdvertisement();
             }
         }
-
         CompletableFuture<List<Advertisement>> sequencedFutures =
                 AsyncUtils.sequenceFuture(this.futureAdContents);
 
@@ -116,32 +117,28 @@ public class AdvertisementSelectionLogic implements FutureMonitor<List<Advertise
 
         try {
             List<Advertisement> ads = sequencedFutures.get();
-            Advertisement adv = ads.get(0);
+            Advertisement adv = ads.get(r.nextInt(ads.size()));
             if (CollectionUtils.isNotEmpty(ads)) {
                 String adContent = adv.getContent();
                 // should be the customerId
                 String adIdSlashCustomerId = adv.getId();
 
-                // GenerateAdvertisementResponse r = GenerateAdvertisementResponse.builder().withAdvertisement(adv).build();
+                // conversion to AdvertisingContent
                 AdvertisingContent advertisingContent =
                         AdvertisingContent.builder().withContent(adContent).withId(adIdSlashCustomerId)
                                 .withMarketplaceId(marketplaceId).build();
 
+                // conversion to AdvertisementContent
                 String adContentId = advertisingContent.getId();
                 String renderableContent = advertisingContent.getContent();
-
                 AdvertisementContent advertisementContent =
                         AdvertisementContent.builder().withContentId(adContentId)
                                 .withRenderableContent(renderableContent).withMarketplaceId(marketplaceId).build();
-
-                AsyncUtils.getExecutor.shutdown();
-
                 return new GeneratedAdvertisement(advertisementContent);
             }
         } catch (InterruptedException | ExecutionException e) {
             LOG.error("Error getting advertisement", e);
         }
-        AsyncUtils.getExecutor.shutdown();
         return new EmptyGeneratedAdvertisement();
     }
 
@@ -188,33 +185,8 @@ public class AdvertisementSelectionLogic implements FutureMonitor<List<Advertise
         FutureMonitor.super.monitor(completableFuture, color);
     }
 
-    @Override
-    public void onCompleteMonitor(CompletableFuture<List<Advertisement>> onComplete) {
-        ThreadUtilities.currentThreadLogger(onComplete);
-        monitor(onComplete);
-        onComplete.whenComplete((result, throwable) -> {
-            if (throwable != null) {
-                pR.accept(String.format("{%s} {%s} %n", throwable, onComplete));
-            }
-            boolean b = onComplete.isDone() && !onComplete.isCompletedExceptionally() && onComplete.join() != null;
-            pM.accept(String.format("Completed future -> {%s} ...completed with no errors!? -> {%s}%n", result, b));
-        });
-    }
 }
 
-
-
-//                            TargetingGroup tg = targetGroups.stream().reduce(
-//                                    (a, b) -> a.getClickThroughRate() > b.getClickThroughRate() ? a : b)
-//                                                        .orElse(targetGroups.get(0));
-//                            String contentId = tg.getContentId();
-
-// probs need to be a list of completable futures rather then a single completable future list
-//                this.eligibleADS = CompletableFuture.supplyAsync(() ->
-//                    contents.stream().map(content -> {
-//                        String contentId = content.getContentId();
-//                        return eval.apply(contentId, allMatchingTgForContentId);
-//                    }).collect(Stack::new, Stack::push, Stack::addAll), AsyncUtils.getExecutor);
 
 
 
