@@ -15,6 +15,10 @@ import javax.inject.Inject;
  * Gets ATA Content based on Marketplace.
  */
 public class ContentDao implements ReadableDao<String, List<AdvertisementContent>> {
+    public DynamoDBMapper getMapper() {
+        return mapper;
+    }
+
     private final DynamoDBMapper mapper;
 
     /**
@@ -42,6 +46,11 @@ public class ContentDao implements ReadableDao<String, List<AdvertisementContent
                 .withConsistentRead(false)
                 .withHashKeyValues(indexHashKey);
         return mapper.query(AdvertisementContent.class, expression);
+    }
+
+
+    public AdvertisementContent getRenderableContent(String contentId) {
+        return mapper.load(AdvertisementContent.class, contentId);
     }
 
     /**

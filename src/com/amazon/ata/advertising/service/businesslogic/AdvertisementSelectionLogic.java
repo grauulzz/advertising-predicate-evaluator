@@ -1,6 +1,10 @@
 package com.amazon.ata.advertising.service.businesslogic;
 
+import com.amazon.ata.ConsoleColors;
+import com.amazon.ata.advertising.service.dao.ContentDao;
 import com.amazon.ata.advertising.service.dao.ReadableDao;
+import com.amazon.ata.advertising.service.dependency.DaggerLambdaComponent;
+import com.amazon.ata.advertising.service.dependency.DynamoDBModule;
 import com.amazon.ata.advertising.service.future.AsyncUtils;
 import com.amazon.ata.advertising.service.future.FutureMonitor;
 import com.amazon.ata.advertising.service.future.ThreadUtilities;
@@ -10,11 +14,10 @@ import com.amazon.ata.advertising.service.model.translator.TargetingGroupTransla
 import com.amazon.ata.advertising.service.targeting.TargetingEvaluator;
 import com.amazon.ata.advertising.service.targeting.TargetingGroup;
 import com.amazon.ata.advertising.service.targeting.predicate.TargetingPredicateResult;
+import com.amazonaws.services.dynamodbv2.AmazonDynamoDB;
+import com.amazonaws.services.dynamodbv2.AmazonDynamoDBClient;
 import com.google.common.cache.CacheLoader;
-import java.util.Comparator;
-import java.util.List;
-import java.util.Map;
-import java.util.Random;
+import java.util.*;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutionException;
 import java.util.function.BiConsumer;
@@ -56,6 +59,9 @@ public class AdvertisementSelectionLogic implements FutureMonitor<List<Advertise
     private Predicate<TargetingGroup> filterByFalse;
     private Predicate<TargetingGroup> filterByIntr;
 
+    // TODO: make dagger inject this into the constructor
+    private final DynamoDBModule mod = new DynamoDBModule();
+
     private final BiConsumer<String, String> predicatesInit = (customerId1, marketplaceId1) -> {
         RequestContext context = new RequestContext(customerId1, marketplaceId1);
         TargetingEvaluator evaluator = new TargetingEvaluator(context);
@@ -65,12 +71,26 @@ public class AdvertisementSelectionLogic implements FutureMonitor<List<Advertise
     };
 
     private final BiFunction<String, List<TargetingGroup>, Advertisement> eval = (customerId, targetingGroups) -> {
-        TargetingGroup tg = targetingGroups.stream().filter(filterByTrue).reduce(
-                                    (a, b) -> a.getClickThroughRate() > b.getClickThroughRate() ? a : b
-        ).orElse(null);
-        return (tg != null) ?
-                       Advertisement.builder().withId(customerId).withContent(tg.getContentId()).build() :
-                       Advertisement.builder().withId(customerId).build();
+        Optional<TargetingGroup> tg = targetingGroups.stream()
+                                              .filter(filterByTrue)
+                                              .reduce((a, b) -> a.getClickThroughRate() > b.getClickThroughRate() ?
+                                                                      a : b);
+        if (tg.isPresent()) {
+            // cache the customerId with the built ad
+            String highestCtrTgContentId = tg.get().getContentId();
+
+            AdvertisementContent matchingContent =
+                    mod.provideDynamoDBMapper().load(AdvertisementContent.class, highestCtrTgContentId);
+
+            if (matchingContent != null) {
+                String matchRenderableContent = matchingContent.getRenderableContent();
+                return Advertisement.builder().withId(highestCtrTgContentId)
+                               .withContent(matchRenderableContent)
+                               .build();
+            }
+            return Advertisement.builder().withId(highestCtrTgContentId).build();
+        }
+        return Advertisement.builder().build();
     };
 
     @Inject
@@ -119,21 +139,15 @@ public class AdvertisementSelectionLogic implements FutureMonitor<List<Advertise
             List<Advertisement> ads = sequencedFutures.get();
             Advertisement adv = ads.get(r.nextInt(ads.size()));
             if (CollectionUtils.isNotEmpty(ads)) {
-                String adContent = adv.getContent();
-                // should be the customerId
-                String adIdSlashCustomerId = adv.getId();
-
                 // conversion to AdvertisingContent
                 AdvertisingContent advertisingContent =
-                        AdvertisingContent.builder().withContent(adContent).withId(adIdSlashCustomerId)
+                        AdvertisingContent.builder().withContent(adv.getContent()).withId(adv.getId())
                                 .withMarketplaceId(marketplaceId).build();
 
                 // conversion to AdvertisementContent
-                String adContentId = advertisingContent.getId();
-                String renderableContent = advertisingContent.getContent();
                 AdvertisementContent advertisementContent =
-                        AdvertisementContent.builder().withContentId(adContentId)
-                                .withRenderableContent(renderableContent).withMarketplaceId(marketplaceId).build();
+                        AdvertisementContent.builder().withContentId(advertisingContent.getId())
+                                .withRenderableContent(advertisingContent.getContent()).withMarketplaceId(marketplaceId).build();
                 return new GeneratedAdvertisement(advertisementContent);
             }
         } catch (InterruptedException | ExecutionException e) {
@@ -187,6 +201,17 @@ public class AdvertisementSelectionLogic implements FutureMonitor<List<Advertise
 
 }
 
+//    List<AdvertisementContent> adContentsList = targetingGroups.stream()
+//                                                        .map(TargetingGroup::getContentId)
+//                                                        .map(id -> getContentDao().get(id)).flatMap(List::stream).collect(Collectors.toList());
+//            pM.accept(adContentsList.toString());
+//
+//                    Optional<AdvertisementContent> matchingAdContent = adContentsList.stream().filter(
+//                                                           adv -> adv.getContentId().equals(tgContentId)
+//                                                           )
+//                                                           .findFirst();
 
 
 
+//        List<TargetingGroup> tgList = targetingGroups.stream().filter(filterByTrue).reduce(
+//                (a, b) -> a.getClickThroughRate() > b.getClickThroughRate() ? a : b).stream().collect(Collectors.toList());

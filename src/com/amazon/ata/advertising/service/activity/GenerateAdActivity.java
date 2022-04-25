@@ -55,7 +55,7 @@ public class GenerateAdActivity implements FutureMonitor<GenerateAdvertisementRe
             return new GenerateAdvertisementResponse(AdvertisementTranslator.toCoral(generatedAd));
         });
         monitor(future, pG);
-        return onCompleted(future);
+        return futureResults(future);
     }
 
     @Override
@@ -68,7 +68,7 @@ public class GenerateAdActivity implements FutureMonitor<GenerateAdvertisementRe
         FutureMonitor.super.monitor(completableFuture, color);
     }
 
-    private GenerateAdvertisementResponse onCompleted(CompletableFuture<GenerateAdvertisementResponse> future) {
+    private GenerateAdvertisementResponse futureResults(CompletableFuture<GenerateAdvertisementResponse> future) {
         try {
             return future.whenComplete((result, throwable) -> {
                 if (throwable != null) {

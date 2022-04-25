@@ -9,6 +9,8 @@ import com.amazon.ata.advertising.service.activity.DeleteContentActivity;
 import com.amazon.ata.advertising.service.activity.GenerateAdActivity;
 import com.amazon.ata.advertising.service.activity.UpdateClickThroughRateActivity;
 import com.amazon.ata.advertising.service.activity.UpdateContentActivity;
+import com.amazon.atacustomerservicelambda.activity.GetCustomerProfileActivity;
+import com.amazon.atacustomerservicelambda.activity.GetCustomerSpendCategoriesActivity;
 import dagger.Component;
 import dagger.Module;
 
@@ -49,4 +51,10 @@ public interface LambdaComponent {
     UpdateClickThroughRateActivity provideUpdateClickThroughRateActivity();
 
     UpdateContentActivity provideUpdateContentActivity();
+
+    GetCustomerProfileActivity provideGetCustomerProfileActivity();
+
+    GetCustomerSpendCategoriesActivity provideGetCustomerSpendCategoriesActivity();
+
+    DynamoDBModule provideDynamoDBModule();
 }
