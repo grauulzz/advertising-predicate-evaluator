@@ -7,9 +7,6 @@ import com.amazon.ata.advertising.service.model.requests.GenerateAdvertisementRe
 import com.amazon.ata.advertising.service.model.responses.GenerateAdvertisementResponse;
 import com.amazon.ata.advertising.service.model.translator.AdvertisementTranslator;
 
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-
 import java.util.concurrent.CompletableFuture;
 import javax.inject.Inject;
 
@@ -19,7 +16,6 @@ import static com.amazon.ata.advertising.service.future.FutureUtils.EXECUTOR_SER
  * Activity class for generate ad operation.
  */
 public class GenerateAdActivity {
-    private static final Logger LOG = LogManager.getLogger(GenerateAdActivity.class);
     private final AdvertisementSelectionLogic adSelector;
 
     /**
@@ -57,6 +53,7 @@ public class GenerateAdActivity {
                                     return new GenerateAdvertisementResponse(
                                             AdvertisementTranslator.toCoral(generatedAd));
                                 });
+
         return FutureUtils.get(future);
     }
 
