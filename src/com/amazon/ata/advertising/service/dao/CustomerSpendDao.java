@@ -19,6 +19,7 @@ public class CustomerSpendDao implements ReadableDao<RequestContext, Map<String,
 
     /**
      * Access customer spend data.
+     *
      * @param customerClient Client for the CustomerService.
      */
     public CustomerSpendDao(ATACustomerService customerClient) {
@@ -29,19 +30,20 @@ public class CustomerSpendDao implements ReadableDao<RequestContext, Map<String,
      * Get the amount a customer has spent in different categories on Amazon.
      *
      * @param requestContext The marketplaceId the customerId has spent in.
+     *
      * @return SpendCategories
      */
     @Override
     public Map<String, Spend> get(RequestContext requestContext) {
-        final GetCustomerSpendCategoriesRequest request = GetCustomerSpendCategoriesRequest.builder()
-                .withCustomerId(requestContext.getCustomerId())
-                .withMarketplaceId(requestContext.getMarketplaceId())
-                .build();
-        final GetCustomerSpendCategoriesResponse result = customerClient.getCustomerSpendCategories(request);
+        GetCustomerSpendCategoriesRequest request = GetCustomerSpendCategoriesRequest.builder()
+                                                                  .withCustomerId(requestContext.getCustomerId())
+                                                                  .withMarketplaceId(requestContext.getMarketplaceId())
+                                                                  .build();
+        GetCustomerSpendCategoriesResponse result = customerClient.getCustomerSpendCategories(request);
         return result.getCustomerSpendCategories()
-                .getSpendCategories()
-                .entrySet()
-                .stream()
-                .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
+                       .getSpendCategories()
+                       .entrySet()
+                       .stream()
+                       .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
     }
 }

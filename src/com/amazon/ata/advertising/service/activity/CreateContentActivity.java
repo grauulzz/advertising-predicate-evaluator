@@ -2,10 +2,9 @@ package com.amazon.ata.advertising.service.activity;
 
 import com.amazon.ata.advertising.service.dao.ContentDao;
 import com.amazon.ata.advertising.service.dao.TargetingGroupDao;
+import com.amazon.ata.advertising.service.model.AdvertisementContent;
 import com.amazon.ata.advertising.service.model.requests.CreateContentRequest;
 import com.amazon.ata.advertising.service.model.responses.CreateContentResponse;
-
-import com.amazon.ata.advertising.service.model.AdvertisementContent;
 import com.amazon.ata.advertising.service.model.translator.AdvertisementContentTranslator;
 import com.amazon.ata.advertising.service.model.translator.TargetingGroupTranslator;
 import com.amazon.ata.advertising.service.model.translator.TargetingPredicateTranslator;
@@ -29,7 +28,8 @@ public class CreateContentActivity {
 
     /**
      * The activity for the CreateContent API.
-     * @param contentDao stores the new advertisement content
+     *
+     * @param contentDao        stores the new advertisement content
      * @param targetingGroupDao stores the new targeting group
      */
     @Inject
@@ -45,30 +45,31 @@ public class CreateContentActivity {
      * created without any predicates, meaning it is viewable by any customer. Targeting groups are given a click
      * through rate of 1 to start, so that they are guaranteed some initial impressions and a true clickThroughRate can
      * be learned.
+     *
      * @param request A piece of advertising content to create.
+     *
      * @return The newly created piece of advertising content.
      */
     public CreateContentResponse createContent(CreateContentRequest request) {
         String marketplaceId = request.getMarketplaceId();
         String requestedContent = request.getContent();
         List<com.amazon.ata.advertising.service.model.TargetingPredicate> requestedTargetingPredicates =
-            request.getTargetingPredicates();
-        LOG.info(String.format("Creating content in marketplace: %s. Content: %s. Targeting predicates: %s",
-            marketplaceId, requestedContent, requestedTargetingPredicates));
+                request.getTargetingPredicates();
 
         AdvertisementContent content = contentDao.create(marketplaceId, requestedContent);
 
         List<TargetingPredicate> targetingPredicates = Optional.ofNullable(requestedTargetingPredicates)
-                .orElse(new ArrayList<>())
-                .stream()
-                .map(TargetingPredicateTranslator::fromCoral)
-                .collect(Collectors.toList());
+                                                               .orElse(new ArrayList<>())
+                                                               .stream()
+                                                               .map(TargetingPredicateTranslator::fromCoral)
+                                                               .collect(Collectors.toList());
         TargetingGroup group = targetingGroupDao.create(content.getContentId(), targetingPredicates);
 
         return CreateContentResponse.builder()
-                .withAdvertisingContent(AdvertisementContentTranslator.toCoral(content, request.getMarketplaceId()))
-                .withTargetingGroup(TargetingGroupTranslator.toCoral(group))
-                .build();
+                       .withAdvertisingContent(AdvertisementContentTranslator.toCoral(content,
+                               request.getMarketplaceId()))
+                       .withTargetingGroup(TargetingGroupTranslator.toCoral(group))
+                       .build();
     }
 
 }

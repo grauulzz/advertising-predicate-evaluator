@@ -9,6 +9,7 @@ public class RecognizedTargetingPredicate extends TargetingPredicate {
 
     /**
      * Evalutates to true based on the customer being recognized and how the inverse flag is set.
+     *
      * @param inverse Can force the predicate to only evaluate to true if the customer isn't recognized.
      */
     public RecognizedTargetingPredicate(boolean inverse) {
@@ -18,7 +19,8 @@ public class RecognizedTargetingPredicate extends TargetingPredicate {
     /**
      * Evaluates to true if the customer is recognized.
      */
-    public RecognizedTargetingPredicate() {}
+    public RecognizedTargetingPredicate() {
+    }
 
     @Override
     TargetingPredicateResult evaluateRecognizedCustomer(RequestContext context) {

@@ -43,7 +43,8 @@ public class CustomerProfileDaoTest {
     @Test
     public void get_customerId_receivesCustomerProfile() {
         // GIVEN
-        ArgumentCaptor<GetCustomerProfileRequest> requestCaptor = ArgumentCaptor.forClass(GetCustomerProfileRequest.class);
+        ArgumentCaptor<GetCustomerProfileRequest> requestCaptor = ArgumentCaptor.forClass(
+                GetCustomerProfileRequest.class);
         when(customerClient.getCustomerProfile(any(GetCustomerProfileRequest.class))).thenReturn(RESULT);
 
         // WHEN

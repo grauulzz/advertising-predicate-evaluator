@@ -18,6 +18,7 @@ public class ParentPredicate extends TargetingPredicate {
 
     /**
      * Evaluates to true if a customer is a parent.
+     *
      * @param inverse Can force the predicate to evaluate to true only if a customer isn't a parent.
      */
     public ParentPredicate(boolean inverse) {
@@ -27,14 +28,15 @@ public class ParentPredicate extends TargetingPredicate {
     /**
      * Evaluates to true if a customer is a parent.
      */
-    public ParentPredicate() {}
+    public ParentPredicate() {
+    }
 
     @Override
     TargetingPredicateResult evaluateRecognizedCustomer(RequestContext context) {
-        final CustomerProfile profile = customerProfileDao.get(context.getCustomerId());
+        CustomerProfile profile = customerProfileDao.get(context.getCustomerId());
 
         return profile.isParent() == null ? TargetingPredicateResult.INDETERMINATE : profile.isParent() ?
-                TargetingPredicateResult.TRUE : TargetingPredicateResult.FALSE;
+                                                                                             TargetingPredicateResult.TRUE : TargetingPredicateResult.FALSE;
 
 //        final CustomerProfile profile = customerProfileDao.get(context.getCustomerId());
 //

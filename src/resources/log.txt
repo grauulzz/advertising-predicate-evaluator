@@ -1,0 +1,350 @@
+
+unsorted ctr ->
+[tg {contentId=0289c927-7ce8-44b0-907d-8b00015481e0'ctr=1.0}, tg {contentId=08b7474e-622e-4c53-bf2d-b06ccc6ea509'ctr=0.0}, tg {contentId=002e02da-e735-4ea1-82da-c95f8a7af3ad'ctr=0.3}, tg {contentId=ac57c20a-0dfa-4ab7-a074-c9ffd1e5b006'ctr=0.6}]
+
+sorted ctr ->
+[[tg {contentId=0289c927-7ce8-44b0-907d-8b00015481e0'ctr=1.0}], [tg {contentId=08b7474e-622e-4c53-bf2d-b06ccc6ea509'ctr=0.0}], [tg {contentId=002e02da-e735-4ea1-82da-c95f8a7af3ad'ctr=0.3}], [tg {contentId=ac57c20a-0dfa-4ab7-a074-c9ffd1e5b006'ctr=0.6}]]
+
+generated ads responses ->
+[GenerateAdvertisementResponse{advertisement=Advertisement{id='2913fcee-8a17-41a7-b05c-a004921f7c66', content='816a535d-49ee-4ea2-991c-c1ff4e26a6f0'}}]
+
+unsorted ctr ->
+[tg {contentId=0289c927-7ce8-44b0-907d-8b00015481e0'ctr=1.0}, tg {contentId=08b7474e-622e-4c53-bf2d-b06ccc6ea509'ctr=0.0}, tg {contentId=002e02da-e735-4ea1-82da-c95f8a7af3ad'ctr=0.3}, tg {contentId=ac57c20a-0dfa-4ab7-a074-c9ffd1e5b006'ctr=0.6}]
+
+sorted ctr ->
+[[tg {contentId=0289c927-7ce8-44b0-907d-8b00015481e0'ctr=1.0}], [tg {contentId=08b7474e-622e-4c53-bf2d-b06ccc6ea509'ctr=0.0}], [tg {contentId=002e02da-e735-4ea1-82da-c95f8a7af3ad'ctr=0.3}], [tg {contentId=ac57c20a-0dfa-4ab7-a074-c9ffd1e5b006'ctr=0.6}]]
+
+generated ads responses ->
+[GenerateAdvertisementResponse{advertisement=Advertisement{id='2913fcee-8a17-41a7-b05c-a004921f7c66', content='816a535d-49ee-4ea2-991c-c1ff4e26a6f0'}}, GenerateAdvertisementResponse{advertisement=Advertisement{id='9ce22327-d52e-406f-8e2c-00f8baa3fdac', content='816a535d-49ee-4ea2-991c-c1ff4e26a6f0'}}]
+
+unsorted ctr ->
+[tg {contentId=0289c927-7ce8-44b0-907d-8b00015481e0'ctr=1.0}, tg {contentId=08b7474e-622e-4c53-bf2d-b06ccc6ea509'ctr=0.0}, tg {contentId=002e02da-e735-4ea1-82da-c95f8a7af3ad'ctr=0.3}, tg {contentId=ac57c20a-0dfa-4ab7-a074-c9ffd1e5b006'ctr=0.6}]
+
+sorted ctr ->
+[[tg {contentId=0289c927-7ce8-44b0-907d-8b00015481e0'ctr=1.0}], [tg {contentId=08b7474e-622e-4c53-bf2d-b06ccc6ea509'ctr=0.0}], [tg {contentId=002e02da-e735-4ea1-82da-c95f8a7af3ad'ctr=0.3}], [tg {contentId=ac57c20a-0dfa-4ab7-a074-c9ffd1e5b006'ctr=0.6}]]
+
+generated ads responses ->
+[GenerateAdvertisementResponse{advertisement=Advertisement{id='2913fcee-8a17-41a7-b05c-a004921f7c66', content='816a535d-49ee-4ea2-991c-c1ff4e26a6f0'}}, GenerateAdvertisementResponse{advertisement=Advertisement{id='9ce22327-d52e-406f-8e2c-00f8baa3fdac', content='816a535d-49ee-4ea2-991c-c1ff4e26a6f0'}}, GenerateAdvertisementResponse{advertisement=Advertisement{id='c539abd3-01a3-4b84-a1d3-0aaed3e63e8b', content='816a535d-49ee-4ea2-991c-c1ff4e26a6f0'}}]
+
+unsorted ctr ->
+[tg {contentId=0289c927-7ce8-44b0-907d-8b00015481e0'ctr=1.0}, tg {contentId=08b7474e-622e-4c53-bf2d-b06ccc6ea509'ctr=0.0}, tg {contentId=002e02da-e735-4ea1-82da-c95f8a7af3ad'ctr=0.3}, tg {contentId=ac57c20a-0dfa-4ab7-a074-c9ffd1e5b006'ctr=0.6}]
+
+sorted ctr ->
+[[tg {contentId=0289c927-7ce8-44b0-907d-8b00015481e0'ctr=1.0}], [tg {contentId=08b7474e-622e-4c53-bf2d-b06ccc6ea509'ctr=0.0}], [tg {contentId=002e02da-e735-4ea1-82da-c95f8a7af3ad'ctr=0.3}], [tg {contentId=ac57c20a-0dfa-4ab7-a074-c9ffd1e5b006'ctr=0.6}]]
+
+generated ads responses ->
+[GenerateAdvertisementResponse{advertisement=Advertisement{id='2913fcee-8a17-41a7-b05c-a004921f7c66', content='816a535d-49ee-4ea2-991c-c1ff4e26a6f0'}}, GenerateAdvertisementResponse{advertisement=Advertisement{id='9ce22327-d52e-406f-8e2c-00f8baa3fdac', content='816a535d-49ee-4ea2-991c-c1ff4e26a6f0'}}, GenerateAdvertisementResponse{advertisement=Advertisement{id='c539abd3-01a3-4b84-a1d3-0aaed3e63e8b', content='816a535d-49ee-4ea2-991c-c1ff4e26a6f0'}}, GenerateAdvertisementResponse{advertisement=Advertisement{id='6210632a-f488-4f0e-b94f-b4ff85e41ed2', content='816a535d-49ee-4ea2-991c-c1ff4e26a6f0'}}]
+
+unsorted ctr ->
+[tg {contentId=0289c927-7ce8-44b0-907d-8b00015481e0'ctr=1.0}, tg {contentId=08b7474e-622e-4c53-bf2d-b06ccc6ea509'ctr=0.0}, tg {contentId=002e02da-e735-4ea1-82da-c95f8a7af3ad'ctr=0.3}, tg {contentId=ac57c20a-0dfa-4ab7-a074-c9ffd1e5b006'ctr=0.6}]
+
+sorted ctr ->
+[[tg {contentId=0289c927-7ce8-44b0-907d-8b00015481e0'ctr=1.0}], [tg {contentId=08b7474e-622e-4c53-bf2d-b06ccc6ea509'ctr=0.0}], [tg {contentId=002e02da-e735-4ea1-82da-c95f8a7af3ad'ctr=0.3}], [tg {contentId=ac57c20a-0dfa-4ab7-a074-c9ffd1e5b006'ctr=0.6}]]
+
+generated ads responses ->
+[GenerateAdvertisementResponse{advertisement=Advertisement{id='2913fcee-8a17-41a7-b05c-a004921f7c66', content='816a535d-49ee-4ea2-991c-c1ff4e26a6f0'}}, GenerateAdvertisementResponse{advertisement=Advertisement{id='9ce22327-d52e-406f-8e2c-00f8baa3fdac', content='816a535d-49ee-4ea2-991c-c1ff4e26a6f0'}}, GenerateAdvertisementResponse{advertisement=Advertisement{id='c539abd3-01a3-4b84-a1d3-0aaed3e63e8b', content='816a535d-49ee-4ea2-991c-c1ff4e26a6f0'}}, GenerateAdvertisementResponse{advertisement=Advertisement{id='6210632a-f488-4f0e-b94f-b4ff85e41ed2', content='816a535d-49ee-4ea2-991c-c1ff4e26a6f0'}}, GenerateAdvertisementResponse{advertisement=Advertisement{id='7647118b-8121-4f6d-a061-b6bdb0640e2b', content='816a535d-49ee-4ea2-991c-c1ff4e26a6f0'}}]
+
+unsorted ctr ->
+[tg {contentId=0289c927-7ce8-44b0-907d-8b00015481e0'ctr=1.0}, tg {contentId=08b7474e-622e-4c53-bf2d-b06ccc6ea509'ctr=0.0}, tg {contentId=002e02da-e735-4ea1-82da-c95f8a7af3ad'ctr=0.3}, tg {contentId=ac57c20a-0dfa-4ab7-a074-c9ffd1e5b006'ctr=0.6}]
+
+sorted ctr ->
+[[tg {contentId=0289c927-7ce8-44b0-907d-8b00015481e0'ctr=1.0}], [tg {contentId=08b7474e-622e-4c53-bf2d-b06ccc6ea509'ctr=0.0}], [tg {contentId=002e02da-e735-4ea1-82da-c95f8a7af3ad'ctr=0.3}], [tg {contentId=ac57c20a-0dfa-4ab7-a074-c9ffd1e5b006'ctr=0.6}]]
+
+generated ads responses ->
+[GenerateAdvertisementResponse{advertisement=Advertisement{id='2913fcee-8a17-41a7-b05c-a004921f7c66', content='816a535d-49ee-4ea2-991c-c1ff4e26a6f0'}}, GenerateAdvertisementResponse{advertisement=Advertisement{id='9ce22327-d52e-406f-8e2c-00f8baa3fdac', content='816a535d-49ee-4ea2-991c-c1ff4e26a6f0'}}, GenerateAdvertisementResponse{advertisement=Advertisement{id='c539abd3-01a3-4b84-a1d3-0aaed3e63e8b', content='816a535d-49ee-4ea2-991c-c1ff4e26a6f0'}}, GenerateAdvertisementResponse{advertisement=Advertisement{id='6210632a-f488-4f0e-b94f-b4ff85e41ed2', content='816a535d-49ee-4ea2-991c-c1ff4e26a6f0'}}, GenerateAdvertisementResponse{advertisement=Advertisement{id='7647118b-8121-4f6d-a061-b6bdb0640e2b', content='816a535d-49ee-4ea2-991c-c1ff4e26a6f0'}}, GenerateAdvertisementResponse{advertisement=Advertisement{id='f937e070-0f63-4802-9ceb-6a1e88390692', content='816a535d-49ee-4ea2-991c-c1ff4e26a6f0'}}]
+
+unsorted ctr ->
+[tg {contentId=0289c927-7ce8-44b0-907d-8b00015481e0'ctr=1.0}, tg {contentId=08b7474e-622e-4c53-bf2d-b06ccc6ea509'ctr=0.0}, tg {contentId=002e02da-e735-4ea1-82da-c95f8a7af3ad'ctr=0.3}, tg {contentId=ac57c20a-0dfa-4ab7-a074-c9ffd1e5b006'ctr=0.6}]
+
+sorted ctr ->
+[[tg {contentId=0289c927-7ce8-44b0-907d-8b00015481e0'ctr=1.0}], [tg {contentId=08b7474e-622e-4c53-bf2d-b06ccc6ea509'ctr=0.0}], [tg {contentId=002e02da-e735-4ea1-82da-c95f8a7af3ad'ctr=0.3}], [tg {contentId=ac57c20a-0dfa-4ab7-a074-c9ffd1e5b006'ctr=0.6}]]
+
+generated ads responses ->
+[GenerateAdvertisementResponse{advertisement=Advertisement{id='2913fcee-8a17-41a7-b05c-a004921f7c66', content='816a535d-49ee-4ea2-991c-c1ff4e26a6f0'}}, GenerateAdvertisementResponse{advertisement=Advertisement{id='9ce22327-d52e-406f-8e2c-00f8baa3fdac', content='816a535d-49ee-4ea2-991c-c1ff4e26a6f0'}}, GenerateAdvertisementResponse{advertisement=Advertisement{id='c539abd3-01a3-4b84-a1d3-0aaed3e63e8b', content='816a535d-49ee-4ea2-991c-c1ff4e26a6f0'}}, GenerateAdvertisementResponse{advertisement=Advertisement{id='6210632a-f488-4f0e-b94f-b4ff85e41ed2', content='816a535d-49ee-4ea2-991c-c1ff4e26a6f0'}}, GenerateAdvertisementResponse{advertisement=Advertisement{id='7647118b-8121-4f6d-a061-b6bdb0640e2b', content='816a535d-49ee-4ea2-991c-c1ff4e26a6f0'}}, GenerateAdvertisementResponse{advertisement=Advertisement{id='f937e070-0f63-4802-9ceb-6a1e88390692', content='816a535d-49ee-4ea2-991c-c1ff4e26a6f0'}}, GenerateAdvertisementResponse{advertisement=Advertisement{id='1f22d060-6754-41f7-8f4c-861c80105393', content='816a535d-49ee-4ea2-991c-c1ff4e26a6f0'}}]
+
+unsorted ctr ->
+[tg {contentId=0289c927-7ce8-44b0-907d-8b00015481e0'ctr=1.0}, tg {contentId=08b7474e-622e-4c53-bf2d-b06ccc6ea509'ctr=0.0}, tg {contentId=002e02da-e735-4ea1-82da-c95f8a7af3ad'ctr=0.3}, tg {contentId=ac57c20a-0dfa-4ab7-a074-c9ffd1e5b006'ctr=0.6}]
+
+sorted ctr ->
+[[tg {contentId=0289c927-7ce8-44b0-907d-8b00015481e0'ctr=1.0}], [tg {contentId=08b7474e-622e-4c53-bf2d-b06ccc6ea509'ctr=0.0}], [tg {contentId=002e02da-e735-4ea1-82da-c95f8a7af3ad'ctr=0.3}], [tg {contentId=ac57c20a-0dfa-4ab7-a074-c9ffd1e5b006'ctr=0.6}]]
+
+generated ads responses ->
+[GenerateAdvertisementResponse{advertisement=Advertisement{id='2913fcee-8a17-41a7-b05c-a004921f7c66', content='816a535d-49ee-4ea2-991c-c1ff4e26a6f0'}}, GenerateAdvertisementResponse{advertisement=Advertisement{id='9ce22327-d52e-406f-8e2c-00f8baa3fdac', content='816a535d-49ee-4ea2-991c-c1ff4e26a6f0'}}, GenerateAdvertisementResponse{advertisement=Advertisement{id='c539abd3-01a3-4b84-a1d3-0aaed3e63e8b', content='816a535d-49ee-4ea2-991c-c1ff4e26a6f0'}}, GenerateAdvertisementResponse{advertisement=Advertisement{id='6210632a-f488-4f0e-b94f-b4ff85e41ed2', content='816a535d-49ee-4ea2-991c-c1ff4e26a6f0'}}, GenerateAdvertisementResponse{advertisement=Advertisement{id='7647118b-8121-4f6d-a061-b6bdb0640e2b', content='816a535d-49ee-4ea2-991c-c1ff4e26a6f0'}}, GenerateAdvertisementResponse{advertisement=Advertisement{id='f937e070-0f63-4802-9ceb-6a1e88390692', content='816a535d-49ee-4ea2-991c-c1ff4e26a6f0'}}, GenerateAdvertisementResponse{advertisement=Advertisement{id='1f22d060-6754-41f7-8f4c-861c80105393', content='816a535d-49ee-4ea2-991c-c1ff4e26a6f0'}}, GenerateAdvertisementResponse{advertisement=Advertisement{id='d5fc2ffe-6591-415b-ac8a-69688eeae3dd', content='816a535d-49ee-4ea2-991c-c1ff4e26a6f0'}}]
+
+unsorted ctr ->
+[tg {contentId=0289c927-7ce8-44b0-907d-8b00015481e0'ctr=1.0}, tg {contentId=08b7474e-622e-4c53-bf2d-b06ccc6ea509'ctr=0.0}, tg {contentId=002e02da-e735-4ea1-82da-c95f8a7af3ad'ctr=0.3}, tg {contentId=ac57c20a-0dfa-4ab7-a074-c9ffd1e5b006'ctr=0.6}]
+
+sorted ctr ->
+[[tg {contentId=0289c927-7ce8-44b0-907d-8b00015481e0'ctr=1.0}], [tg {contentId=08b7474e-622e-4c53-bf2d-b06ccc6ea509'ctr=0.0}], [tg {contentId=002e02da-e735-4ea1-82da-c95f8a7af3ad'ctr=0.3}], [tg {contentId=ac57c20a-0dfa-4ab7-a074-c9ffd1e5b006'ctr=0.6}]]
+
+generated ads responses ->
+[GenerateAdvertisementResponse{advertisement=Advertisement{id='2913fcee-8a17-41a7-b05c-a004921f7c66', content='816a535d-49ee-4ea2-991c-c1ff4e26a6f0'}}, GenerateAdvertisementResponse{advertisement=Advertisement{id='9ce22327-d52e-406f-8e2c-00f8baa3fdac', content='816a535d-49ee-4ea2-991c-c1ff4e26a6f0'}}, GenerateAdvertisementResponse{advertisement=Advertisement{id='c539abd3-01a3-4b84-a1d3-0aaed3e63e8b', content='816a535d-49ee-4ea2-991c-c1ff4e26a6f0'}}, GenerateAdvertisementResponse{advertisement=Advertisement{id='6210632a-f488-4f0e-b94f-b4ff85e41ed2', content='816a535d-49ee-4ea2-991c-c1ff4e26a6f0'}}, GenerateAdvertisementResponse{advertisement=Advertisement{id='7647118b-8121-4f6d-a061-b6bdb0640e2b', content='816a535d-49ee-4ea2-991c-c1ff4e26a6f0'}}, GenerateAdvertisementResponse{advertisement=Advertisement{id='f937e070-0f63-4802-9ceb-6a1e88390692', content='816a535d-49ee-4ea2-991c-c1ff4e26a6f0'}}, GenerateAdvertisementResponse{advertisement=Advertisement{id='1f22d060-6754-41f7-8f4c-861c80105393', content='816a535d-49ee-4ea2-991c-c1ff4e26a6f0'}}, GenerateAdvertisementResponse{advertisement=Advertisement{id='d5fc2ffe-6591-415b-ac8a-69688eeae3dd', content='816a535d-49ee-4ea2-991c-c1ff4e26a6f0'}}, GenerateAdvertisementResponse{advertisement=Advertisement{id='a5529e6a-1a54-4734-bc55-3f4924a7ed15', content='816a535d-49ee-4ea2-991c-c1ff4e26a6f0'}}]
+
+unsorted ctr ->
+[tg {contentId=0289c927-7ce8-44b0-907d-8b00015481e0'ctr=1.0}, tg {contentId=08b7474e-622e-4c53-bf2d-b06ccc6ea509'ctr=0.0}, tg {contentId=002e02da-e735-4ea1-82da-c95f8a7af3ad'ctr=0.3}, tg {contentId=ac57c20a-0dfa-4ab7-a074-c9ffd1e5b006'ctr=0.6}]
+
+sorted ctr ->
+[[tg {contentId=0289c927-7ce8-44b0-907d-8b00015481e0'ctr=1.0}], [tg {contentId=08b7474e-622e-4c53-bf2d-b06ccc6ea509'ctr=0.0}], [tg {contentId=002e02da-e735-4ea1-82da-c95f8a7af3ad'ctr=0.3}], [tg {contentId=ac57c20a-0dfa-4ab7-a074-c9ffd1e5b006'ctr=0.6}]]
+
+generated ads responses ->
+[GenerateAdvertisementResponse{advertisement=Advertisement{id='2913fcee-8a17-41a7-b05c-a004921f7c66', content='816a535d-49ee-4ea2-991c-c1ff4e26a6f0'}}, GenerateAdvertisementResponse{advertisement=Advertisement{id='9ce22327-d52e-406f-8e2c-00f8baa3fdac', content='816a535d-49ee-4ea2-991c-c1ff4e26a6f0'}}, GenerateAdvertisementResponse{advertisement=Advertisement{id='c539abd3-01a3-4b84-a1d3-0aaed3e63e8b', content='816a535d-49ee-4ea2-991c-c1ff4e26a6f0'}}, GenerateAdvertisementResponse{advertisement=Advertisement{id='6210632a-f488-4f0e-b94f-b4ff85e41ed2', content='816a535d-49ee-4ea2-991c-c1ff4e26a6f0'}}, GenerateAdvertisementResponse{advertisement=Advertisement{id='7647118b-8121-4f6d-a061-b6bdb0640e2b', content='816a535d-49ee-4ea2-991c-c1ff4e26a6f0'}}, GenerateAdvertisementResponse{advertisement=Advertisement{id='f937e070-0f63-4802-9ceb-6a1e88390692', content='816a535d-49ee-4ea2-991c-c1ff4e26a6f0'}}, GenerateAdvertisementResponse{advertisement=Advertisement{id='1f22d060-6754-41f7-8f4c-861c80105393', content='816a535d-49ee-4ea2-991c-c1ff4e26a6f0'}}, GenerateAdvertisementResponse{advertisement=Advertisement{id='d5fc2ffe-6591-415b-ac8a-69688eeae3dd', content='816a535d-49ee-4ea2-991c-c1ff4e26a6f0'}}, GenerateAdvertisementResponse{advertisement=Advertisement{id='a5529e6a-1a54-4734-bc55-3f4924a7ed15', content='816a535d-49ee-4ea2-991c-c1ff4e26a6f0'}}, GenerateAdvertisementResponse{advertisement=Advertisement{id='6ca3d6ae-54b4-412b-8c3c-e7ca7df9dc20', content='816a535d-49ee-4ea2-991c-c1ff4e26a6f0'}}]
+
+
+Did not select the advertisement with the highest CTR. The CTRs of eligible ads available were: [0.0, 0.3, 0.6, 1.0] ==> expected: <96db700f-e439-4c13-9dc6-2f277782c5c0> but was: <816a535d-49ee-4ea2-991c-c1ff4e26a6f0>
+Expected :96db700f-e439-4c13-9dc6-2f277782c5c0
+Actual   :816a535d-49ee-4ea2-991c-c1ff4e26a6f0
+<Click to see difference>
+
+com.tct.mastery.task3.part1.MasteryTaskThreeTests
+  Test generateAdvertisement_multipleContentEachSingleTargetingGroups_alwaysReturnsHighestCTR() FAILED (13.3s)
+  org.opentest4j.AssertionFailedError: Did not select the advertisement with the highest CTR. The CTRs of eligible ads available were: [0.0, 0.3, 0.6, 1.0] ==> expected: <96db700f-e439-4c13-9dc6-2f277782c5c0> but was: <816a535d-49ee-4ea2-991c-c1ff4e26a6f0>
+      at com.tct.mastery.task3.part1.MasteryTaskThreeTests.lambda$generateAdvertisement_multipleContentEachSingleTargetingGroups_alwaysReturnsHighestCTR$2(MasteryTaskThreeTests.java:58)
+FAILURE: Executed 1 tests in 17.3s (1 failed)
+
+--------------------------------------------------------------------
+|  Results: FAILURE (1 tests, 0 successes, 1 failures, 0 skipped)  |
+--------------------------------------------------------------------
+Exit Result for Scoring: 0.9
+1 test completed, 1 failed
+> Task :test FAILED
+FAILURE: Build failed with an exception.
+* What went wrong:
+Execution failed for task ':test'.
+> There were failing tests. See the report at: file:///C:/repos/bd-advertising-service-grauulzz/build/reports/tests/test/index.html
+* Try:
+Run with --stacktrace option to get the stack trace. Run with --info or --debug option to get more log output. Run with --scan to get full insights.
+* Get more help at https://help.gradle.org
+BUILD FAILED in 17s
+12 actionable tasks: 1 executed, 11 up-to-date
+
+
+
+
+
+
+
+
+
+
+
+
+> Task :LibrariesAndUtilities:ATACurriculumTestInfrastructure:compileJava UP-TO-DATE
+> Task :LibrariesAndUtilities:ATACurriculumTestInfrastructure:processResources NO-SOURCE
+> Task :LibrariesAndUtilities:ATACurriculumTestInfrastructure:classes UP-TO-DATE
+> Task :LibrariesAndUtilities:ATACurriculumTestInfrastructure:jar UP-TO-DATE
+> Task :LibrariesAndUtilities:ATACustomerServiceLambda:compileJava UP-TO-DATE
+> Task :LibrariesAndUtilities:ATACustomerServiceLambda:processResources NO-SOURCE
+> Task :LibrariesAndUtilities:ATACustomerServiceLambda:classes UP-TO-DATE
+> Task :LibrariesAndUtilities:ATACustomerServiceLambda:jar UP-TO-DATE
+> Task :LibrariesAndUtilities:ATAPrimeClubServiceLambda:compileJava UP-TO-DATE
+> Task :LibrariesAndUtilities:ATAPrimeClubServiceLambda:processResources NO-SOURCE
+> Task :LibrariesAndUtilities:ATAPrimeClubServiceLambda:classes UP-TO-DATE
+> Task :LibrariesAndUtilities:ATAPrimeClubServiceLambda:jar UP-TO-DATE
+> Task :LibrariesAndUtilities:LessonPlanResources:compileJava UP-TO-DATE
+> Task :LibrariesAndUtilities:LessonPlanResources:processResources NO-SOURCE
+> Task :LibrariesAndUtilities:LessonPlanResources:classes UP-TO-DATE
+> Task :LibrariesAndUtilities:LessonPlanResources:jar UP-TO-DATE
+> Task :compileJava
+> Task :processResources UP-TO-DATE
+> Task :classes
+> Task :compileTestJava
+Note: Some input files use or override a deprecated API.
+Note: Recompile with -Xlint:deprecation for details.
+Note: Some input files use unchecked or unsafe operations.
+Note: Recompile with -Xlint:unchecked for details.
+> Task :processTestResources NO-SOURCE
+> Task :testClasses
+> Task :test
+sorted ctr (from adlogic) ->
+[tg {groupId='80fdb44d-021b-4c43-8e8f-2f6c4c34eab7'contentId=bb013638-0ee1-46a3-ab61-851eb56137ae'ctr=0.3'pred=[]}]
+
+returning generated ad from adlogic ->
+GeneratedAdvertisement{id='92ee518f-314e-4397-8762-cc6066d66701', content=AdvertisementContent{contentId='bb013638-0ee1-46a3-ab61-851eb56137ae', renderableContent='b1a278af-82dc-4854-8b48-dbd10119f291', marketplaceId='72cf3890-0f35-44fb-a5b1-bafd2974355c'}}
+
+sorted ctr (from adlogic) ->
+[tg {groupId='80fdb44d-021b-4c43-8e8f-2f6c4c34eab7'contentId=bb013638-0ee1-46a3-ab61-851eb56137ae'ctr=0.3'pred=[]}]
+
+returning generated ad from adlogic ->
+GeneratedAdvertisement{id='dd3f37a7-04d2-4096-b0e0-2f4fbf153b72', content=AdvertisementContent{contentId='bb013638-0ee1-46a3-ab61-851eb56137ae', renderableContent='b1a278af-82dc-4854-8b48-dbd10119f291', marketplaceId='72cf3890-0f35-44fb-a5b1-bafd2974355c'}}
+
+sorted ctr (from adlogic) ->
+[tg {groupId='80fdb44d-021b-4c43-8e8f-2f6c4c34eab7'contentId=bb013638-0ee1-46a3-ab61-851eb56137ae'ctr=0.3'pred=[]}]
+
+returning generated ad from adlogic ->
+GeneratedAdvertisement{id='07cb24a5-d5c6-4186-ba35-8415db551962', content=AdvertisementContent{contentId='bb013638-0ee1-46a3-ab61-851eb56137ae', renderableContent='b1a278af-82dc-4854-8b48-dbd10119f291', marketplaceId='72cf3890-0f35-44fb-a5b1-bafd2974355c'}}
+
+sorted ctr (from adlogic) ->
+[tg {groupId='80fdb44d-021b-4c43-8e8f-2f6c4c34eab7'contentId=bb013638-0ee1-46a3-ab61-851eb56137ae'ctr=0.3'pred=[]}]
+
+returning generated ad from adlogic ->
+GeneratedAdvertisement{id='210a62ed-6bb6-4cac-b422-ed800de0be9d', content=AdvertisementContent{contentId='bb013638-0ee1-46a3-ab61-851eb56137ae', renderableContent='b1a278af-82dc-4854-8b48-dbd10119f291', marketplaceId='72cf3890-0f35-44fb-a5b1-bafd2974355c'}}
+
+sorted ctr (from adlogic) ->
+[tg {groupId='80fdb44d-021b-4c43-8e8f-2f6c4c34eab7'contentId=bb013638-0ee1-46a3-ab61-851eb56137ae'ctr=0.3'pred=[]}]
+
+returning generated ad from adlogic ->
+GeneratedAdvertisement{id='817a41e8-f178-4a59-962e-0ac6a690c2ea', content=AdvertisementContent{contentId='bb013638-0ee1-46a3-ab61-851eb56137ae', renderableContent='b1a278af-82dc-4854-8b48-dbd10119f291', marketplaceId='72cf3890-0f35-44fb-a5b1-bafd2974355c'}}
+
+sorted ctr (from adlogic) ->
+[tg {groupId='80fdb44d-021b-4c43-8e8f-2f6c4c34eab7'contentId=bb013638-0ee1-46a3-ab61-851eb56137ae'ctr=0.3'pred=[]}]
+
+returning generated ad from adlogic ->
+GeneratedAdvertisement{id='97243ea4-1448-4afe-aa3b-0df27a0b9745', content=AdvertisementContent{contentId='bb013638-0ee1-46a3-ab61-851eb56137ae', renderableContent='b1a278af-82dc-4854-8b48-dbd10119f291', marketplaceId='72cf3890-0f35-44fb-a5b1-bafd2974355c'}}
+
+sorted ctr (from adlogic) ->
+[tg {groupId='80fdb44d-021b-4c43-8e8f-2f6c4c34eab7'contentId=bb013638-0ee1-46a3-ab61-851eb56137ae'ctr=0.3'pred=[]}]
+
+returning generated ad from adlogic ->
+GeneratedAdvertisement{id='d6874c9b-081d-4860-8e85-b42f085c6672', content=AdvertisementContent{contentId='bb013638-0ee1-46a3-ab61-851eb56137ae', renderableContent='b1a278af-82dc-4854-8b48-dbd10119f291', marketplaceId='72cf3890-0f35-44fb-a5b1-bafd2974355c'}}
+
+sorted ctr (from adlogic) ->
+[tg {groupId='80fdb44d-021b-4c43-8e8f-2f6c4c34eab7'contentId=bb013638-0ee1-46a3-ab61-851eb56137ae'ctr=0.3'pred=[]}]
+
+returning generated ad from adlogic ->
+GeneratedAdvertisement{id='3e8577c5-b9a7-458e-ac62-a156ef31ff50', content=AdvertisementContent{contentId='bb013638-0ee1-46a3-ab61-851eb56137ae', renderableContent='b1a278af-82dc-4854-8b48-dbd10119f291', marketplaceId='72cf3890-0f35-44fb-a5b1-bafd2974355c'}}
+
+sorted ctr (from adlogic) ->
+[tg {groupId='80fdb44d-021b-4c43-8e8f-2f6c4c34eab7'contentId=bb013638-0ee1-46a3-ab61-851eb56137ae'ctr=0.3'pred=[]}]
+
+returning generated ad from adlogic ->
+GeneratedAdvertisement{id='0456334e-4b88-4a9c-8dd4-93753fa6c6fc', content=AdvertisementContent{contentId='bb013638-0ee1-46a3-ab61-851eb56137ae', renderableContent='b1a278af-82dc-4854-8b48-dbd10119f291', marketplaceId='72cf3890-0f35-44fb-a5b1-bafd2974355c'}}
+
+sorted ctr (from adlogic) ->
+[tg {groupId='80fdb44d-021b-4c43-8e8f-2f6c4c34eab7'contentId=bb013638-0ee1-46a3-ab61-851eb56137ae'ctr=0.3'pred=[]}]
+
+returning generated ad from adlogic ->
+GeneratedAdvertisement{id='5c4c50c5-3f17-4daa-87fa-0aaf9d664a6f', content=AdvertisementContent{contentId='bb013638-0ee1-46a3-ab61-851eb56137ae', renderableContent='b1a278af-82dc-4854-8b48-dbd10119f291', marketplaceId='72cf3890-0f35-44fb-a5b1-bafd2974355c'}}
+
+
+Did not select the advertisement with the highest CTR. The CTRs of eligible ads available were: [0.0, 0.3, 0.6, 1.0] ==> expected: <b06fc8e3-cdc0-4a53-89f8-0e3da1bd97ba> but was: <b1a278af-82dc-4854-8b48-dbd10119f291>
+Expected :b06fc8e3-cdc0-4a53-89f8-0e3da1bd97ba
+Actual   :b1a278af-82dc-4854-8b48-dbd10119f291
+<Click to see difference>
+
+org.opentest4j.AssertionFailedError: Did not select the advertisement with the highest CTR. The CTRs of eligible ads available were: [0.0, 0.3, 0.6, 1.0] ==> expected: <b06fc8e3-cdc0-4a53-89f8-0e3da1bd97ba> but was: <b1a278af-82dc-4854-8b48-dbd10119f291>
+	at org.junit.jupiter.api.AssertionUtils.fail(AssertionUtils.java:55)
+	at org.junit.jupiter.api.AssertionUtils.failNotEqual(AssertionUtils.java:62)
+	at org.junit.jupiter.api.AssertEquals.assertEquals(AssertEquals.java:182)
+	at org.junit.jupiter.api.Assertions.assertEquals(Assertions.java:1135)
+	at com.tct.mastery.task3.MasteryTaskThreeHelper.assertContent(MasteryTaskThreeHelper.java:40)
+	at com.tct.mastery.task3.part1.MasteryTaskThreeTests.lambda$generateAdvertisement_multipleContentEachSingleTargetingGroups_alwaysReturnsHighestCTR$2(MasteryTaskThreeTests.java:58)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1541)
+	at com.tct.mastery.task3.part1.MasteryTaskThreeTests.generateAdvertisement_multipleContentEachSingleTargetingGroups_alwaysReturnsHighestCTR(MasteryTaskThreeTests.java:57)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)
+	at java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:566)
+	at org.junit.platform.commons.util.ReflectionUtils.invokeMethod(ReflectionUtils.java:688)
+	at org.junit.jupiter.engine.execution.MethodInvocation.proceed(MethodInvocation.java:60)
+	at org.junit.jupiter.engine.execution.InvocationInterceptorChain$ValidatingInvocation.proceed(InvocationInterceptorChain.java:131)
+	at org.junit.jupiter.engine.extension.TimeoutExtension.intercept(TimeoutExtension.java:149)
+	at org.junit.jupiter.engine.extension.TimeoutExtension.interceptTestableMethod(TimeoutExtension.java:140)
+	at org.junit.jupiter.engine.extension.TimeoutExtension.interceptTestMethod(TimeoutExtension.java:84)
+	at org.junit.jupiter.engine.execution.ExecutableInvoker$ReflectiveInterceptorCall.lambda$ofVoidMethod$0(ExecutableInvoker.java:115)
+	at org.junit.jupiter.engine.execution.ExecutableInvoker.lambda$invoke$0(ExecutableInvoker.java:105)
+	at org.junit.jupiter.engine.execution.InvocationInterceptorChain$InterceptedInvocation.proceed(InvocationInterceptorChain.java:106)
+	at org.junit.jupiter.engine.execution.InvocationInterceptorChain.proceed(InvocationInterceptorChain.java:64)
+	at org.junit.jupiter.engine.execution.InvocationInterceptorChain.chainAndInvoke(InvocationInterceptorChain.java:45)
+	at org.junit.jupiter.engine.execution.InvocationInterceptorChain.invoke(InvocationInterceptorChain.java:37)
+	at org.junit.jupiter.engine.execution.ExecutableInvoker.invoke(ExecutableInvoker.java:104)
+	at org.junit.jupiter.engine.execution.ExecutableInvoker.invoke(ExecutableInvoker.java:98)
+	at org.junit.jupiter.engine.descriptor.TestMethodTestDescriptor.lambda$invokeTestMethod$6(TestMethodTestDescriptor.java:210)
+	at org.junit.platform.engine.support.hierarchical.ThrowableCollector.execute(ThrowableCollector.java:73)
+	at org.junit.jupiter.engine.descriptor.TestMethodTestDescriptor.invokeTestMethod(TestMethodTestDescriptor.java:206)
+	at org.junit.jupiter.engine.descriptor.TestMethodTestDescriptor.execute(TestMethodTestDescriptor.java:131)
+	at org.junit.jupiter.engine.descriptor.TestMethodTestDescriptor.execute(TestMethodTestDescriptor.java:65)
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.lambda$executeRecursively$5(NodeTestTask.java:139)
+	at org.junit.platform.engine.support.hierarchical.ThrowableCollector.execute(ThrowableCollector.java:73)
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.lambda$executeRecursively$7(NodeTestTask.java:129)
+	at org.junit.platform.engine.support.hierarchical.Node.around(Node.java:137)
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.lambda$executeRecursively$8(NodeTestTask.java:127)
+	at org.junit.platform.engine.support.hierarchical.ThrowableCollector.execute(ThrowableCollector.java:73)
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.executeRecursively(NodeTestTask.java:126)
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.execute(NodeTestTask.java:84)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1541)
+	at org.junit.platform.engine.support.hierarchical.SameThreadHierarchicalTestExecutorService.invokeAll(SameThreadHierarchicalTestExecutorService.java:38)
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.lambda$executeRecursively$5(NodeTestTask.java:143)
+	at org.junit.platform.engine.support.hierarchical.ThrowableCollector.execute(ThrowableCollector.java:73)
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.lambda$executeRecursively$7(NodeTestTask.java:129)
+	at org.junit.platform.engine.support.hierarchical.Node.around(Node.java:137)
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.lambda$executeRecursively$8(NodeTestTask.java:127)
+	at org.junit.platform.engine.support.hierarchical.ThrowableCollector.execute(ThrowableCollector.java:73)
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.executeRecursively(NodeTestTask.java:126)
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.execute(NodeTestTask.java:84)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1541)
+	at org.junit.platform.engine.support.hierarchical.SameThreadHierarchicalTestExecutorService.invokeAll(SameThreadHierarchicalTestExecutorService.java:38)
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.lambda$executeRecursively$5(NodeTestTask.java:143)
+	at org.junit.platform.engine.support.hierarchical.ThrowableCollector.execute(ThrowableCollector.java:73)
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.lambda$executeRecursively$7(NodeTestTask.java:129)
+	at org.junit.platform.engine.support.hierarchical.Node.around(Node.java:137)
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.lambda$executeRecursively$8(NodeTestTask.java:127)
+	at org.junit.platform.engine.support.hierarchical.ThrowableCollector.execute(ThrowableCollector.java:73)
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.executeRecursively(NodeTestTask.java:126)
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.execute(NodeTestTask.java:84)
+	at org.junit.platform.engine.support.hierarchical.SameThreadHierarchicalTestExecutorService.submit(SameThreadHierarchicalTestExecutorService.java:32)
+	at org.junit.platform.engine.support.hierarchical.HierarchicalTestExecutor.execute(HierarchicalTestExecutor.java:57)
+	at org.junit.platform.engine.support.hierarchical.HierarchicalTestEngine.execute(HierarchicalTestEngine.java:51)
+	at org.junit.platform.launcher.core.EngineExecutionOrchestrator.execute(EngineExecutionOrchestrator.java:107)
+	at org.junit.platform.launcher.core.EngineExecutionOrchestrator.execute(EngineExecutionOrchestrator.java:88)
+	at org.junit.platform.launcher.core.EngineExecutionOrchestrator.lambda$execute$0(EngineExecutionOrchestrator.java:54)
+	at org.junit.platform.launcher.core.EngineExecutionOrchestrator.withInterceptedStreams(EngineExecutionOrchestrator.java:67)
+	at org.junit.platform.launcher.core.EngineExecutionOrchestrator.execute(EngineExecutionOrchestrator.java:52)
+	at org.junit.platform.launcher.core.DefaultLauncher.execute(DefaultLauncher.java:114)
+	at org.junit.platform.launcher.core.DefaultLauncher.execute(DefaultLauncher.java:86)
+	at org.junit.platform.launcher.core.DefaultLauncherSession$DelegatingLauncher.execute(DefaultLauncherSession.java:86)
+	at org.junit.platform.launcher.core.SessionPerRequestLauncher.execute(SessionPerRequestLauncher.java:53)
+	at org.gradle.api.internal.tasks.testing.junitplatform.JUnitPlatformTestClassProcessor$CollectAllTestClassesExecutor.processAllTestClasses(JUnitPlatformTestClassProcessor.java:99)
+	at org.gradle.api.internal.tasks.testing.junitplatform.JUnitPlatformTestClassProcessor$CollectAllTestClassesExecutor.access$000(JUnitPlatformTestClassProcessor.java:79)
+	at org.gradle.api.internal.tasks.testing.junitplatform.JUnitPlatformTestClassProcessor.stop(JUnitPlatformTestClassProcessor.java:75)
+	at org.gradle.api.internal.tasks.testing.SuiteTestClassProcessor.stop(SuiteTestClassProcessor.java:61)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)
+	at java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:566)
+	at org.gradle.internal.dispatch.ReflectionDispatch.dispatch(ReflectionDispatch.java:36)
+	at org.gradle.internal.dispatch.ReflectionDispatch.dispatch(ReflectionDispatch.java:24)
+	at org.gradle.internal.dispatch.ContextClassLoaderDispatch.dispatch(ContextClassLoaderDispatch.java:33)
+	at org.gradle.internal.dispatch.ProxyDispatchAdapter$DispatchingInvocationHandler.invoke(ProxyDispatchAdapter.java:94)
+	at com.sun.proxy.$Proxy5.stop(Unknown Source)
+	at org.gradle.api.internal.tasks.testing.worker.TestWorker.stop(TestWorker.java:135)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)
+	at java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:566)
+	at org.gradle.internal.dispatch.ReflectionDispatch.dispatch(ReflectionDispatch.java:36)
+	at org.gradle.internal.dispatch.ReflectionDispatch.dispatch(ReflectionDispatch.java:24)
+	at org.gradle.internal.remote.internal.hub.MessageHubBackedObjectConnection$DispatchWrapper.dispatch(MessageHubBackedObjectConnection.java:182)
+	at org.gradle.internal.remote.internal.hub.MessageHubBackedObjectConnection$DispatchWrapper.dispatch(MessageHubBackedObjectConnection.java:164)
+	at org.gradle.internal.remote.internal.hub.MessageHub$Handler.run(MessageHub.java:414)
+	at org.gradle.internal.concurrent.ExecutorPolicy$CatchAndRecordFailures.onExecute(ExecutorPolicy.java:64)
+	at org.gradle.internal.concurrent.ManagedExecutorImpl$1.run(ManagedExecutorImpl.java:48)
+	at java.base/java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1128)
+	at java.base/java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:628)
+	at org.gradle.internal.concurrent.ThreadFactoryImpl$ManagedThreadRunnable.run(ThreadFactoryImpl.java:56)
+	at java.base/java.lang.Thread.run(Thread.java:829)
+
+
+com.tct.mastery.task3.part1.MasteryTaskThreeTests
+  Test generateAdvertisement_multipleContentEachSingleTargetingGroups_alwaysReturnsHighestCTR() FAILED (12.9s)
+  org.opentest4j.AssertionFailedError: Did not select the advertisement with the highest CTR. The CTRs of eligible ads available were: [0.0, 0.3, 0.6, 1.0] ==> expected: <b06fc8e3-cdc0-4a53-89f8-0e3da1bd97ba> but was: <b1a278af-82dc-4854-8b48-dbd10119f291>
+      at com.tct.mastery.task3.part1.MasteryTaskThreeTests.lambda$generateAdvertisement_multipleContentEachSingleTargetingGroups_alwaysReturnsHighestCTR$2(MasteryTaskThreeTests.java:58)
+FAILURE: Executed 1 tests in 16.9s (1 failed)
+
+--------------------------------------------------------------------
+|  Results: FAILURE (1 tests, 0 successes, 1 failures, 0 skipped)  |
+--------------------------------------------------------------------
+Exit Result for Scoring: 0.9
+1 test completed, 1 failed
+> Task :test FAILED
+FAILURE: Build failed with an exception.
+* What went wrong:
+Execution failed for task ':test'.
+> There were failing tests. See the report at: file:///C:/repos/bd-advertising-service-grauulzz/build/reports/tests/test/index.html
+* Try:
+Run with --stacktrace option to get the stack trace. Run with --info or --debug option to get more log output. Run with --scan to get full insights.
+* Get more help at https://help.gradle.org
+BUILD FAILED in 20s
+12 actionable tasks: 3 executed, 9 up-to-date
+
+
+

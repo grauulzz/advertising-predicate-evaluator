@@ -12,8 +12,10 @@ public class Futures {
      * Blocks until completion, just like Future.get().
      *
      * @param future The Future to retrieve the value from.
-     * @param <T> The generic type of the Future.
+     * @param <T>    The generic type of the Future.
+     *
      * @return The value of the future, as retrieved by get.
+     *
      * @throws RuntimeException When Future.get() would throw an ExecutionException:
      *                          if the process underlying the Future threw an exception.
      * @see Future#get()

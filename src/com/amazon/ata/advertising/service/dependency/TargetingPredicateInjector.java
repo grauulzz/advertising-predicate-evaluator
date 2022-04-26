@@ -10,7 +10,6 @@ import com.amazon.ata.advertising.service.targeting.predicate.TargetingPredicate
 
 import dagger.MembersInjector;
 
-import java.lang.reflect.Method;
 import javax.inject.Inject;
 
 public class TargetingPredicateInjector {
@@ -23,12 +22,13 @@ public class TargetingPredicateInjector {
 
     /**
      * Constructs a targeting predicate injector.
-     * @param agePredicateInjector injects dependencies in AgeTargetingPredicates
+     *
+     * @param agePredicateInjector            injects dependencies in AgeTargetingPredicates
      * @param spendFrequencyPredicateInjector injects dependencies in CategorySpendFrequencyTargetingPredicate
-     * @param spendValuePredicateInjector injects dependencies in CategorySpendValueTargetingPredicate
-     * @param primePredicateInjector injects dependencies in PrimeBenefitTargetingPredicate
-     * @param parentPredicateInjector injects dependencies in ParentPredicate
-     * @param recognizedPredicateInjector injects dependencies in RecognizedTargetingPredicate
+     * @param spendValuePredicateInjector     injects dependencies in CategorySpendValueTargetingPredicate
+     * @param primePredicateInjector          injects dependencies in PrimeBenefitTargetingPredicate
+     * @param parentPredicateInjector         injects dependencies in ParentPredicate
+     * @param recognizedPredicateInjector     injects dependencies in RecognizedTargetingPredicate
      */
     @Inject
     public TargetingPredicateInjector(MembersInjector<AgeTargetingPredicate> agePredicateInjector,
@@ -49,6 +49,7 @@ public class TargetingPredicateInjector {
     /**
      * Inject's any member variables or method's marked with @Inject. This is how we can serialize the targeting
      * predicates without the Daos and then inject the dependencies later.
+     *
      * @param targetingPredicate predicate to be injected
      */
     public void inject(TargetingPredicate targetingPredicate) {
@@ -67,46 +68,4 @@ public class TargetingPredicateInjector {
             recognizedPredicateInjector.injectMembers((RecognizedTargetingPredicate) targetingPredicate);
         }
     }
-
-    // make a switch statement for all different cases of targetingPredicate instanceof TargetingPredicate
-    // subclasses inherited from TargetingPredicate
-
-//        Class<? extends TargetingPredicate> subClazz = targetingPredicate.getClass().asSubclass(
-//                targetingPredicate.getClass());
-//
-//        injectMembers(subClazz, targetingPredicate);
-
-//    private void injectMembers(Class<? extends TargetingPredicate> clazz, TargetingPredicate targetingPredicate) {
-//        switch (clazz.getSimpleName()) {
-//            case "AgeTargetingPredicate":
-//                agePredicateInjector.injectMembers((AgeTargetingPredicate) targetingPredicate);
-//                break;
-//            case "CategorySpendFrequencyTargetingPredicate":
-//                spendFrequencyPredicateInjector.injectMembers(
-//                        (CategorySpendFrequencyTargetingPredicate) targetingPredicate);
-//                break;
-//            case "CategorySpendValueTargetingPredicate":
-//                spendValuePredicateInjector.injectMembers((CategorySpendValueTargetingPredicate) targetingPredicate);
-//                break;
-//            case "PrimeBenefitTargetingPredicate":
-//                primePredicateInjector.injectMembers((PrimeBenefitTargetingPredicate) targetingPredicate);
-//                break;
-//            case "ParentPredicate":
-//                parentPredicateInjector.injectMembers((ParentPredicate) targetingPredicate);
-//                break;
-//            case "RecognizedTargetingPredicate":
-//                recognizedPredicateInjector.injectMembers((RecognizedTargetingPredicate) targetingPredicate);
-//                break;
-//            default:
-//                throw new IllegalArgumentException("Unknown predicate type: " + clazz.getSimpleName());
-//        }
-//    }
 }
-
-//        if (clazz.isAnnotationPresent(Inject.class)) {
-//            try {
-//                Method method = clazz.getMethod("injectDependencies", TargetingPredicate.class);
-//            } catch (NoSuchMethodException e) {
-//                throw new RuntimeException(e);
-//            }
-//        }

@@ -1,98 +1,96 @@
 package com.amazon.ata.advertising.service.businesslogic;
 
-import com.amazon.ata.advertising.service.dao.ReadableDao;
+import com.amazon.ata.advertising.service.dao.ContentDao;
+import com.amazon.ata.advertising.service.dao.TargetingGroupDao;
+import com.amazon.ata.advertising.service.dependency.DaggerLambdaComponent;
+import com.amazon.ata.advertising.service.dependency.LambdaComponent;
+import com.amazon.ata.advertising.service.model.Advertisement;
 import com.amazon.ata.advertising.service.model.AdvertisementContent;
 import com.amazon.ata.advertising.service.model.EmptyGeneratedAdvertisement;
 import com.amazon.ata.advertising.service.model.GeneratedAdvertisement;
-import com.amazon.ata.advertising.service.targeting.TargetingGroup;
-import org.junit.jupiter.api.BeforeEach;
+import com.amazon.ata.advertising.service.model.requests.GenerateAdvertisementRequest;
+import com.amazon.ata.advertising.service.model.responses.GenerateAdvertisementResponse;
+import java.util.*;
+import java.util.concurrent.ExecutionException;
+import java.util.function.Function;
+
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
-import org.mockito.Mock;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.CsvSource;
 
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
-import java.util.Random;
-import java.util.UUID;
-
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
-import static org.mockito.Mockito.when;
-import static org.mockito.MockitoAnnotations.initMocks;
 
 public class AdvertisementSelectionLogicTest {
 
-    private static final String CUSTOMER_ID = "A123B456";
-    private static final String MARKETPLACE_ID = "1";
+    private final LambdaComponent daggerLambdaComponent = DaggerLambdaComponent.create();
+    private final Function<GenerateAdvertisementRequest, GenerateAdvertisementResponse>
+            handleWithDagger = request -> daggerLambdaComponent.provideGenerateAdActivity().generateAd(request);
+    private final ContentDao cd = daggerLambdaComponent.provideContentDao();
+    private final TargetingGroupDao td = daggerLambdaComponent.provideTargetingGroupDao();
+    private final AdvertisementSelectionLogic adSelectionService = new AdvertisementSelectionLogic(cd, td);
 
-    private static final String CONTENT_ID1 = UUID.randomUUID().toString();
-    private static final AdvertisementContent CONTENT1 = AdvertisementContent.builder().withContentId(CONTENT_ID1).build();
-    private static final String CONTENT_ID2 = UUID.randomUUID().toString();
-    private static final AdvertisementContent CONTENT2 = AdvertisementContent.builder().withContentId(CONTENT_ID2).build();
-    private static final String CONTENT_ID3 = UUID.randomUUID().toString();
-    private static final AdvertisementContent CONTENT3 = AdvertisementContent.builder().withContentId(CONTENT_ID3).build();
-    private static final String CONTENT_ID4 = UUID.randomUUID().toString();
-    private static final AdvertisementContent CONTENT4 = AdvertisementContent.builder().withContentId(CONTENT_ID4).build();
-
-    @Mock
-    private ReadableDao<String, List<AdvertisementContent>> contentDao;
-
-    @Mock
-    private ReadableDao<String, List<TargetingGroup>> targetingGroupDao;
-
-    @Mock
-    private Random random;
-
-    private AdvertisementSelectionLogic adSelectionService;
-
-
-    @BeforeEach
-    public void setup() {
-        initMocks(this);
-        adSelectionService = new AdvertisementSelectionLogic(contentDao, targetingGroupDao);
-        adSelectionService.setRandom(random);
+    @Test
+    void whenGenerateAdRequest_returnHandledAdvertisement_withCorrectContent1() {
+        Advertisement response = handleWithDagger.apply(
+                        GenerateAdvertisementRequest.builder().withCustomerId(
+                                "0b633dee-9c16-11e8-98d0-529269fb1459").withMarketplaceId("ATVPDKIKX0DER").build())
+                                         .getAdvertisement();
+        Assertions.assertEquals("Hey there person over 18, join ATA in Seattle!", response.getContent());
     }
 
     @Test
-    public void selectAdvertisement_nullMarketplaceId_EmptyAdReturned() {
-        GeneratedAdvertisement ad = adSelectionService.selectAdvertisement(CUSTOMER_ID, null);
-        assertTrue(ad instanceof EmptyGeneratedAdvertisement);
+    void whenGenerateAdRequest_returnHandledAdvertisement_withAnIdNotEqualToTheCustomerId() {
+        Advertisement response = handleWithDagger.apply(GenerateAdvertisementRequest.builder().withCustomerId(
+                        "0b633dee-9c16-11e8-98d0-529269fb1459").withMarketplaceId("ATVPDKIKX0DER").build())
+                                         .getAdvertisement();
+        Assertions.assertNotNull(response.getId());
+        // checks that it's not the same as the customerId, which doesn't check for randomness but for uniqueness
+        Assertions.assertNotEquals("0b633dee-9c16-11e8-98d0-529269fb1459", response.getId());
+    }
+
+
+    @ParameterizedTest
+    @CsvSource({"0b633dee-9c16-11e8-98d0-529269fb1459,  ",      // null marketplaceId
+                "0b633dee-9c16-11e8-98d0-529269fb1459, 2",     // invalid marketplace
+                ":[, 1",                                      // invalid customerId
+                "0b633dee-9c16-11e8-98d0-529269fb1459, ' '"  // empty marketplaceId
+    })
+    void selectAdvertisement(String id, String marketPlaceId) {
+        GeneratedAdvertisement ad =
+                adSelectionService.selectAdvertisement(id, marketPlaceId);
+
+        Assertions.assertTrue(ad instanceof EmptyGeneratedAdvertisement);
     }
 
     @Test
-    public void selectAdvertisement_emptyMarketplaceId_EmptyAdReturned() {
-        GeneratedAdvertisement ad = adSelectionService.selectAdvertisement(CUSTOMER_ID, "");
-        assertTrue(ad instanceof EmptyGeneratedAdvertisement);
+    void selectAdvertisement_oneAd_returnsAd() {
+        GeneratedAdvertisement ad =
+                adSelectionService.selectAdvertisement("0b633dee-9c16-11e8-98d0-529269fb1459", "1");
+
+        Assertions.assertNotNull(ad);
     }
 
     @Test
-    public void selectAdvertisement_noContentForMarketplace_emptyAdReturned() throws InterruptedException {
-        when(contentDao.get(MARKETPLACE_ID)).thenReturn(Collections.emptyList());
+    void selectAdvertisement_multipleAds_returnsOneAdd() {
 
-        GeneratedAdvertisement ad = adSelectionService.selectAdvertisement(CUSTOMER_ID, MARKETPLACE_ID);
+        AdvertisementContent ACTUAL_CONTENT = AdvertisementContent.builder().withContentId(
+                "0b633dee-9c16-11e8-98d0-529269fb1459").build();
 
-        assertTrue(ad instanceof EmptyGeneratedAdvertisement);
+        // these will all be null because they don't exist in the database
+        AdvertisementContent C1 = AdvertisementContent.builder().withContentId(UUID.randomUUID().toString()).build();
+        AdvertisementContent C2 = AdvertisementContent.builder().withContentId(UUID.randomUUID().toString()).build();
+        AdvertisementContent C3 = AdvertisementContent.builder().withContentId(UUID.randomUUID().toString()).build();
+
+        List<AdvertisementContent> contents = new ArrayList<>();
+        contents.add(ACTUAL_CONTENT);
+        contents.add(C1);
+        contents.add(C2);
+        contents.add(C3);
+
+        contents.stream().map(c -> adSelectionService.selectAdvertisement(c.getContentId(), "1"))
+                .filter(Objects::nonNull)
+                .forEach(Assertions::assertNotNull);
     }
 
-
-    @Test
-    public void selectAdvertisement_oneAd_returnsAd() {
-        List<AdvertisementContent> contents = Arrays.asList(CONTENT1);
-        when(contentDao.get(MARKETPLACE_ID)).thenReturn(contents);
-        when(random.nextInt(contents.size())).thenReturn(0);
-        GeneratedAdvertisement ad = adSelectionService.selectAdvertisement(CUSTOMER_ID, MARKETPLACE_ID);
-
-        assertEquals(CONTENT_ID1, ad.getContent().getContentId());
-    }
-
-    @Test
-    public void selectAdvertisement_multipleAds_returnsOneRandom() {
-        List<AdvertisementContent> contents = Arrays.asList(CONTENT1, CONTENT2, CONTENT3);
-        when(contentDao.get(MARKETPLACE_ID)).thenReturn(contents);
-        when(random.nextInt(contents.size())).thenReturn(1);
-        GeneratedAdvertisement ad = adSelectionService.selectAdvertisement(CUSTOMER_ID, MARKETPLACE_ID);
-
-        assertEquals(CONTENT_ID2, ad.getContent().getContentId());
-    }
 
 }

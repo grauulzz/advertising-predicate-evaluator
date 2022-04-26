@@ -19,7 +19,8 @@ checkstyle {
 //    sourceSets = [sourceSets.main, sourceSets.test]
     sourceSets = [sourceSets.main]
     configFile = file("$rootDir/LibrariesAndUtilities/ATACheckstyle/configuration/checkstyle/checkstyle.xml")
-    configProperties.put('checkstyle.suppression.filter', "$rootDir/LibrariesAndUtilities/ATACheckstyle/configuration/checkstyle/suppressions.xml")
+    configProperties.put('checkstyle.suppression.filter',
+            "$rootDir/LibrariesAndUtilities/ATACheckstyle/configuration/checkstyle/suppressions.xml")
     ignoreFailures = true
 }
 
@@ -112,6 +113,9 @@ dependencies {
     // Added for using log4j usage
     implementation group: 'org.apache.logging.log4j', name: 'log4j-api', version: '2.17.0'
     implementation group: 'org.apache.logging.log4j', name: 'log4j-core', version: '2.17.0'
+
+    // Added for testing output from console
+    testImplementation 'com.github.stefanbirkner:system-lambda:1.2.1'
 
 }
 

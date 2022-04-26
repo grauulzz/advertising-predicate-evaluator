@@ -4,12 +4,10 @@ import com.amazon.ata.advertising.service.dao.ReadableDao;
 import com.amazon.ata.advertising.service.model.RequestContext;
 import com.amazon.ata.advertising.service.targeting.Comparison;
 import com.amazon.ata.customerservice.Spend;
-
 import com.google.common.annotations.VisibleForTesting;
-import org.apache.commons.lang3.Validate;
-
 import java.util.Map;
 import javax.inject.Inject;
+import org.apache.commons.lang3.Validate;
 
 /**
  * Compare against the amount a customer has spent in USD in a single category on Amazon.
@@ -26,12 +24,16 @@ public class CategorySpendValueTargetingPredicate extends TargetingPredicate {
 
     /**
      * Create a predicate to compare against spend in a category on Amazon.
+     *
      * @param targetedCategory The category you want to compare spend for - i.e. KINDLE
-     * @param comparison How to compare the customer's number of purchases against the targeted value.  For example,
-     *                  if you specify the comparision as Comparison.LT and the targeted value as $50, this predicate
-     *                  will evaluate to TRUE for all customers who have spent less than $50 in the specified category.
-     * @param targetedValue The value in rounded USD to compare the customer against.
-     * @param inverse If you would like to negate the value of this predicate.
+     * @param comparison       How to compare the customer's number of purchases against the targeted value.
+     *                         For example,
+     *                         if you specify the comparision as Comparison.LT and the targeted value as $50,
+     *                         this predicate
+     *                         will evaluate to TRUE for all customers who have spent less than $50 in the specified
+     *                         category.
+     * @param targetedValue    The value in rounded USD to compare the customer against.
+     * @param inverse          If you would like to negate the value of this predicate.
      */
     public CategorySpendValueTargetingPredicate(String targetedCategory,
                                                 Comparison comparison,
@@ -49,9 +51,10 @@ public class CategorySpendValueTargetingPredicate extends TargetingPredicate {
 
     /**
      * Create a predicate that evaluates to true based on how much a customer has spent in a given category.
+     *
      * @param targetedCategory Category customer to have spent money in
-     * @param comparison How to compare against the value
-     * @param targetedValue The value of money in the local currency to have spent or not spent
+     * @param comparison       How to compare against the value
+     * @param targetedValue    The value of money in the local currency to have spent or not spent
      */
     public CategorySpendValueTargetingPredicate(String targetedCategory, Comparison comparison, int targetedValue) {
         this(targetedCategory, comparison, targetedValue, false);
@@ -60,17 +63,18 @@ public class CategorySpendValueTargetingPredicate extends TargetingPredicate {
     /**
      *
      */
-    public CategorySpendValueTargetingPredicate() {}
+    public CategorySpendValueTargetingPredicate() {
+    }
 
     @Override
     TargetingPredicateResult evaluateRecognizedCustomer(RequestContext context) {
         Validate.notNull(targetedCategory, "The targeted category cannot be null.");
         Validate.notNull(comparison, "How to compare against the targeted value cannot be null.");
 
-        final Map<String, Spend> customerSpend = spendDao.get(context);
-        final Spend categorySpend = customerSpend.getOrDefault(targetedCategory, ZERO_SPEND);
+        Map<String, Spend> customerSpend = spendDao.get(context);
+        Spend categorySpend = customerSpend.getOrDefault(targetedCategory, ZERO_SPEND);
         return comparison.compare(categorySpend.getUsdSpent(), targetedValue) ?
-                TargetingPredicateResult.TRUE : TargetingPredicateResult.FALSE;
+                       TargetingPredicateResult.TRUE : TargetingPredicateResult.FALSE;
     }
 
     public String getTargetedCategory() {

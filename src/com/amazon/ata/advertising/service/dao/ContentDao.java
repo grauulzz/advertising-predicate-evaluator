@@ -19,6 +19,7 @@ public class ContentDao implements ReadableDao<String, List<AdvertisementContent
 
     /**
      * Constructs a ContentDao.
+     *
      * @param mapper Connection to dynamo
      */
     @Inject
@@ -28,54 +29,61 @@ public class ContentDao implements ReadableDao<String, List<AdvertisementContent
 
     /**
      * Gets content for ATA based on the Marketplace of the request.
+     *
      * @param marketplaceId The marketplace to get content for.
+     *
      * @return A list of all advertisement content that could be shown for ATA in this marketplace.
      */
     @Override
     public List<AdvertisementContent> get(String marketplaceId) {
         String encryptedMarketplace = EncryptionUtil.encryptMarketplaceId(marketplaceId);
         AdvertisementContent indexHashKey = AdvertisementContent.builder()
-                .withMarketplaceId(encryptedMarketplace)
-                .build();
-        DynamoDBQueryExpression<AdvertisementContent> expression = new DynamoDBQueryExpression<AdvertisementContent>()
-                .withIndexName(AdvertisementContent.MARKETPLACE_ID_INDEX)
-                .withConsistentRead(false)
-                .withHashKeyValues(indexHashKey);
+                                                    .withMarketplaceId(encryptedMarketplace)
+                                                    .build();
+        DynamoDBQueryExpression<AdvertisementContent> expression =
+                new DynamoDBQueryExpression<AdvertisementContent>()
+                        .withIndexName(AdvertisementContent.MARKETPLACE_ID_INDEX)
+                        .withConsistentRead(false)
+                        .withHashKeyValues(indexHashKey);
         return mapper.query(AdvertisementContent.class, expression);
     }
 
     /**
      * Create a new advertisement content and persist it.
+     *
      * @param marketplaceId The marketplace to save the new advertisement content in
-     * @param content The content to save
+     * @param content       The content to save
+     *
      * @return The newly created advertisement content
      */
     public AdvertisementContent create(String marketplaceId, String content) {
         String encryptedMarketplace = EncryptionUtil.encryptMarketplaceId(marketplaceId);
         String id = UUID.randomUUID().toString();
         AdvertisementContent advertisementContent = AdvertisementContent.builder()
-                .withContentId(id)
-                .withMarketplaceId(encryptedMarketplace)
-                .withRenderableContent(content)
-                .build();
+                                                            .withContentId(id)
+                                                            .withMarketplaceId(encryptedMarketplace)
+                                                            .withRenderableContent(content)
+                                                            .build();
         mapper.save(advertisementContent);
         return advertisementContent;
     }
 
     /**
      * Update an AdvertisementContent's renderable content and it's marketplace.
-     * @param marketplaceId the marketplace to move the content to.
+     *
+     * @param marketplaceId        the marketplace to move the content to.
      * @param advertisementContent The renderable content to be updated.
+     *
      * @return The updated AdvertisementContent.
      */
     public AdvertisementContent update(String marketplaceId, AdvertisementContent advertisementContent) {
         AdvertisementContent hashKey = AdvertisementContent.builder()
-                .withContentId(advertisementContent.getContentId())
-                .build();
+                                               .withContentId(advertisementContent.getContentId())
+                                               .build();
         AdvertisementContent existingAdvertisementContent = mapper.load(hashKey);
         if (existingAdvertisementContent == null) {
             throw new AdvertisementClientException("No content exists with the ID " +
-                    advertisementContent.getContentId());
+                                                           advertisementContent.getContentId());
         }
 
         String encryptedMarketplace = EncryptionUtil.encryptMarketplaceId(marketplaceId);
@@ -87,12 +95,14 @@ public class ContentDao implements ReadableDao<String, List<AdvertisementContent
     /**
      * Deletes the AdvertisementContent corresponding to the provided contentId. If content cannot be found for the
      * provided contentId an AdvertisementClientException will be thrown.
+     *
      * @param contentId - the id of the content to delete
+     *
      * @return - the deleted content
      */
     public AdvertisementContent delete(String contentId) {
         AdvertisementContent advertisementContent = AdvertisementContent.builder()
-            .withContentId(contentId).build();
+                                                            .withContentId(contentId).build();
         AdvertisementContent deletedContent = mapper.load(advertisementContent);
 
         if (deletedContent == null) {
