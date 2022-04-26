@@ -3,10 +3,17 @@ package com.amazon.ata.advertising.service.model.translator;
 import com.amazon.ata.advertising.service.exceptions.AdvertisementClientException;
 import com.amazon.ata.advertising.service.model.TargetingPredicateType;
 import com.amazon.ata.advertising.service.targeting.Comparison;
-import com.amazon.ata.advertising.service.targeting.predicate.*;
+import com.amazon.ata.advertising.service.targeting.predicate.AgeTargetingPredicate;
+import com.amazon.ata.advertising.service.targeting.predicate.CategorySpendFrequencyTargetingPredicate;
+import com.amazon.ata.advertising.service.targeting.predicate.CategorySpendValueTargetingPredicate;
+import com.amazon.ata.advertising.service.targeting.predicate.ParentPredicate;
+import com.amazon.ata.advertising.service.targeting.predicate.PrimeBenefitTargetingPredicate;
+import com.amazon.ata.advertising.service.targeting.predicate.RecognizedTargetingPredicate;
+import com.amazon.ata.advertising.service.targeting.predicate.TargetingPredicate;
 import com.amazon.ata.customerservice.AgeRange;
 import com.amazon.ata.customerservice.Category;
 import com.amazon.ata.primeclubservice.Benefit;
+
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;

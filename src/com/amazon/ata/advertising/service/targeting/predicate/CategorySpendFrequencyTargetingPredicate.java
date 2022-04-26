@@ -4,6 +4,7 @@ import com.amazon.ata.advertising.service.dao.ReadableDao;
 import com.amazon.ata.advertising.service.model.RequestContext;
 import com.amazon.ata.advertising.service.targeting.Comparison;
 import com.amazon.ata.customerservice.Spend;
+
 import com.google.common.annotations.VisibleForTesting;
 import java.util.Map;
 import javax.inject.Inject;
@@ -26,9 +27,12 @@ public class CategorySpendFrequencyTargetingPredicate extends TargetingPredicate
      * Create a predicate to compare against the number of purchases in a category on Amazon.
      *
      * @param targetedCategory          The category you want to compare spend for - i.e. KINDLE
-     * @param comparison                How to compare the customer's number of purchases against the targeted value.  For example,
-     *                                  if you specify the comparision as Comparison.LT and the targeted number of purchases as 2,
-     *                                  this predicate will evaluate to TRUE for all customers who have made less than 2 purchases
+     * @param comparison                How to compare the customer's number of purchases against the targeted value.
+     *                                   For example,
+     *                                  if you specify the comparision as Comparison.LT and the targeted number of
+     *                                  purchases as 2,
+     *                                  this predicate will evaluate to TRUE for all customers who have made less than
+     *                                  2 purchases
      *                                  in the specified category.
      * @param targetedNumberOfPurchases The number of purchases to compare against.
      * @param inverse                   If you would like to negate the value of this predicate.

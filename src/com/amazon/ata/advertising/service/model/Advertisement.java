@@ -2,27 +2,56 @@ package com.amazon.ata.advertising.service.model;
 
 import com.google.common.base.Objects;
 
+/**
+ * The type Advertisement.
+ */
 public class Advertisement {
     private String id;
     private String content;
 
+    /**
+     * Instantiates a new Advertisement.
+     *
+     * @param id      the id
+     * @param content the content
+     */
     public Advertisement(String id, String content) {
         this.id = id;
         this.content = content;
     }
 
+    /**
+     * Gets id.
+     *
+     * @return the id
+     */
     public String getId() {
         return id;
     }
 
+    /**
+     * Sets id.
+     *
+     * @param id the id
+     */
     public void setId(String id) {
         this.id = id;
     }
 
+    /**
+     * Gets content.
+     *
+     * @return the content
+     */
     public String getContent() {
         return content;
     }
 
+    /**
+     * Sets content.
+     *
+     * @param content the content
+     */
     public void setContent(String content) {
         this.content = content;
     }
@@ -35,10 +64,6 @@ public class Advertisement {
     public static Builder builder() {
         return new Builder();
     }
-
-//    public static <U extends Comparable<? super U>, T> U getCtr(T t) {
-//        return
-//    }
 
     public static final class Builder {
         private String id;

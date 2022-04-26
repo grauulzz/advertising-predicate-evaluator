@@ -4,6 +4,7 @@ import com.amazon.ata.advertising.service.dependency.DaggerLambdaComponent;
 import com.amazon.ata.advertising.service.dependency.LambdaComponent;
 import com.amazon.ata.advertising.service.model.requests.UpdateContentRequest;
 import com.amazon.ata.advertising.service.model.responses.UpdateContentResponse;
+
 import com.amazonaws.services.lambda.runtime.Context;
 import com.amazonaws.services.lambda.runtime.RequestHandler;
 

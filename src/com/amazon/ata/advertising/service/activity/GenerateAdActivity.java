@@ -6,10 +6,12 @@ import com.amazon.ata.advertising.service.model.EmptyGeneratedAdvertisement;
 import com.amazon.ata.advertising.service.model.requests.GenerateAdvertisementRequest;
 import com.amazon.ata.advertising.service.model.responses.GenerateAdvertisementResponse;
 import com.amazon.ata.advertising.service.model.translator.AdvertisementTranslator;
-import java.util.concurrent.CompletableFuture;
-import javax.inject.Inject;
+
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+
+import java.util.concurrent.CompletableFuture;
+import javax.inject.Inject;
 
 import static com.amazon.ata.advertising.service.future.FutureUtils.EXECUTOR_SERVICE;
 

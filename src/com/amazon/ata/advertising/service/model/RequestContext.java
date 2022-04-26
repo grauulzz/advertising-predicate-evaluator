@@ -1,6 +1,7 @@
 package com.amazon.ata.advertising.service.model;
 
 import java.util.Objects;
+
 import org.apache.commons.lang3.StringUtils;
 
 /**

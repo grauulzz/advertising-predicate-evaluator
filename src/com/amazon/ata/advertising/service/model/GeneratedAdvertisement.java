@@ -1,6 +1,7 @@
 package com.amazon.ata.advertising.service.model;
 
 import com.google.common.base.Objects;
+
 import java.util.UUID;
 import org.apache.commons.lang3.Validate;
 

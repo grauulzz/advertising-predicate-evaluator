@@ -7,12 +7,17 @@ import com.amazon.ata.advertising.service.model.translator.TargetingGroupTransla
 import com.amazon.ata.advertising.service.model.translator.TargetingPredicateTranslator;
 import com.amazon.ata.advertising.service.targeting.TargetingGroup;
 import com.amazon.ata.advertising.service.targeting.predicate.TargetingPredicate;
-import java.util.*;
+
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
+import java.util.Collection;
+import java.util.Collections;
+import java.util.List;
+import java.util.Optional;
 import java.util.function.UnaryOperator;
 import java.util.stream.Collectors;
 import javax.inject.Inject;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 
 /**
  * Adds a new targeting group to an existing piece of advertising content based on the contentId specified. If a list of

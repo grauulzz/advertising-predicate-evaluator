@@ -10,9 +10,11 @@ import com.amazon.ata.advertising.service.model.RequestContext;
 import com.amazon.ata.advertising.service.targeting.TargetingEvaluator;
 import com.amazon.ata.advertising.service.targeting.TargetingGroup;
 import com.amazon.ata.advertising.service.targeting.predicate.TargetingPredicateResult;
+
 import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBMapper;
 import com.amazonaws.util.CollectionUtils;
 import com.amazonaws.util.StringUtils;
+
 import java.util.List;
 import java.util.Optional;
 import java.util.Random;
@@ -22,6 +24,9 @@ import java.util.function.Predicate;
 import java.util.stream.Collectors;
 import javax.inject.Inject;
 
+/**
+ * The type Advertisement selection logic.
+ */
 public class AdvertisementSelectionLogic {
     private final DynamoDBMapper db = new DynamoDBModule().provideDynamoDBMapper();
     private final Random r = new Random();
@@ -44,6 +49,13 @@ public class AdvertisementSelectionLogic {
                             (group1, group2) -> group1.getClickThroughRate() >
                                                         group2.getClickThroughRate() ? group1 : group2)
                                                    .stream().map(loadAdContent).collect(Collectors.toList()));
+
+    /**
+     * Instantiates a new Advertisement selection logic.
+     *
+     * @param contentDao        the content dao
+     * @param targetingGroupDao the targeting group dao
+     */
     @Inject
     public AdvertisementSelectionLogic(ReadableDao<String, List<AdvertisementContent>> contentDao,
                                        ReadableDao<String, List<TargetingGroup>> targetingGroupDao) {
@@ -59,8 +71,7 @@ public class AdvertisementSelectionLogic {
      * @param customerId    - the customer to generate a custom advertisement for
      * @param marketplaceId - the id of the marketplace the advertisement will be rendered on
      *
-     * @return an advertisement customized for the customer id provided, or an empty advertisement if one could
-     * not be generated.
+     * @return an advertisement customized for the customer id provided, or an empty advertisement if one could not be generated.
      */
     public GeneratedAdvertisement selectAdvertisement(String customerId, String marketplaceId) {
         if (StringUtils.isNullOrEmpty(marketplaceId)) {
@@ -80,13 +91,30 @@ public class AdvertisementSelectionLogic {
 
         return new GeneratedAdvertisement(l.get(r.nextInt(l.size())));
     }
+
+    /**
+     * Gets eval true predicate.
+     *
+     * @return the eval true predicate
+     */
     public Predicate<TargetingGroup> getEvalTruePredicate() {
         return evalTruePredicate;
     }
 
+    /**
+     * Gets eval indeterminate.
+     *
+     * @return the eval indeterminate
+     */
     public Predicate<TargetingGroup> getEvalIndeterminate() {
         return evalIndeterminate;
     }
+
+    /**
+     * Gets eval false predicate.
+     *
+     * @return the eval false predicate
+     */
     public Predicate<TargetingGroup> getEvalFalsePredicate() {
         return evalFalsePredicate;
     }

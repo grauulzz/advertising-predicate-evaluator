@@ -2,10 +2,14 @@ package com.amazon.ata.advertising.service.targeting.predicate;
 
 import com.amazon.ata.advertising.service.dao.ReadableDao;
 import com.amazon.ata.advertising.service.model.RequestContext;
+
 import com.google.common.annotations.VisibleForTesting;
+
+import org.apache.commons.lang3.Validate;
+
 import java.util.List;
 import javax.inject.Inject;
-import org.apache.commons.lang3.Validate;
+
 
 /**
  * This predicate can be used to ensure a customer has a specific PrimeBenefit, or ensure the absence of a prime

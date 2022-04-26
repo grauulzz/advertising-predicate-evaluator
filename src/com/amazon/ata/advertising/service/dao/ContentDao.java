@@ -3,8 +3,10 @@ package com.amazon.ata.advertising.service.dao;
 import com.amazon.ata.advertising.service.exceptions.AdvertisementClientException;
 import com.amazon.ata.advertising.service.model.AdvertisementContent;
 import com.amazon.ata.advertising.service.util.EncryptionUtil;
+
 import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBMapper;
 import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBQueryExpression;
+
 import java.util.List;
 import java.util.UUID;
 import javax.inject.Inject;
@@ -38,16 +40,12 @@ public class ContentDao implements ReadableDao<String, List<AdvertisementContent
         AdvertisementContent indexHashKey = AdvertisementContent.builder()
                                                     .withMarketplaceId(encryptedMarketplace)
                                                     .build();
-        DynamoDBQueryExpression<AdvertisementContent> expression = new DynamoDBQueryExpression<AdvertisementContent>()
-                                                                           .withIndexName(AdvertisementContent.MARKETPLACE_ID_INDEX)
-                                                                           .withConsistentRead(false)
-                                                                           .withHashKeyValues(indexHashKey);
+        DynamoDBQueryExpression<AdvertisementContent> expression =
+                new DynamoDBQueryExpression<AdvertisementContent>()
+                        .withIndexName(AdvertisementContent.MARKETPLACE_ID_INDEX)
+                        .withConsistentRead(false)
+                        .withHashKeyValues(indexHashKey);
         return mapper.query(AdvertisementContent.class, expression);
-    }
-
-
-    public AdvertisementContent getRenderableContent(String contentId) {
-        return mapper.load(AdvertisementContent.class, contentId);
     }
 
     /**

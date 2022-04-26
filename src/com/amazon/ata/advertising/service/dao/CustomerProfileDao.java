@@ -2,6 +2,7 @@ package com.amazon.ata.advertising.service.dao;
 
 import com.amazon.ata.customerservice.CustomerProfile;
 import com.amazon.ata.customerservice.GetCustomerProfileRequest;
+
 import com.amazon.atacustomerservicelambda.service.ATACustomerService;
 
 /**

@@ -1,8 +1,9 @@
 package com.amazon.ata.advertising.service.future;
 
-import java.util.function.Consumer;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+
+import java.util.function.Consumer;
 
 public abstract class FutureMonitor {
     public static final Logger LOG = LogManager.getLogger(FutureMonitor.class);
@@ -28,6 +29,11 @@ public abstract class FutureMonitor {
             return color;
         }
 
+        /**
+         * Log.
+         *
+         * @param message the message
+         */
         public void log(String message) {
             color.accept(message);
         }

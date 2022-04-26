@@ -26,9 +26,12 @@ public class CategorySpendValueTargetingPredicate extends TargetingPredicate {
      * Create a predicate to compare against spend in a category on Amazon.
      *
      * @param targetedCategory The category you want to compare spend for - i.e. KINDLE
-     * @param comparison       How to compare the customer's number of purchases against the targeted value.  For example,
-     *                         if you specify the comparision as Comparison.LT and the targeted value as $50, this predicate
-     *                         will evaluate to TRUE for all customers who have spent less than $50 in the specified category.
+     * @param comparison       How to compare the customer's number of purchases against the targeted value.
+     *                         For example,
+     *                         if you specify the comparision as Comparison.LT and the targeted value as $50,
+     *                         this predicate
+     *                         will evaluate to TRUE for all customers who have spent less than $50 in the specified
+     *                         category.
      * @param targetedValue    The value in rounded USD to compare the customer against.
      * @param inverse          If you would like to negate the value of this predicate.
      */

@@ -9,16 +9,13 @@ import com.amazon.ata.advertising.service.model.responses.UpdateContentResponse;
 import com.amazon.ata.advertising.service.model.translator.AdvertisementContentTranslator;
 import com.amazon.ata.advertising.service.model.translator.TargetingGroupTranslator;
 import com.amazon.ata.advertising.service.targeting.TargetingGroup;
+
 import java.util.List;
 import java.util.stream.Collectors;
 import javax.inject.Inject;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 
 
 public class UpdateContentActivity {
-    private static final Logger LOG = LogManager.getLogger(UpdateContentActivity.class);
-
     private final ContentDao contentDao;
     private final TargetingGroupDao targetingGroupDao;
 
@@ -45,16 +42,15 @@ public class UpdateContentActivity {
     public UpdateContentResponse updateContent(UpdateContentRequest request) {
         String marketplaceId = request.getAdvertisingContent().getMarketplaceId();
         AdvertisingContent requestedContent = request.getAdvertisingContent();
-        LOG.info(String.format("Updating content with id: %s. Updated content: %s",
-                requestedContent.getId(), requestedContent));
 
         AdvertisementContent updatedContent = contentDao.update(marketplaceId,
                 AdvertisementContentTranslator.fromCoral(requestedContent));
 
         List<TargetingGroup> targetingGroups = targetingGroupDao.get(updatedContent.getContentId());
-        List<com.amazon.ata.advertising.service.model.TargetingGroup> coralTargetingGroup = targetingGroups.stream()
-                                                                                                    .map(TargetingGroupTranslator::toCoral)
-                                                                                                    .collect(Collectors.toList());
+        List<com.amazon.ata.advertising.service.model.TargetingGroup> coralTargetingGroup =
+                targetingGroups.stream()
+                        .map(TargetingGroupTranslator::toCoral)
+                        .collect(Collectors.toList());
 
         return UpdateContentResponse.builder()
                        .withAdvertisingContent(AdvertisementContentTranslator.toCoral(updatedContent, marketplaceId))

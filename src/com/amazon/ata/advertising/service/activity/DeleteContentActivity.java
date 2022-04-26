@@ -4,9 +4,11 @@ import com.amazon.ata.advertising.service.dao.ContentDao;
 import com.amazon.ata.advertising.service.dao.TargetingGroupDao;
 import com.amazon.ata.advertising.service.model.requests.DeleteContentRequest;
 import com.amazon.ata.advertising.service.model.responses.DeleteContentResponse;
-import javax.inject.Inject;
+
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+
+import javax.inject.Inject;
 
 public class DeleteContentActivity {
     private static final Logger LOG = LogManager.getLogger(DeleteContentActivity.class);

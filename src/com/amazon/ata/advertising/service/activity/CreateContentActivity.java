@@ -10,13 +10,15 @@ import com.amazon.ata.advertising.service.model.translator.TargetingGroupTransla
 import com.amazon.ata.advertising.service.model.translator.TargetingPredicateTranslator;
 import com.amazon.ata.advertising.service.targeting.TargetingGroup;
 import com.amazon.ata.advertising.service.targeting.predicate.TargetingPredicate;
+
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 import javax.inject.Inject;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 
 public class CreateContentActivity {
     private static final Logger LOG = LogManager.getLogger(CreateContentActivity.class);
@@ -53,8 +55,6 @@ public class CreateContentActivity {
         String requestedContent = request.getContent();
         List<com.amazon.ata.advertising.service.model.TargetingPredicate> requestedTargetingPredicates =
                 request.getTargetingPredicates();
-        LOG.info(String.format("Creating content in marketplace: %s. Content: %s. Targeting predicates: %s",
-                marketplaceId, requestedContent, requestedTargetingPredicates));
 
         AdvertisementContent content = contentDao.create(marketplaceId, requestedContent);
 
@@ -66,7 +66,8 @@ public class CreateContentActivity {
         TargetingGroup group = targetingGroupDao.create(content.getContentId(), targetingPredicates);
 
         return CreateContentResponse.builder()
-                       .withAdvertisingContent(AdvertisementContentTranslator.toCoral(content, request.getMarketplaceId()))
+                       .withAdvertisingContent(AdvertisementContentTranslator.toCoral(content,
+                               request.getMarketplaceId()))
                        .withTargetingGroup(TargetingGroupTranslator.toCoral(group))
                        .build();
     }

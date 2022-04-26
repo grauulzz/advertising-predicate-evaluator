@@ -1,7 +1,15 @@
 package com.amazon.ata.advertising.service.dependency;
 
-import com.amazon.ata.advertising.service.targeting.predicate.*;
+import com.amazon.ata.advertising.service.targeting.predicate.AgeTargetingPredicate;
+import com.amazon.ata.advertising.service.targeting.predicate.CategorySpendFrequencyTargetingPredicate;
+import com.amazon.ata.advertising.service.targeting.predicate.CategorySpendValueTargetingPredicate;
+import com.amazon.ata.advertising.service.targeting.predicate.ParentPredicate;
+import com.amazon.ata.advertising.service.targeting.predicate.PrimeBenefitTargetingPredicate;
+import com.amazon.ata.advertising.service.targeting.predicate.RecognizedTargetingPredicate;
+import com.amazon.ata.advertising.service.targeting.predicate.TargetingPredicate;
+
 import dagger.MembersInjector;
+
 import javax.inject.Inject;
 
 public class TargetingPredicateInjector {

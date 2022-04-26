@@ -9,6 +9,7 @@ import com.amazonaws.auth.DefaultAWSCredentialsProviderChain;
 import com.amazonaws.client.builder.AwsClientBuilder;
 import dagger.Module;
 import dagger.Provides;
+
 import javax.inject.Singleton;
 
 /**
@@ -34,7 +35,8 @@ public class ExternalServiceModule {
         String serviceEndpoint = System.getProperty(primeKeys + SERVICE_ENDPOINT);
         String signingRegion = System.getProperty(primeKeys + SIGNING_REGION);
         return ATAPrimeClubServiceClientBuilder.standard()
-                       .withEndpointConfiguration(new AwsClientBuilder.EndpointConfiguration(serviceEndpoint, signingRegion))
+                       .withEndpointConfiguration(
+                               new AwsClientBuilder.EndpointConfiguration(serviceEndpoint, signingRegion))
                        .withAwsCredentialsProvider(credentialsProvider)
                        .build();
     }
@@ -54,7 +56,8 @@ public class ExternalServiceModule {
         String serviceEndpoint = System.getProperty(primeKeys + SERVICE_ENDPOINT);
         String signingRegion = System.getProperty(primeKeys + SIGNING_REGION);
         return ATACustomerServiceClientBuilder.standard()
-                       .withEndpointConfiguration(new AwsClientBuilder.EndpointConfiguration(serviceEndpoint, signingRegion))
+                       .withEndpointConfiguration(
+                               new AwsClientBuilder.EndpointConfiguration(serviceEndpoint, signingRegion))
                        .withAwsCredentialsProvider(credentialsProvider)
                        .build();
     }

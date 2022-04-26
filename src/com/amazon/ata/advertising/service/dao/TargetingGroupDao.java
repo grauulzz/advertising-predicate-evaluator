@@ -5,15 +5,17 @@ import com.amazon.ata.advertising.service.exceptions.AdvertisementClientExceptio
 import com.amazon.ata.advertising.service.model.responses.GenerateAdvertisementResponse;
 import com.amazon.ata.advertising.service.targeting.TargetingGroup;
 import com.amazon.ata.advertising.service.targeting.predicate.TargetingPredicate;
+
 import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBMapper;
 import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBMappingException;
 import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBQueryExpression;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 import javax.inject.Inject;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 
 
 /**
@@ -48,10 +50,11 @@ public class TargetingGroupDao implements ReadableDao<String, List<TargetingGrou
     public List<TargetingGroup> get(String contentId) {
         try {
             TargetingGroup indexHashKey = new TargetingGroup(null, contentId, 0, null);
-            DynamoDBQueryExpression<TargetingGroup> queryExpression = new DynamoDBQueryExpression<TargetingGroup>()
-                                                                              .withIndexName(TargetingGroup.CONTENT_ID_INDEX)
-                                                                              .withConsistentRead(false)
-                                                                              .withHashKeyValues(indexHashKey);
+            DynamoDBQueryExpression<TargetingGroup> queryExpression =
+                    new DynamoDBQueryExpression<TargetingGroup>()
+                            .withIndexName(TargetingGroup.CONTENT_ID_INDEX)
+                            .withConsistentRead(false)
+                            .withHashKeyValues(indexHashKey);
             return mapper.query(TargetingGroup.class, queryExpression);
         } catch (RuntimeException e) {
             return new ArrayList<>();
