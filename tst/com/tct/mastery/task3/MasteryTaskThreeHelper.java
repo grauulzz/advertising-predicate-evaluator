@@ -27,7 +27,7 @@ public class MasteryTaskThreeHelper {
     }
 
     public static GenerateAdvertisementRequest createGenAdRequest(String marketplaceId, String customerId) {
-        return  new GenerateAdvertisementRequest().builder()
+        return  GenerateAdvertisementRequest.builder()
                 .withMarketplaceId(marketplaceId)
                 .withCustomerId(customerId)
                 .build();
@@ -43,7 +43,7 @@ public class MasteryTaskThreeHelper {
 
     public AdvertisingContent createContent(String marketplaceId, double clickThroughRate) {
         String content = UUID.randomUUID().toString();
-        CreateContentRequest request = new CreateContentRequest().builder()
+        CreateContentRequest request = CreateContentRequest.builder()
                 .withMarketplaceId(marketplaceId)
                 .withContent(content)
                 .build();
@@ -55,7 +55,7 @@ public class MasteryTaskThreeHelper {
     }
 
     public void updateCTR(TargetingGroup targetingGroup, double clickThroughRate) {
-        UpdateClickThroughRateRequest updateClickThroughRateRequest = new UpdateClickThroughRateRequest().builder()
+        UpdateClickThroughRateRequest updateClickThroughRateRequest = UpdateClickThroughRateRequest.builder()
                 .withTargetingGroupId(targetingGroup.getTargetingGroupId())
                 .withClickThroughRate(clickThroughRate)
                 .build();
@@ -63,7 +63,7 @@ public class MasteryTaskThreeHelper {
     }
 
     public void deleteContent(String contentId) {
-        DeleteContentRequest request = new DeleteContentRequest().builder()
+        DeleteContentRequest request = DeleteContentRequest.builder()
                 .withContentId(contentId)
                 .build();
         new DeleteContentActivityDagger().handleRequest(request, null);

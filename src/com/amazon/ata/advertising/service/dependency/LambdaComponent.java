@@ -9,6 +9,9 @@ import com.amazon.ata.advertising.service.activity.DeleteContentActivity;
 import com.amazon.ata.advertising.service.activity.GenerateAdActivity;
 import com.amazon.ata.advertising.service.activity.UpdateClickThroughRateActivity;
 import com.amazon.ata.advertising.service.activity.UpdateContentActivity;
+import com.amazon.ata.advertising.service.dao.ContentDao;
+import com.amazon.ata.advertising.service.dao.TargetingGroupDao;
+import com.amazon.ata.advertising.service.targeting.TargetingGroup;
 import com.amazon.atacustomerservicelambda.activity.GetCustomerProfileActivity;
 import com.amazon.atacustomerservicelambda.activity.GetCustomerSpendCategoriesActivity;
 import dagger.Component;
@@ -17,22 +20,12 @@ import dagger.Module;
 import javax.inject.Singleton;
 
 @Singleton
-//@CoralComponent(
-//        modules = {CoralModule.class},
-//        // No need to generate a Launcher
-//        generateLauncher = false
-//)
 @Component(modules = {
         ExternalServiceModule.class,
         DaoModule.class,
         DynamoDBModule.class
 })
 public interface LambdaComponent {
-    /**
-     * The LambdaEndpoint to connect the lambda to Coral.
-     * @return a LambdaEndpoint
-     */
-//    LambdaEndpoint getLambdaEndpoint();
 
     /**
      * Inject's targeting predicates with the DAOs they require.
@@ -51,10 +44,7 @@ public interface LambdaComponent {
     UpdateClickThroughRateActivity provideUpdateClickThroughRateActivity();
 
     UpdateContentActivity provideUpdateContentActivity();
+    ContentDao provideContentDao();
 
-    GetCustomerProfileActivity provideGetCustomerProfileActivity();
-
-    GetCustomerSpendCategoriesActivity provideGetCustomerSpendCategoriesActivity();
-
-    DynamoDBModule provideDynamoDBModule();
+    TargetingGroupDao provideTargetingGroupDao();
 }
