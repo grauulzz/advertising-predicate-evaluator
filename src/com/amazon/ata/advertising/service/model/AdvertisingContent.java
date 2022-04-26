@@ -10,6 +10,7 @@ public class AdvertisingContent {
     private String marketplaceId;
     private String content;
 
+
     /**
      * Instantiates a new Advertising content.
      *
@@ -21,6 +22,17 @@ public class AdvertisingContent {
         this.id = id;
         this.marketplaceId = marketplaceId;
         this.content = content;
+    }
+
+    /**
+     * Instantiates a new Advertising content.
+     *
+     * @param builder the builder
+     */
+    public AdvertisingContent(Builder builder) {
+        this.id = builder.id;
+        this.marketplaceId = builder.marketplaceId;
+        this.content = builder.content;
     }
 
     /**
@@ -78,23 +90,39 @@ public class AdvertisingContent {
     }
 
     /**
-     * Instantiates a new Advertising content.
-     *
-     * @param builder the builder
-     */
-    public AdvertisingContent(Builder builder) {
-        this.id = builder.id;
-        this.marketplaceId = builder.marketplaceId;
-        this.content = builder.content;
-    }
-
-    /**
      * Builder builder.
      *
      * @return the builder
      */
     public static Builder builder() {
         return new Builder();
+    }
+
+    @Override
+    public String toString() {
+        return "AdvertisingContent{" +
+                       "id='" + id + '\'' +
+                       ", marketplaceId='" + marketplaceId + '\'' +
+                       ", content='" + content + '\'' +
+                       '}';
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
+        AdvertisingContent content1 = (AdvertisingContent) o;
+        return Objects.equal(getId(), content1.getId()) && Objects.equal(getMarketplaceId(),
+                content1.getMarketplaceId()) && Objects.equal(getContent(), content1.getContent());
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hashCode(getId(), getMarketplaceId(), getContent());
     }
 
     /**
@@ -155,30 +183,5 @@ public class AdvertisingContent {
         }
     }
 
-    @Override
-    public String toString() {
-        return "AdvertisingContent{" +
-                       "id='" + id + '\'' +
-                       ", marketplaceId='" + marketplaceId + '\'' +
-                       ", content='" + content + '\'' +
-                       '}';
-    }
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) {
-            return true;
-        }
-        if (o == null || getClass() != o.getClass()) {
-            return false;
-        }
-        AdvertisingContent content1 = (AdvertisingContent) o;
-        return Objects.equal(getId(), content1.getId()) && Objects.equal(getMarketplaceId(),
-                content1.getMarketplaceId()) && Objects.equal(getContent(), content1.getContent());
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hashCode(getId(), getMarketplaceId(), getContent());
-    }
 }

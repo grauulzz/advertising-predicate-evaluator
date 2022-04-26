@@ -19,6 +19,15 @@ public class AddTargetingGroupResponse {
 
     /**
      * Instantiates a new Add targeting group response.
+     *
+     * @param builder the builder
+     */
+    public AddTargetingGroupResponse(Builder builder) {
+        this.targetingGroup = builder.targetingGroup;
+    }
+
+    /**
+     * Instantiates a new Add targeting group response.
      */
     public AddTargetingGroupResponse() {
     }
@@ -41,14 +50,7 @@ public class AddTargetingGroupResponse {
         this.targetingGroup = targetingGroup;
     }
 
-    /**
-     * Instantiates a new Add targeting group response.
-     *
-     * @param builder the builder
-     */
-    public AddTargetingGroupResponse(Builder builder) {
-        this.targetingGroup = builder.targetingGroup;
-    }
+
 
     /**
      * Builder builder.

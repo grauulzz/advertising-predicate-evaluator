@@ -8,7 +8,6 @@ import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBHashKey;
 import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBIndexHashKey;
 import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBTable;
 import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBTypeConverted;
-
 import com.google.common.base.Objects;
 
 import java.util.List;
@@ -102,8 +101,12 @@ public class TargetingGroup {
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
         TargetingGroup group = (TargetingGroup) o;
         return Double.compare(group.getClickThroughRate(), getClickThroughRate()) == 0 &&
                        Objects.equal(getTargetingGroupId(), group.getTargetingGroupId());

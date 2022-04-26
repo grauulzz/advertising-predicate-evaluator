@@ -23,6 +23,16 @@ public class CreateContentResponse {
 
     /**
      * Instantiates a new Create content response.
+     *
+     * @param builder the builder
+     */
+    public CreateContentResponse(Builder builder) {
+        this.targetingGroup = builder.targetingGroup;
+        this.advertisingContent = builder.advertisingContent;
+    }
+
+    /**
+     * Instantiates a new Create content response.
      */
     public CreateContentResponse() {
     }
@@ -63,15 +73,7 @@ public class CreateContentResponse {
         this.targetingGroup = targetingGroup;
     }
 
-    /**
-     * Instantiates a new Create content response.
-     *
-     * @param builder the builder
-     */
-    public CreateContentResponse(Builder builder) {
-        this.targetingGroup = builder.targetingGroup;
-        this.advertisingContent = builder.advertisingContent;
-    }
+
 
     /**
      * Builder builder.

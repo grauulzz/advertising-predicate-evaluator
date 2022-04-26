@@ -22,6 +22,16 @@ public class UpdateContentRequest {
 
     /**
      * Instantiates a new Update content request.
+     *
+     * @param builder the builder
+     */
+    public UpdateContentRequest(Builder builder) {
+        this.contentId = builder.contentId;
+        this.advertisingContent = builder.advertisingContent;
+    }
+
+    /**
+     * Instantiates a new Update content request.
      */
     public UpdateContentRequest() {
     }
@@ -62,15 +72,7 @@ public class UpdateContentRequest {
         this.advertisingContent = advertisingContent;
     }
 
-    /**
-     * Instantiates a new Update content request.
-     *
-     * @param builder the builder
-     */
-    public UpdateContentRequest(Builder builder) {
-        this.contentId = builder.contentId;
-        this.advertisingContent = builder.advertisingContent;
-    }
+
 
     /**
      * Builder builder.

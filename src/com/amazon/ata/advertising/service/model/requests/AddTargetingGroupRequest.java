@@ -1,6 +1,7 @@
 package com.amazon.ata.advertising.service.model.requests;
 
 import com.amazon.ata.advertising.service.model.TargetingPredicate;
+
 import java.util.List;
 
 /**
@@ -19,6 +20,16 @@ public class AddTargetingGroupRequest {
     public AddTargetingGroupRequest(String id, List<TargetingPredicate> targetingPredicates) {
         this.contentId = id;
         this.targetingPredicates = targetingPredicates;
+    }
+
+    /**
+     * Instantiates a new Add targeting group request.
+     *
+     * @param builder the builder
+     */
+    public AddTargetingGroupRequest(Builder builder) {
+        this.contentId = builder.contentId;
+        this.targetingPredicates = builder.targetingPredicates;
     }
 
     /**
@@ -63,15 +74,7 @@ public class AddTargetingGroupRequest {
         this.targetingPredicates = targetingPredicates;
     }
 
-    /**
-     * Instantiates a new Add targeting group request.
-     *
-     * @param builder the builder
-     */
-    public AddTargetingGroupRequest(Builder builder) {
-        this.contentId = builder.contentId;
-        this.targetingPredicates = builder.targetingPredicates;
-    }
+
 
     /**
      * Builder builder.

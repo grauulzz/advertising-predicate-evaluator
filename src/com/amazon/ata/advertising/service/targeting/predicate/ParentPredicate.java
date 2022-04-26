@@ -35,17 +35,8 @@ public class ParentPredicate extends TargetingPredicate {
     TargetingPredicateResult evaluateRecognizedCustomer(RequestContext context) {
         CustomerProfile profile = customerProfileDao.get(context.getCustomerId());
 
-        return profile.isParent() == null ? TargetingPredicateResult.INDETERMINATE : profile.isParent() ?
-                                                                                             TargetingPredicateResult.TRUE : TargetingPredicateResult.FALSE;
-
-//        final CustomerProfile profile = customerProfileDao.get(context.getCustomerId());
-//
-//        if (profile.isParent() == null) {
-//            return TargetingPredicateResult.INDETERMINATE;
-//        } else {
-//            if (profile.isParent()) return TargetingPredicateResult.TRUE;
-//            return TargetingPredicateResult.FALSE;
-//        }
+        return profile.isParent() == null ? TargetingPredicateResult.INDETERMINATE :
+                       profile.isParent() ? TargetingPredicateResult.TRUE : TargetingPredicateResult.FALSE;
     }
 
     @VisibleForTesting

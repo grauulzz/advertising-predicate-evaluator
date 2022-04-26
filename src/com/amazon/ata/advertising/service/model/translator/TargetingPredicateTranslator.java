@@ -106,7 +106,8 @@ public class TargetingPredicateTranslator {
         return new CategorySpendValueTargetingPredicate(targetedCategory, comparison, value, predicate.isNegate());
     }
 
-    private static ParentPredicate toParentPredicate(com.amazon.ata.advertising.service.model.TargetingPredicate predicate) {
+    private static ParentPredicate toParentPredicate(
+            com.amazon.ata.advertising.service.model.TargetingPredicate predicate) {
         return new ParentPredicate(predicate.isNegate());
     }
 
@@ -168,7 +169,8 @@ public class TargetingPredicateTranslator {
      *
      * @return The coral shape
      */
-    public static com.amazon.ata.advertising.service.model.TargetingPredicate toCoral(TargetingPredicate targetingPredicate) {
+    public static com.amazon.ata.advertising.service.model.TargetingPredicate toCoral(
+            TargetingPredicate targetingPredicate) {
         return com.amazon.ata.advertising.service.model.TargetingPredicate.builder()
                        .withNegate(targetingPredicate.isInverse())
                        .withTargetingPredicateType(toType(targetingPredicate))

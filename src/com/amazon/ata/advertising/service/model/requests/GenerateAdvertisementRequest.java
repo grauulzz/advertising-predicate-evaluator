@@ -20,6 +20,16 @@ public class GenerateAdvertisementRequest {
 
     /**
      * Instantiates a new Generate advertisement request.
+     *
+     * @param builder the builder
+     */
+    public GenerateAdvertisementRequest(Builder builder) {
+        this.customerId = builder.customerId;
+        this.marketplaceId = builder.marketplaceId;
+    }
+
+    /**
+     * Instantiates a new Generate advertisement request.
      */
     public GenerateAdvertisementRequest() {
     }
@@ -60,15 +70,7 @@ public class GenerateAdvertisementRequest {
         this.marketplaceId = marketPlaceId;
     }
 
-    /**
-     * Instantiates a new Generate advertisement request.
-     *
-     * @param builder the builder
-     */
-    public GenerateAdvertisementRequest(Builder builder) {
-        this.customerId = builder.customerId;
-        this.marketplaceId = builder.marketplaceId;
-    }
+
 
     /**
      * Builder builder.

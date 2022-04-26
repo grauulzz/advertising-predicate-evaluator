@@ -6,9 +6,10 @@ import com.amazon.ata.advertising.service.targeting.Comparison;
 import com.amazon.ata.customerservice.Spend;
 
 import com.google.common.annotations.VisibleForTesting;
+import org.apache.commons.lang3.Validate;
+
 import java.util.Map;
 import javax.inject.Inject;
-import org.apache.commons.lang3.Validate;
 
 /**
  * Compare against the number of purchases a customer has made in a single category on Amazon.

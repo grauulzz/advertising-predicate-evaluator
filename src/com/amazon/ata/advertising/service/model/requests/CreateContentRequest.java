@@ -1,6 +1,7 @@
 package com.amazon.ata.advertising.service.model.requests;
 
 import com.amazon.ata.advertising.service.model.TargetingPredicate;
+
 import java.util.List;
 
 /**
@@ -22,6 +23,17 @@ public class CreateContentRequest {
         this.content = content;
         this.marketplaceId = marketplaceId;
         this.targetingPredicates = targetingPredicates;
+    }
+
+    /**
+     * Instantiates a new Create content request.
+     *
+     * @param builder the builder
+     */
+    public CreateContentRequest(Builder builder) {
+        this.content = builder.content;
+        this.marketplaceId = builder.marketplaceId;
+        this.targetingPredicates = builder.targetingPredicates;
     }
 
     /**
@@ -82,17 +94,6 @@ public class CreateContentRequest {
      */
     public void setTargetingPredicates(List<TargetingPredicate> targetingPredicates) {
         this.targetingPredicates = targetingPredicates;
-    }
-
-    /**
-     * Instantiates a new Create content request.
-     *
-     * @param builder the builder
-     */
-    public CreateContentRequest(Builder builder) {
-        this.content = builder.content;
-        this.marketplaceId = builder.marketplaceId;
-        this.targetingPredicates = builder.targetingPredicates;
     }
 
     /**

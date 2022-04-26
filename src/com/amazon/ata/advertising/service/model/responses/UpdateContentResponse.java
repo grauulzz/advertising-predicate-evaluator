@@ -2,6 +2,7 @@ package com.amazon.ata.advertising.service.model.responses;
 
 import com.amazon.ata.advertising.service.model.AdvertisingContent;
 import com.amazon.ata.advertising.service.model.TargetingGroup;
+
 import java.util.List;
 
 /**
@@ -20,6 +21,16 @@ public class UpdateContentResponse {
     public UpdateContentResponse(AdvertisingContent advertisingContent, List<TargetingGroup> targetingGroupList) {
         this.advertisingContent = advertisingContent;
         this.targetingGroups = targetingGroupList;
+    }
+
+    /**
+     * Instantiates a new Update content response.
+     *
+     * @param builder the builder
+     */
+    public UpdateContentResponse(Builder builder) {
+        this.targetingGroups = builder.targetingGroups;
+        this.advertisingContent = builder.advertisingContent;
     }
 
     /**
@@ -62,16 +73,6 @@ public class UpdateContentResponse {
      */
     public void setTargetingGroupList(List<TargetingGroup> targetingGroupList) {
         this.targetingGroups = targetingGroupList;
-    }
-
-    /**
-     * Instantiates a new Update content response.
-     *
-     * @param builder the builder
-     */
-    public UpdateContentResponse(Builder builder) {
-        this.targetingGroups = builder.targetingGroups;
-        this.advertisingContent = builder.advertisingContent;
     }
 
     /**

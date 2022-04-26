@@ -19,11 +19,23 @@ public class TargetingGroup {
      * @param clickThroughRate    the click through rate
      * @param targetingPredicates the targeting predicates
      */
-    public TargetingGroup(String targetingGroupId, String contentId, double clickThroughRate, List<TargetingPredicate> targetingPredicates) {
+    public TargetingGroup(String targetingGroupId, String contentId, double clickThroughRate,
+                          List<TargetingPredicate> targetingPredicates) {
         this.targetingGroupId = targetingGroupId;
         this.contentId = contentId;
         this.clickThroughRate = clickThroughRate;
         this.targetingPredicates = targetingPredicates;
+    }
+    /**
+     * Instantiates a new Targeting group.
+     *
+     * @param builder the builder
+     */
+    public TargetingGroup(Builder builder) {
+        this.contentId = builder.contentId;
+        this.targetingPredicates = builder.targetingPredicates;
+        this.targetingGroupId = builder.targetingGroupId;
+        this.clickThroughRate = builder.clickThroughRate;
     }
 
     /**
@@ -98,17 +110,6 @@ public class TargetingGroup {
         this.targetingPredicates = targetingPredicates;
     }
 
-    /**
-     * Instantiates a new Targeting group.
-     *
-     * @param builder the builder
-     */
-    public TargetingGroup(Builder builder) {
-        this.contentId = builder.contentId;
-        this.targetingPredicates = builder.targetingPredicates;
-        this.targetingGroupId = builder.targetingGroupId;
-        this.clickThroughRate = builder.clickThroughRate;
-    }
 
     /**
      * Builder builder.

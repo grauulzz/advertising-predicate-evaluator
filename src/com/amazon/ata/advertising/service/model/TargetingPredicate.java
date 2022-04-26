@@ -27,6 +27,18 @@ public class TargetingPredicate {
 
     /**
      * Instantiates a new Targeting predicate.
+     *
+     * @param builder the builder
+     */
+    public TargetingPredicate(Builder builder) {
+        targetingPredicateType = builder.targetingPredicateType;
+        negate = builder.negate;
+        attributes = builder.attributes;
+    }
+
+
+    /**
+     * Instantiates a new Targeting predicate.
      */
     public TargetingPredicate() {
     }
@@ -104,16 +116,6 @@ public class TargetingPredicate {
         return Objects.hash(targetingPredicateType, negate, attributes);
     }
 
-    /**
-     * Instantiates a new Targeting predicate.
-     *
-     * @param builder the builder
-     */
-    public TargetingPredicate(Builder builder) {
-        targetingPredicateType = builder.targetingPredicateType;
-        negate = builder.negate;
-        attributes = builder.attributes;
-    }
 
     /**
      * Builder builder.

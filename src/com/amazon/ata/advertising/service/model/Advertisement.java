@@ -21,6 +21,16 @@ public class Advertisement {
     }
 
     /**
+     * Instantiates a new Advertisement.
+     *
+     * @param builder the builder
+     */
+    public Advertisement(Builder builder) {
+        this.id = builder.id;
+        this.content = builder.content;
+    }
+
+    /**
      * Gets id.
      *
      * @return the id
@@ -56,36 +66,14 @@ public class Advertisement {
         this.content = content;
     }
 
-    public Advertisement(Builder builder) {
-        this.id = builder.id;
-        this.content = builder.content;
-    }
 
+    /**
+     * Builder builder.
+     *
+     * @return the builder
+     */
     public static Builder builder() {
         return new Builder();
-    }
-
-    public static final class Builder {
-        private String id;
-        private String content;
-
-        private Builder() {
-
-        }
-
-        public Builder withId(String idToUse) {
-            this.id = idToUse;
-            return this;
-        }
-
-        public Builder withContent(String contentToUse) {
-            this.content = contentToUse;
-            return this;
-        }
-
-        public Advertisement build() {
-            return new Advertisement(this);
-        }
     }
 
     @Override
@@ -98,8 +86,12 @@ public class Advertisement {
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
         Advertisement that = (Advertisement) o;
         return Objects.equal(getId(), that.getId()) && Objects.equal(getContent(), that.getContent());
     }
@@ -108,4 +100,50 @@ public class Advertisement {
     public int hashCode() {
         return Objects.hashCode(getId(), getContent());
     }
+
+    /**
+     * The type Builder.
+     */
+    public static final class Builder {
+        private String id;
+        private String content;
+
+        private Builder() {
+        }
+
+        /**
+         * With id builder.
+         *
+         * @param idToUse the id to use
+         *
+         * @return the builder
+         */
+        public Builder withId(String idToUse) {
+            this.id = idToUse;
+            return this;
+        }
+
+        /**
+         * With content builder.
+         *
+         * @param contentToUse the content to use
+         *
+         * @return the builder
+         */
+        public Builder withContent(String contentToUse) {
+            this.content = contentToUse;
+            return this;
+        }
+
+        /**
+         * Build advertisement.
+         *
+         * @return the advertisement
+         */
+        public Advertisement build() {
+            return new Advertisement(this);
+        }
+    }
+
+
 }

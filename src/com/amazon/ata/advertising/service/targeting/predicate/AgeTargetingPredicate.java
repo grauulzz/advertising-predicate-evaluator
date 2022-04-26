@@ -3,9 +3,11 @@ package com.amazon.ata.advertising.service.targeting.predicate;
 import com.amazon.ata.advertising.service.dao.ReadableDao;
 import com.amazon.ata.advertising.service.model.RequestContext;
 import com.amazon.ata.customerservice.CustomerProfile;
+
 import com.google.common.annotations.VisibleForTesting;
-import javax.inject.Inject;
 import org.apache.commons.lang3.Validate;
+
+import javax.inject.Inject;
 
 /**
  * Targets a customers age range.

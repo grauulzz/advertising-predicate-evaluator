@@ -1,9 +1,10 @@
 package com.amazon.ata.advertising.service.model;
 
 import com.google.common.base.Objects;
+import org.apache.commons.lang3.Validate;
 
 import java.util.UUID;
-import org.apache.commons.lang3.Validate;
+
 
 /**
  * The unique advertisement generated for a customer, containing an ID unique to this ad's impression and advertisement
@@ -43,8 +44,12 @@ public class GeneratedAdvertisement {
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
         GeneratedAdvertisement that = (GeneratedAdvertisement) o;
         return Objects.equal(getId(), that.getId()) && Objects.equal(getContent(), that.getContent());
     }

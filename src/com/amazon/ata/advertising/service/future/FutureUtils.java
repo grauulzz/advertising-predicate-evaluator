@@ -4,14 +4,15 @@ import com.amazon.ata.advertising.service.future.FutureMonitor.ConsoleLogger;
 import com.amazon.ata.advertising.service.model.AdvertisementContent;
 import com.amazon.ata.advertising.service.targeting.TargetingGroup;
 
+import java.util.List;
+import java.util.Optional;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.function.Consumer;
-import java.util.List;
-import java.util.Optional;
 import java.util.function.Function;
+
 
 /**
  * The type Future utils.

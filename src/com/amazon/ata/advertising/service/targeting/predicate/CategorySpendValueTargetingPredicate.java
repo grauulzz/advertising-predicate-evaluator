@@ -4,10 +4,12 @@ import com.amazon.ata.advertising.service.dao.ReadableDao;
 import com.amazon.ata.advertising.service.model.RequestContext;
 import com.amazon.ata.advertising.service.targeting.Comparison;
 import com.amazon.ata.customerservice.Spend;
+
 import com.google.common.annotations.VisibleForTesting;
+import org.apache.commons.lang3.Validate;
+
 import java.util.Map;
 import javax.inject.Inject;
-import org.apache.commons.lang3.Validate;
 
 /**
  * Compare against the amount a customer has spent in USD in a single category on Amazon.

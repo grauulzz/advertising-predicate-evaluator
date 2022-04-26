@@ -9,13 +9,11 @@ import com.amazon.ata.advertising.service.dao.TargetingGroupDao;
 import com.amazon.ata.advertising.service.model.AdvertisementContent;
 import com.amazon.ata.advertising.service.model.RequestContext;
 import com.amazon.ata.advertising.service.targeting.TargetingGroup;
-
 import com.amazon.ata.customerservice.CustomerProfile;
 import com.amazon.ata.customerservice.Spend;
 
 import com.amazon.atacustomerservicelambda.service.ATACustomerService;
 import com.amazon.ataprimeclubservicelambda.service.ATAPrimeClubService;
-
 import dagger.Module;
 import dagger.Provides;
 

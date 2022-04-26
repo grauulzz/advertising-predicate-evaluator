@@ -20,6 +20,16 @@ public class UpdateClickThroughRateRequest {
 
     /**
      * Instantiates a new Update click through rate request.
+     *
+     * @param builder the builder
+     */
+    public UpdateClickThroughRateRequest(Builder builder) {
+        this.targetingGroupId = builder.targetingGroupId;
+        this.clickThroughRate = builder.clickThroughRate;
+    }
+
+    /**
+     * Instantiates a new Update click through rate request.
      */
     public UpdateClickThroughRateRequest() {
     }
@@ -58,16 +68,6 @@ public class UpdateClickThroughRateRequest {
      */
     public void setClickThroughRate(double clickThroughRate) {
         this.clickThroughRate = clickThroughRate;
-    }
-
-    /**
-     * Instantiates a new Update click through rate request.
-     *
-     * @param builder the builder
-     */
-    public UpdateClickThroughRateRequest(Builder builder) {
-        this.targetingGroupId = builder.targetingGroupId;
-        this.clickThroughRate = builder.clickThroughRate;
     }
 
     /**

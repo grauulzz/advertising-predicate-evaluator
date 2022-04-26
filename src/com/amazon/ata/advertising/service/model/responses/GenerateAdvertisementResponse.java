@@ -1,6 +1,7 @@
 package com.amazon.ata.advertising.service.model.responses;
 
 import com.amazon.ata.advertising.service.model.Advertisement;
+
 import com.google.common.base.Objects;
 
 /**
@@ -16,6 +17,15 @@ public class GenerateAdvertisementResponse {
      */
     public GenerateAdvertisementResponse(Advertisement advertisement) {
         this.advertisement = advertisement;
+    }
+
+    /**
+     * Instantiates a new Generate advertisement response.
+     *
+     * @param builder the builder
+     */
+    public GenerateAdvertisementResponse(Builder builder) {
+        this.advertisement = builder.advertisement;
     }
 
     /**
@@ -43,21 +53,36 @@ public class GenerateAdvertisementResponse {
     }
 
     /**
-     * Instantiates a new Generate advertisement response.
-     *
-     * @param builder the builder
-     */
-    public GenerateAdvertisementResponse(Builder builder) {
-        this.advertisement = builder.advertisement;
-    }
-
-    /**
      * Builder builder.
      *
      * @return the builder
      */
     public static Builder builder() {
         return new Builder();
+    }
+
+    @Override
+    public String toString() {
+        return "GenerateAdvertisementResponse{" +
+                       "advertisement=" + advertisement +
+                       '}';
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
+        GenerateAdvertisementResponse response = (GenerateAdvertisementResponse) o;
+        return Objects.equal(getAdvertisement(), response.getAdvertisement());
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hashCode(getAdvertisement());
     }
 
     /**
@@ -90,25 +115,5 @@ public class GenerateAdvertisementResponse {
         public GenerateAdvertisementResponse build() {
             return new GenerateAdvertisementResponse(this);
         }
-    }
-
-    @Override
-    public String toString() {
-        return "GenerateAdvertisementResponse{" +
-                       "advertisement=" + advertisement +
-                       '}';
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        GenerateAdvertisementResponse response = (GenerateAdvertisementResponse) o;
-        return Objects.equal(getAdvertisement(), response.getAdvertisement());
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hashCode(getAdvertisement());
     }
 }

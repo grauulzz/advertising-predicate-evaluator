@@ -19,6 +19,15 @@ public class UpdateClickThroughRateResponse {
 
     /**
      * Instantiates a new Update click through rate response.
+     *
+     * @param builder the builder
+     */
+    public UpdateClickThroughRateResponse(Builder builder) {
+        this.targetingGroup = builder.targetingGroup;
+    }
+
+    /**
+     * Instantiates a new Update click through rate response.
      */
     public UpdateClickThroughRateResponse() {
     }
@@ -39,15 +48,6 @@ public class UpdateClickThroughRateResponse {
      */
     public void setTargetingGroup(TargetingGroup targetingGroup) {
         this.targetingGroup = targetingGroup;
-    }
-
-    /**
-     * Instantiates a new Update click through rate response.
-     *
-     * @param builder the builder
-     */
-    public UpdateClickThroughRateResponse(Builder builder) {
-        this.targetingGroup = builder.targetingGroup;
     }
 
     /**

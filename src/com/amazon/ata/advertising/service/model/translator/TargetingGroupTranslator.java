@@ -2,6 +2,7 @@ package com.amazon.ata.advertising.service.model.translator;
 
 import com.amazon.ata.advertising.service.model.TargetingGroup;
 import com.amazon.ata.advertising.service.model.TargetingPredicate;
+
 import java.util.List;
 import java.util.stream.Collectors;
 

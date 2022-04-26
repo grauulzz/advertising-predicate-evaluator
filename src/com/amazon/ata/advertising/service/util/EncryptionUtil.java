@@ -15,7 +15,8 @@ public class EncryptionUtil {
         String encryptedMarketplace;
         try {
             long decryptedMarketplace = Long.parseLong(marketplaceId);
-            encryptedMarketplace = marketplaceId; //AmzUid.encryptCustomerID(decryptedMarketplace); Replace with encryptor
+            //AmzUid.encryptCustomerID(decryptedMarketplace); Replace with encryptor
+            encryptedMarketplace = marketplaceId;
         } catch (NumberFormatException e) {
             encryptedMarketplace = marketplaceId;
         }
