@@ -10,10 +10,8 @@ import com.amazon.ata.advertising.service.model.EmptyGeneratedAdvertisement;
 import com.amazon.ata.advertising.service.model.GeneratedAdvertisement;
 import com.amazon.ata.advertising.service.model.requests.GenerateAdvertisementRequest;
 import com.amazon.ata.advertising.service.model.responses.GenerateAdvertisementResponse;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
-import java.util.UUID;
+import java.util.*;
+import java.util.concurrent.ExecutionException;
 import java.util.function.Function;
 
 import org.junit.jupiter.api.Assertions;
@@ -93,4 +91,6 @@ public class AdvertisementSelectionLogicTest {
                 .filter(Objects::nonNull)
                 .forEach(Assertions::assertNotNull);
     }
+
+
 }

@@ -1,7 +1,6 @@
 package com.amazon.ata.advertising.service.activity;
 
 import com.amazon.ata.advertising.service.future.FutureUtils;
-import com.amazon.ata.advertising.service.future.FutureMonitor;
 import com.amazon.ata.advertising.service.model.EmptyGeneratedAdvertisement;
 import com.amazon.ata.advertising.service.model.requests.GenerateAdvertisementRequest;
 import com.amazon.ata.advertising.service.model.responses.GenerateAdvertisementResponse;
@@ -9,13 +8,12 @@ import com.amazon.ata.advertising.service.businesslogic.AdvertisementSelectionLo
 import com.amazon.ata.advertising.service.model.translator.AdvertisementTranslator;
 
 import java.util.concurrent.CompletableFuture;
-import java.util.function.Consumer;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import javax.inject.Inject;
 
-import static com.amazon.ata.advertising.service.future.FutureUtils.getExecutor;
+import static com.amazon.ata.advertising.service.future.FutureUtils.EXECUTOR_SERVICE;
 
 /**
  *
@@ -34,7 +32,6 @@ public class GenerateAdActivity {
     public GenerateAdActivity(AdvertisementSelectionLogic advertisementSelector) {
         this.adSelector = advertisementSelector;
     }
-
     /**
      * Decides on the ad most likely to be clicked on by the provided customer, from the group of ads a customer is
      * eligible to see.
@@ -48,7 +45,7 @@ public class GenerateAdActivity {
         String marketplaceId = request.getMarketplaceId();
 
         CompletableFuture<GenerateAdvertisementResponse> future = CompletableFuture.supplyAsync(
-                () -> adSelector.selectAdvertisement(customerId, marketplaceId), getExecutor).handleAsync(
+                () -> adSelector.selectAdvertisement(customerId, marketplaceId), EXECUTOR_SERVICE).handleAsync(
                         (generatedAd, throwable) -> {
                             if (throwable != null) {
                                 return new GenerateAdvertisementResponse(AdvertisementTranslator.toCoral(
@@ -56,9 +53,7 @@ public class GenerateAdActivity {
                             }
                             return new GenerateAdvertisementResponse(AdvertisementTranslator.toCoral(generatedAd));
                         });
-        GenerateAdvertisementResponse r = FutureUtils.get(future);
-
-        return r;
+        return FutureUtils.get(future);
     }
 
 }

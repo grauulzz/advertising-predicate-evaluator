@@ -12,8 +12,6 @@ import java.util.concurrent.TimeUnit;
 
 
 public class CacheMe {
-//    private static final TargetingGroupDao dao = DaggerLambdaComponent.create().provideTargetingGroupDao();
-
 
     static final CacheLoader<AdvertisementContent, Optional<TargetingGroup>> contentLoader = new CacheLoader<>() {
         @Override
@@ -37,23 +35,3 @@ public class CacheMe {
 
 }
 
-
-//     @Test
-//    void cacheLoader() {
-//        logic.selectAdvertisement("0b632e26-9c16-11e8-98d0-529269fb1459", "ATVPDKIKX0DER");
-//
-//        @Nullable
-//        Optional<TargetingGroup> group = CacheMe.contentCacher.apply("0b632e26-9c16-11e8-98d0-529269fb1459");
-//        assert Objects.requireNonNull(group).isPresent();
-//
-//        group.ifPresent(System.out::println);
-//
-//
-//        try {
-//            Optional<TargetingGroup> g = CacheMe.contentLoader.load("0b632e26-9c16-11e8-98d0-529269fb1459");
-//            TargetingGroup tg = g.orElse(null);
-//            System.out.println(tg);
-//        } catch (Exception e) {
-//            throw new RuntimeException(e);
-//        }
-//    }
