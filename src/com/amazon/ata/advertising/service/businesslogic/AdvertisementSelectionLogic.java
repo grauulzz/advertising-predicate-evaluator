@@ -3,89 +3,49 @@ package com.amazon.ata.advertising.service.businesslogic;
 import com.amazon.ata.advertising.service.dao.ReadableDao;
 import com.amazon.ata.advertising.service.dependency.DynamoDBModule;
 import com.amazon.ata.advertising.service.future.FutureUtils;
-import com.amazon.ata.advertising.service.future.FutureMonitor;
 import com.amazon.ata.advertising.service.model.AdvertisementContent;
-import com.amazon.ata.advertising.service.model.EmptyGeneratedAdvertisement;
 import com.amazon.ata.advertising.service.model.GeneratedAdvertisement;
 import com.amazon.ata.advertising.service.model.RequestContext;
 import com.amazon.ata.advertising.service.targeting.TargetingEvaluator;
 import com.amazon.ata.advertising.service.targeting.TargetingGroup;
 import com.amazon.ata.advertising.service.targeting.predicate.TargetingPredicateResult;
-import com.google.common.cache.*;
-import java.util.Collections;
+import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBMapper;
 import java.util.List;
 import java.util.Optional;
 import java.util.Random;
-import java.util.concurrent.CompletableFuture;
 import java.util.function.BiConsumer;
-import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
-import javax.annotation.ParametersAreNonnullByDefault;
 import javax.inject.Inject;
-import org.apache.commons.collections4.CollectionUtils;
-import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-public class AdvertisementSelectionLogic implements FutureMonitor<List<AdvertisementContent>> {
+public class AdvertisementSelectionLogic {
     private static final Logger LOG = LogManager.getLogger(AdvertisementSelectionLogic.class);
-    private final DynamoDBModule mod = new DynamoDBModule();
+    private final DynamoDBMapper db = new DynamoDBModule().provideDynamoDBMapper();
     private Random r = new Random();
     private final ReadableDao<String, List<AdvertisementContent>> contentDao;
     private final ReadableDao<String, List<TargetingGroup>> targetingGroupDao;
-    private List<CompletableFuture<AdvertisementContent>> futureAdContents;
-    private Predicate<TargetingGroup> filterByTrue;
+    public Predicate<TargetingGroup> filterByTrue;
     private Predicate<TargetingGroup> filterByFalse;
     private Predicate<TargetingGroup> filterByIntr;
     private final BiConsumer<String, String> predicatesInit = (customerId, marketPlaceId) -> {
         RequestContext context = new RequestContext(customerId, marketPlaceId);
         TargetingEvaluator evaluator = new TargetingEvaluator(context);
-        this.filterByTrue = pred -> evaluator.evaluate(pred).equals(TargetingPredicateResult.TRUE);
-        this.filterByFalse = pred -> evaluator.evaluate(pred).equals(TargetingPredicateResult.FALSE);
-        this.filterByIntr = pred -> evaluator.evaluate(pred).equals(TargetingPredicateResult.INDETERMINATE);
+        filterByTrue = pred -> evaluator.evaluate(pred).equals(TargetingPredicateResult.TRUE);
+        filterByFalse = pred -> evaluator.evaluate(pred).equals(TargetingPredicateResult.FALSE);
+        filterByIntr = pred -> evaluator.evaluate(pred).equals(TargetingPredicateResult.INDETERMINATE);
     };
 
-    private final Function<List<TargetingGroup>, AdvertisementContent> asyncEvaluator = targetingGroups -> {
+    private final Function<TargetingGroup, AdvertisementContent> getCorresponding =
+            targetingGroup -> db.load(AdvertisementContent.class, targetingGroup.getContentId());
+    private final Function<List<TargetingGroup>, Optional<List<AdvertisementContent>>> mapHighestCtrToContentId =
+            targetingGroups -> Optional.of(targetingGroups.stream().filter(filterByTrue).reduce(
+                            (group1, group2) -> group1.getClickThroughRate() >
+                                                        group2.getClickThroughRate() ? group1 : group2)
+                                                   .stream().map(getCorresponding).collect(Collectors.toList()));
 
-                Optional<TargetingGroup> tg = targetingGroups.stream().filter(filterByTrue).reduce(
-                        (a, b) -> a.getClickThroughRate() > b.getClickThroughRate() ? a : b);
-
-                if (tg.isPresent()) {
-                    String highestCtrTgContentId = tg.get().getContentId();
-                    Optional<AdvertisementContent> matchingContent =
-                            Optional.ofNullable(mod.provideDynamoDBMapper().load(AdvertisementContent.class,
-                                    highestCtrTgContentId));
-
-                    if (matchingContent.isPresent()) {
-                        String matchRenderableContent = matchingContent.get().getRenderableContent();
-                        return AdvertisementContent.builder().withContentId(highestCtrTgContentId)
-                                       .withRenderableContent(matchRenderableContent)
-                                       .build();
-                    }
-                    AdvertisementContent.builder().withContentId(highestCtrTgContentId).build();
-                }
-
-        return AdvertisementContent.builder().build();
-    };
-    private final CacheLoader<String, Optional<List<AdvertisementContent>>> loader = new CacheLoader<>() {
-        @Override
-        @ParametersAreNonnullByDefault
-        public Optional<List<AdvertisementContent>> load(String key) {
-            return Optional.ofNullable(contentDao.get(key));
-        }
-    };
-
-    private final RemovalListener<String, Optional<List<AdvertisementContent>>> listener = n -> {
-        if (n.wasEvicted()) {
-            String cause = n.getCause().name();
-            System.out.printf("Cache hit -> {%s} %nCause -> {%s}", n.getKey(), cause);
-        }
-    };
-
-    private final LoadingCache<String, Optional<List<AdvertisementContent>>> cache =
-            CacheBuilder.newBuilder().removalListener(listener).maximumSize(100).build(loader);
 
     @Inject
     public AdvertisementSelectionLogic(ReadableDao<String, List<AdvertisementContent>> contentDao,
@@ -106,60 +66,17 @@ public class AdvertisementSelectionLogic implements FutureMonitor<List<Advertise
      * not be generated.
      */
     public GeneratedAdvertisement selectAdvertisement(String customerId, String marketplaceId) {
-        if (marketplaceId == null || StringUtils.isEmpty(marketplaceId)) {
-            return new EmptyGeneratedAdvertisement();
-        } else {
-            List<AdvertisementContent> contents = cache.getUnchecked(marketplaceId).orElseGet(() -> {
-                List<AdvertisementContent> content = contentDao.get(marketplaceId);
-                cache.putAll(Collections.singletonMap(marketplaceId, Optional.ofNullable(content)));
-                return content;
-            });
-            if (CollectionUtils.isNotEmpty(contents)) {
-                predicatesInit.accept(customerId, marketplaceId);
-                List<TargetingGroup> allMatchingTgForContentId = loadCorrespondingTargetGroupsListFromCache(contents);
-                this.futureAdContents = contents.stream().map(
-                        c -> CompletableFuture.supplyAsync(() -> asyncEvaluator.apply(allMatchingTgForContentId),
-                                FutureUtils.getExecutor)
-                ).collect(Collectors.toList());
+        predicatesInit.accept(customerId, marketplaceId);
 
-            } else {
-                return new EmptyGeneratedAdvertisement();
-            }
-        }
+        List<TargetingGroup> groups =
+                contentDao.get(marketplaceId).stream().map(AdvertisementContent::getContentId)
+                        .map(targetingGroupDao::get).flatMap(List::stream)
+                        .collect(Collectors.toList());
 
-        CompletableFuture<List<AdvertisementContent>> sequencedFutures =
-                FutureUtils.sequenceFuture(this.futureAdContents);
-
-        monitor(sequencedFutures, ConsoleLogger.CYAN.getColor());
-
-        List<AdvertisementContent> ads = FutureUtils.get(sequencedFutures);
-
-        if (CollectionUtils.isNotEmpty(ads)) {
-            AdvertisementContent adv = ads.get(r.nextInt(ads.size()));
-            return new GeneratedAdvertisement(adv);
-        } else {
-            return new EmptyGeneratedAdvertisement();
-        }
-
+        List<AdvertisementContent> l = FutureUtils.appyAsyncProcessing(mapHighestCtrToContentId, groups);
+        return new GeneratedAdvertisement(l.get(r.nextInt(l.size())));
     }
 
-    @Override
-    public void monitor(CompletableFuture<List<AdvertisementContent>> completableFuture) {
-        FutureMonitor.super.monitor(completableFuture);
-    }
-
-    @Override
-    public void monitor(CompletableFuture<List<AdvertisementContent>> completableFuture, Consumer<String> color) {
-        FutureMonitor.super.monitor(completableFuture, color);
-    }
-
-    private List<TargetingGroup> loadCorrespondingTargetGroupsListFromCache(List<AdvertisementContent> contents) {
-        return contents.stream()
-                       .map(AdvertisementContent::getContentId)
-                       .map(targetingGroupDao::get)
-                       .flatMap(List::stream)
-                       .collect(Collectors.toList());
-    }
     public void setRandom(Random random) {
         this.r = random;
     }
@@ -183,3 +100,59 @@ public class AdvertisementSelectionLogic implements FutureMonitor<List<Advertise
 //            }
 //            return new EmptyGeneratedAdvertisement();
 //        }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+// if (marketplaceId == null || StringUtils.isEmpty(marketplaceId)) {
+//            return new EmptyGeneratedAdvertisement();
+//        } else {
+//            List<AdvertisementContent> contents = cache.getUnchecked(marketplaceId).orElseGet(() -> {
+//                List<AdvertisementContent> content = contentDao.get(marketplaceId);
+//                cache.putAll(Collections.singletonMap(marketplaceId, Optional.ofNullable(content)));
+//                return content;
+//            });
+//            if (CollectionUtils.isNotEmpty(contents)) {
+//                predicatesInit.accept(customerId, marketplaceId);
+//                List<TargetingGroup> allMatchingTgForContentId = loadCorrespondingContentFromTg(contents);
+//                this.futureAdContents = contents.stream().map(
+//                        c -> CompletableFuture.supplyAsync(() -> asyncEvaluator.apply(allMatchingTgForContentId),
+//                                FutureUtils.getExecutor)
+//                ).collect(Collectors.toList());
+//
+//            } else {
+//                return new EmptyGeneratedAdvertisement();
+//            }
+//        }
+//
+//        CompletableFuture<List<AdvertisementContent>> sequencedFutures =
+//                FutureUtils.sequenceFuture(this.futureAdContents);
+//
+//        monitor(sequencedFutures, ConsoleLogger.CYAN.getColor());
+//
+//        List<AdvertisementContent> ads = FutureUtils.get(sequencedFutures);
+//
+//        if (CollectionUtils.isNotEmpty(ads)) {
+//            AdvertisementContent adv = ads.get(r.nextInt(ads.size()));
+//            return new GeneratedAdvertisement(adv);
+//        } else {
+//            return new EmptyGeneratedAdvertisement();
+//        }
+
+

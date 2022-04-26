@@ -22,7 +22,7 @@ import static com.amazon.ata.advertising.service.future.FutureUtils.getExecutor;
  * Activity class for generate ad operation.
  *
  */
-public class GenerateAdActivity implements FutureMonitor<GenerateAdvertisementResponse> {
+public class GenerateAdActivity {
     private static final Logger LOG = LogManager.getLogger(GenerateAdActivity.class);
     private final AdvertisementSelectionLogic adSelector;
 
@@ -56,18 +56,10 @@ public class GenerateAdActivity implements FutureMonitor<GenerateAdvertisementRe
                             }
                             return new GenerateAdvertisementResponse(AdvertisementTranslator.toCoral(generatedAd));
                         });
-        monitor(future, ConsoleLogger.MAGENTA.getColor());
-        return FutureUtils.get(future);
+        GenerateAdvertisementResponse r = FutureUtils.get(future);
+
+        return r;
     }
 
-    @Override
-    public void monitor(CompletableFuture<GenerateAdvertisementResponse> completableFuture) {
-        FutureMonitor.super.monitor(completableFuture);
-    }
-
-    @Override
-    public void monitor(CompletableFuture<GenerateAdvertisementResponse> completableFuture, Consumer<String> color) {
-        FutureMonitor.super.monitor(completableFuture, color);
-    }
 }
 
