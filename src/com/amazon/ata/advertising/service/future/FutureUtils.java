@@ -13,9 +13,12 @@ import java.util.function.Consumer;
 import java.util.function.Function;
 
 public class FutureUtils {
-    private FutureUtils() {}
+    private FutureUtils() {
+    }
+
     public static final ExecutorService EXECUTOR_SERVICE =
             Executors.newFixedThreadPool(Runtime.getRuntime().availableProcessors());
+
     public static <T> T get(CompletableFuture<T> future) {
         monitor(future, ConsoleLogger.CYAN.getColor());
         try {
@@ -26,6 +29,7 @@ public class FutureUtils {
             throw new RuntimeException(e);
         }
     }
+
     public static List<AdvertisementContent> callableAsyncProcessing(
             Function<List<TargetingGroup>, Optional<List<AdvertisementContent>>> function, List<TargetingGroup> groups
     ) {
@@ -34,9 +38,10 @@ public class FutureUtils {
         monitor(future, ConsoleLogger.MAGENTA.getColor());
         return get(future.thenApply(Optional::get));
     }
+
     private static <G> void monitor(CompletableFuture<G> future, Consumer<String> color) {
         if (!future.isDone()) {
-            color.accept(String.format("[%s][%s]",Thread.currentThread().getName(), Thread.currentThread().getState()));
+            color.accept(String.format("[%s][%s]", Thread.currentThread().getName(), Thread.currentThread().getState()));
             ConsoleLogger.YELLOW.getColor().accept(String.format("Waiting for {%s} %n", future));
         }
 

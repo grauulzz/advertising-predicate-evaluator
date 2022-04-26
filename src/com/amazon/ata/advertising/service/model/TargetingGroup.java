@@ -54,7 +54,9 @@ public class TargetingGroup {
         this.clickThroughRate = builder.clickThroughRate;
     }
 
-    public static Builder builder() {return new Builder();}
+    public static Builder builder() {
+        return new Builder();
+    }
 
     public static final class Builder {
         private String targetingGroupId;
@@ -86,6 +88,8 @@ public class TargetingGroup {
             return this;
         }
 
-        public TargetingGroup build() { return new TargetingGroup(this); }
+        public TargetingGroup build() {
+            return new TargetingGroup(this);
+        }
     }
 }

@@ -1,16 +1,7 @@
 package com.amazon.ata.advertising.service.dependency;
 
-import com.amazon.ata.advertising.service.targeting.predicate.AgeTargetingPredicate;
-import com.amazon.ata.advertising.service.targeting.predicate.CategorySpendFrequencyTargetingPredicate;
-import com.amazon.ata.advertising.service.targeting.predicate.CategorySpendValueTargetingPredicate;
-import com.amazon.ata.advertising.service.targeting.predicate.ParentPredicate;
-import com.amazon.ata.advertising.service.targeting.predicate.PrimeBenefitTargetingPredicate;
-import com.amazon.ata.advertising.service.targeting.predicate.RecognizedTargetingPredicate;
-import com.amazon.ata.advertising.service.targeting.predicate.TargetingPredicate;
-
+import com.amazon.ata.advertising.service.targeting.predicate.*;
 import dagger.MembersInjector;
-
-import java.lang.reflect.Method;
 import javax.inject.Inject;
 
 public class TargetingPredicateInjector {
@@ -23,12 +14,13 @@ public class TargetingPredicateInjector {
 
     /**
      * Constructs a targeting predicate injector.
-     * @param agePredicateInjector injects dependencies in AgeTargetingPredicates
+     *
+     * @param agePredicateInjector            injects dependencies in AgeTargetingPredicates
      * @param spendFrequencyPredicateInjector injects dependencies in CategorySpendFrequencyTargetingPredicate
-     * @param spendValuePredicateInjector injects dependencies in CategorySpendValueTargetingPredicate
-     * @param primePredicateInjector injects dependencies in PrimeBenefitTargetingPredicate
-     * @param parentPredicateInjector injects dependencies in ParentPredicate
-     * @param recognizedPredicateInjector injects dependencies in RecognizedTargetingPredicate
+     * @param spendValuePredicateInjector     injects dependencies in CategorySpendValueTargetingPredicate
+     * @param primePredicateInjector          injects dependencies in PrimeBenefitTargetingPredicate
+     * @param parentPredicateInjector         injects dependencies in ParentPredicate
+     * @param recognizedPredicateInjector     injects dependencies in RecognizedTargetingPredicate
      */
     @Inject
     public TargetingPredicateInjector(MembersInjector<AgeTargetingPredicate> agePredicateInjector,
@@ -49,6 +41,7 @@ public class TargetingPredicateInjector {
     /**
      * Inject's any member variables or method's marked with @Inject. This is how we can serialize the targeting
      * predicates without the Daos and then inject the dependencies later.
+     *
      * @param targetingPredicate predicate to be injected
      */
     public void inject(TargetingPredicate targetingPredicate) {

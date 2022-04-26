@@ -1,8 +1,8 @@
 package com.amazon.ata.advertising.service.model;
 
 /**
- *  An extension of AdvertisementContent that has empty renderable content and a null id. This class is used as the
- *  content for an EmptyGeneratedAdvertisement.
+ * An extension of AdvertisementContent that has empty renderable content and a null id. This class is used as the
+ * content for an EmptyGeneratedAdvertisement.
  */
 public class EmptyAdvertisementContent extends AdvertisementContent {
     static final String EMPTY_CONTENT = "";

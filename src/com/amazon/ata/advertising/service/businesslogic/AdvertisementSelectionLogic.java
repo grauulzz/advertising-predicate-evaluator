@@ -13,23 +13,18 @@ import com.amazon.ata.advertising.service.targeting.predicate.TargetingPredicate
 import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBMapper;
 import com.amazonaws.util.CollectionUtils;
 import com.amazonaws.util.StringUtils;
-import com.google.common.cache.*;
-import java.util.*;
+import java.util.List;
+import java.util.Optional;
+import java.util.Random;
 import java.util.function.BiConsumer;
 import java.util.function.Function;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 import javax.inject.Inject;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 
 public class AdvertisementSelectionLogic {
-    private static final Logger LOG = LogManager.getLogger(AdvertisementSelectionLogic.class);
-    private static final RemovalListener<? super Object,? super Object> LISTENER =
-            (RemovalListener<Object, Object>) notification ->
-                                                      System.out.printf("Removal notification: {%s}", notification);
     private final DynamoDBMapper db = new DynamoDBModule().provideDynamoDBMapper();
-    private Random r = new Random();
+    private final Random r = new Random();
     private final ReadableDao<String, List<AdvertisementContent>> contentDao;
     private final ReadableDao<String, List<TargetingGroup>> targetingGroupDao;
     private Predicate<TargetingGroup> evalTruePredicate;
@@ -42,16 +37,13 @@ public class AdvertisementSelectionLogic {
         evalFalsePredicate = p -> evaluator.evaluate(p).equals(TargetingPredicateResult.FALSE);
         evalIndeterminate = p -> evaluator.evaluate(p).equals(TargetingPredicateResult.INDETERMINATE);
     };
-
     private final Function<TargetingGroup, AdvertisementContent> loadAdContent =
             targetingGroup -> db.load(AdvertisementContent.class, targetingGroup.getContentId());
     private final Function<List<TargetingGroup>, Optional<List<AdvertisementContent>>> mapHighestCtrToContentId =
-            targetingGroups -> Optional.of(targetingGroups.stream().filter(evalTruePredicate).reduce(
+            targetingGroups -> Optional.of(targetingGroups.stream().filter(this.evalTruePredicate).reduce(
                             (group1, group2) -> group1.getClickThroughRate() >
                                                         group2.getClickThroughRate() ? group1 : group2)
                                                    .stream().map(loadAdContent).collect(Collectors.toList()));
-
-
     @Inject
     public AdvertisementSelectionLogic(ReadableDao<String, List<AdvertisementContent>> contentDao,
                                        ReadableDao<String, List<TargetingGroup>> targetingGroupDao) {
@@ -71,22 +63,33 @@ public class AdvertisementSelectionLogic {
      * not be generated.
      */
     public GeneratedAdvertisement selectAdvertisement(String customerId, String marketplaceId) {
-        initializePredicates.accept(customerId, marketplaceId);
-
         if (StringUtils.isNullOrEmpty(marketplaceId)) {
             return new EmptyGeneratedAdvertisement();
         }
-
+        this.initializePredicates.accept(customerId, marketplaceId);
         List<AdvertisementContent> contents = contentDao.get(marketplaceId);
+
         if (CollectionUtils.isNullOrEmpty(contents)) {
             return new EmptyGeneratedAdvertisement();
         }
-
         List<TargetingGroup> groups =
                 contents.stream().map(AdvertisementContent::getContentId)
                         .map(targetingGroupDao::get).flatMap(List::stream)
                         .collect(Collectors.toList());
         List<AdvertisementContent> l = FutureUtils.callableAsyncProcessing(mapHighestCtrToContentId, groups);
+
         return new GeneratedAdvertisement(l.get(r.nextInt(l.size())));
     }
+    public Predicate<TargetingGroup> getEvalTruePredicate() {
+        return evalTruePredicate;
+    }
+
+    public Predicate<TargetingGroup> getEvalIndeterminate() {
+        return evalIndeterminate;
+    }
+    public Predicate<TargetingGroup> getEvalFalsePredicate() {
+        return evalFalsePredicate;
+    }
+
+
 }

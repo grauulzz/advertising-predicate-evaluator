@@ -33,7 +33,9 @@ public class GenerateAdvertisementRequest {
         this.marketplaceId = builder.marketplaceId;
     }
 
-    public static Builder builder() {return new Builder();}
+    public static Builder builder() {
+        return new Builder();
+    }
 
     public static final class Builder {
         private String customerId;
@@ -53,6 +55,8 @@ public class GenerateAdvertisementRequest {
             return this;
         }
 
-        public GenerateAdvertisementRequest build() { return new GenerateAdvertisementRequest(this); }
+        public GenerateAdvertisementRequest build() {
+            return new GenerateAdvertisementRequest(this);
+        }
     }
 }

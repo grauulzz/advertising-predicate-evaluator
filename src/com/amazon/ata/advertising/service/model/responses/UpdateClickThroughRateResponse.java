@@ -24,7 +24,9 @@ public class UpdateClickThroughRateResponse {
         this.targetingGroup = builder.targetingGroup;
     }
 
-    public static Builder builder() {return new Builder();}
+    public static Builder builder() {
+        return new Builder();
+    }
 
     public static final class Builder {
         private TargetingGroup targetingGroup;
@@ -38,6 +40,8 @@ public class UpdateClickThroughRateResponse {
             return this;
         }
 
-        public UpdateClickThroughRateResponse build() { return new UpdateClickThroughRateResponse(this); }
+        public UpdateClickThroughRateResponse build() {
+            return new UpdateClickThroughRateResponse(this);
+        }
     }
 }

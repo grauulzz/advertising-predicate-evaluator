@@ -33,7 +33,9 @@ public class UpdateClickThroughRateRequest {
         this.clickThroughRate = builder.clickThroughRate;
     }
 
-    public static Builder builder() {return new Builder();}
+    public static Builder builder() {
+        return new Builder();
+    }
 
     public static final class Builder {
         private String targetingGroupId;
@@ -53,6 +55,8 @@ public class UpdateClickThroughRateRequest {
             return this;
         }
 
-        public UpdateClickThroughRateRequest build() { return new UpdateClickThroughRateRequest(this); }
+        public UpdateClickThroughRateRequest build() {
+            return new UpdateClickThroughRateRequest(this);
+        }
     }
 }

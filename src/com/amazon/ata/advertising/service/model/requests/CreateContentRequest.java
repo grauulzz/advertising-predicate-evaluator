@@ -1,7 +1,6 @@
 package com.amazon.ata.advertising.service.model.requests;
 
 import com.amazon.ata.advertising.service.model.TargetingPredicate;
-
 import java.util.List;
 
 public class CreateContentRequest {
@@ -48,7 +47,9 @@ public class CreateContentRequest {
         this.targetingPredicates = builder.targetingPredicates;
     }
 
-    public static Builder builder() {return new Builder();}
+    public static Builder builder() {
+        return new Builder();
+    }
 
     public static final class Builder {
         private String content;
@@ -74,6 +75,8 @@ public class CreateContentRequest {
             return this;
         }
 
-        public CreateContentRequest build() { return new CreateContentRequest(this); }
+        public CreateContentRequest build() {
+            return new CreateContentRequest(this);
+        }
     }
 }

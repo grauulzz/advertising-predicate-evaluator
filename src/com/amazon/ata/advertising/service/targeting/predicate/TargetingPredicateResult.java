@@ -7,10 +7,11 @@ package com.amazon.ata.advertising.service.targeting.predicate;
 public enum TargetingPredicateResult {
     TRUE(true), FALSE(false), INDETERMINATE(false);
 
-    private boolean isTrueResult;
+    private final boolean isTrueResult;
 
     /**
      * Each targeting predicate result value defines if it could be considered true.
+     *
      * @param isTrueResult Should this result be considered a true result.
      */
     TargetingPredicateResult(boolean isTrueResult) {
@@ -23,6 +24,7 @@ public enum TargetingPredicateResult {
 
     /**
      * Calculate the inverse of the passed result.
+     *
      * @return the inverse TargetingPredicateResult value
      */
     public TargetingPredicateResult invert() {

@@ -32,7 +32,9 @@ public class Advertisement {
         this.content = builder.content;
     }
 
-    public static Builder builder() {return new Builder();}
+    public static Builder builder() {
+        return new Builder();
+    }
 
 //    public static <U extends Comparable<? super U>, T> U getCtr(T t) {
 //        return
@@ -56,7 +58,9 @@ public class Advertisement {
             return this;
         }
 
-        public Advertisement build() { return new Advertisement(this); }
+        public Advertisement build() {
+            return new Advertisement(this);
+        }
     }
 
     @Override

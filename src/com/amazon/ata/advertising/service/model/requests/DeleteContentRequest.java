@@ -22,7 +22,9 @@ public class DeleteContentRequest {
         this.contentId = builder.contentId;
     }
 
-    public static Builder builder() {return new Builder();}
+    public static Builder builder() {
+        return new Builder();
+    }
 
     public static final class Builder {
         private String contentId;
@@ -36,6 +38,8 @@ public class DeleteContentRequest {
             return this;
         }
 
-        public DeleteContentRequest build() { return new DeleteContentRequest(this); }
+        public DeleteContentRequest build() {
+            return new DeleteContentRequest(this);
+        }
     }
 }

@@ -1,9 +1,8 @@
 package com.amazon.ata.advertising.service.model;
 
 import com.google.common.base.Objects;
-import org.apache.commons.lang3.Validate;
-
 import java.util.UUID;
+import org.apache.commons.lang3.Validate;
 
 /**
  * The unique advertisement generated for a customer, containing an ID unique to this ad's impression and advertisement
@@ -16,6 +15,7 @@ public class GeneratedAdvertisement {
 
     /**
      * Constructs GeneratedAdvertisements - generating a value for the id.
+     *
      * @param content - the content for the generated ad, cannot be null
      */
     public GeneratedAdvertisement(AdvertisementContent content) {

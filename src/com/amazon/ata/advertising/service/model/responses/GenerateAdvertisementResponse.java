@@ -1,7 +1,6 @@
 package com.amazon.ata.advertising.service.model.responses;
 
 import com.amazon.ata.advertising.service.model.Advertisement;
-import com.amazon.ata.advertising.service.model.AdvertisementContent;
 import com.google.common.base.Objects;
 
 public class GenerateAdvertisementResponse {
@@ -26,7 +25,9 @@ public class GenerateAdvertisementResponse {
         this.advertisement = builder.advertisement;
     }
 
-    public static Builder builder() {return new Builder();}
+    public static Builder builder() {
+        return new Builder();
+    }
 
     public static final class Builder {
         private Advertisement advertisement;
@@ -40,7 +41,9 @@ public class GenerateAdvertisementResponse {
             return this;
         }
 
-        public GenerateAdvertisementResponse build() { return new GenerateAdvertisementResponse(this); }
+        public GenerateAdvertisementResponse build() {
+            return new GenerateAdvertisementResponse(this);
+        }
     }
 
     @Override

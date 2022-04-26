@@ -4,12 +4,10 @@ import com.amazon.ata.advertising.service.dao.ReadableDao;
 import com.amazon.ata.advertising.service.model.RequestContext;
 import com.amazon.ata.advertising.service.targeting.Comparison;
 import com.amazon.ata.customerservice.Spend;
-
 import com.google.common.annotations.VisibleForTesting;
-import org.apache.commons.lang3.Validate;
-
 import java.util.Map;
 import javax.inject.Inject;
+import org.apache.commons.lang3.Validate;
 
 /**
  * Compare against the number of purchases a customer has made in a single category on Amazon.
@@ -26,13 +24,14 @@ public class CategorySpendFrequencyTargetingPredicate extends TargetingPredicate
 
     /**
      * Create a predicate to compare against the number of purchases in a category on Amazon.
-     * @param targetedCategory The category you want to compare spend for - i.e. KINDLE
-     * @param comparison How to compare the customer's number of purchases against the targeted value.  For example,
-     *                  if you specify the comparision as Comparison.LT and the targeted number of purchases as 2,
-     *                  this predicate will evaluate to TRUE for all customers who have made less than 2 purchases
-     *                  in the specified category.
+     *
+     * @param targetedCategory          The category you want to compare spend for - i.e. KINDLE
+     * @param comparison                How to compare the customer's number of purchases against the targeted value.  For example,
+     *                                  if you specify the comparision as Comparison.LT and the targeted number of purchases as 2,
+     *                                  this predicate will evaluate to TRUE for all customers who have made less than 2 purchases
+     *                                  in the specified category.
      * @param targetedNumberOfPurchases The number of purchases to compare against.
-     * @param inverse If you would like to negate the value of this predicate.
+     * @param inverse                   If you would like to negate the value of this predicate.
      */
     public CategorySpendFrequencyTargetingPredicate(String targetedCategory,
                                                     Comparison comparison,
@@ -50,8 +49,9 @@ public class CategorySpendFrequencyTargetingPredicate extends TargetingPredicate
 
     /**
      * Predicate for evaluating how often a customer spends in a given category.
-     * @param targetedCategory The goal category to compare spending against
-     * @param comparison Whether it should be greater than or less than the value
+     *
+     * @param targetedCategory          The goal category to compare spending against
+     * @param comparison                Whether it should be greater than or less than the value
      * @param targetedNumberOfPurchases The value to compare against how many times the customer has spent money
      */
     public CategorySpendFrequencyTargetingPredicate(String targetedCategory,
@@ -63,17 +63,18 @@ public class CategorySpendFrequencyTargetingPredicate extends TargetingPredicate
     /**
      * Predicate for evaluating how often a customer spends in a given category.
      */
-    public CategorySpendFrequencyTargetingPredicate() {}
+    public CategorySpendFrequencyTargetingPredicate() {
+    }
 
     @Override
     TargetingPredicateResult evaluateRecognizedCustomer(RequestContext context) {
         Validate.notNull(targetedCategory, "The targeted category cannot be null.");
         Validate.notNull(comparison, "How to compare against the targeted value cannot be null.");
 
-        final Map<String, Spend> customerSpend = spendDao.get(context);
-        final Spend categorySpend = customerSpend.getOrDefault(targetedCategory, ZERO_SPEND);
+        Map<String, Spend> customerSpend = spendDao.get(context);
+        Spend categorySpend = customerSpend.getOrDefault(targetedCategory, ZERO_SPEND);
         return comparison.compare(categorySpend.getNumberOfPurchases(), targetedNumberOfPurchases) ?
-                TargetingPredicateResult.TRUE : TargetingPredicateResult.FALSE;
+                       TargetingPredicateResult.TRUE : TargetingPredicateResult.FALSE;
     }
 
     public String getTargetedCategory() {

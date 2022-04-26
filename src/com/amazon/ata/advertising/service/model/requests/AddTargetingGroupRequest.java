@@ -1,7 +1,6 @@
 package com.amazon.ata.advertising.service.model.requests;
 
 import com.amazon.ata.advertising.service.model.TargetingPredicate;
-
 import java.util.List;
 
 public class AddTargetingGroupRequest {
@@ -37,7 +36,9 @@ public class AddTargetingGroupRequest {
         this.targetingPredicates = builder.targetingPredicates;
     }
 
-    public static Builder builder() {return new Builder();}
+    public static Builder builder() {
+        return new Builder();
+    }
 
     public static final class Builder {
         private String contentId;
@@ -57,6 +58,8 @@ public class AddTargetingGroupRequest {
             return this;
         }
 
-        public AddTargetingGroupRequest build() { return new AddTargetingGroupRequest(this); }
+        public AddTargetingGroupRequest build() {
+            return new AddTargetingGroupRequest(this);
+        }
     }
 }

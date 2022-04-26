@@ -8,13 +8,17 @@ public class DeleteContentResponse {
 
     }
 
-    public static Builder builder() {return new Builder();}
+    public static Builder builder() {
+        return new Builder();
+    }
 
     public static final class Builder {
         private Builder() {
 
         }
 
-        public DeleteContentResponse build() { return new DeleteContentResponse(this); }
+        public DeleteContentResponse build() {
+            return new DeleteContentResponse(this);
+        }
     }
 }

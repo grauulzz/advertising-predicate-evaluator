@@ -3,17 +3,10 @@ package com.amazon.ata.advertising.service.model.translator;
 import com.amazon.ata.advertising.service.exceptions.AdvertisementClientException;
 import com.amazon.ata.advertising.service.model.TargetingPredicateType;
 import com.amazon.ata.advertising.service.targeting.Comparison;
-import com.amazon.ata.advertising.service.targeting.predicate.AgeTargetingPredicate;
-import com.amazon.ata.advertising.service.targeting.predicate.CategorySpendFrequencyTargetingPredicate;
-import com.amazon.ata.advertising.service.targeting.predicate.CategorySpendValueTargetingPredicate;
-import com.amazon.ata.advertising.service.targeting.predicate.ParentPredicate;
-import com.amazon.ata.advertising.service.targeting.predicate.PrimeBenefitTargetingPredicate;
-import com.amazon.ata.advertising.service.targeting.predicate.RecognizedTargetingPredicate;
-import com.amazon.ata.advertising.service.targeting.predicate.TargetingPredicate;
+import com.amazon.ata.advertising.service.targeting.predicate.*;
 import com.amazon.ata.customerservice.AgeRange;
 import com.amazon.ata.customerservice.Category;
 import com.amazon.ata.primeclubservice.Benefit;
-
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
@@ -29,13 +22,16 @@ public class TargetingPredicateTranslator {
     private static final String CATEGORY_KEY = "Category";
     private static final String COMPARISON_KEY = "Comparison";
     private static final String EXCEPTION_MESSAGE = "An %s must be specified with a valid %s in it's attribute Map. " +
-            "Valid values include: %s. Value specified was %s.";
+                                                            "Valid values include: %s. Value specified was %s.";
 
-    private TargetingPredicateTranslator() {}
+    private TargetingPredicateTranslator() {
+    }
 
     /**
      * Converts from a coral shape to the internal representation of a TargetingPredicate.
+     *
      * @param predicate The coral shape
+     *
      * @return The internal representation
      */
     public static TargetingPredicate fromCoral(com.amazon.ata.advertising.service.model.TargetingPredicate predicate) {
@@ -61,7 +57,7 @@ public class TargetingPredicateTranslator {
                 break;
             default:
                 throw new AdvertisementClientException(String.format("An unknown predicate type was requested, %s. " +
-                                "Valid predicate types are: %s",
+                                                                             "Valid predicate types are: %s",
                         predicate.getTargetingPredicateType(), Arrays.toString(TargetingPredicateType.values())));
         }
         return targetingPredicate;
@@ -160,15 +156,17 @@ public class TargetingPredicateTranslator {
 
     /**
      * Convert from an internal representation of a TargetingPredicate to the coral shape.
+     *
      * @param targetingPredicate The internal representation
+     *
      * @return The coral shape
      */
     public static com.amazon.ata.advertising.service.model.TargetingPredicate toCoral(TargetingPredicate targetingPredicate) {
         return com.amazon.ata.advertising.service.model.TargetingPredicate.builder()
-                .withNegate(targetingPredicate.isInverse())
-                .withTargetingPredicateType(toType(targetingPredicate))
-                .withAttributes(toAttributes(targetingPredicate))
-                .build();
+                       .withNegate(targetingPredicate.isInverse())
+                       .withTargetingPredicateType(toType(targetingPredicate))
+                       .withAttributes(toAttributes(targetingPredicate))
+                       .build();
     }
 
     private static TargetingPredicateType toType(TargetingPredicate predicate) {
@@ -204,7 +202,7 @@ public class TargetingPredicateTranslator {
             attributes.put(CATEGORY_KEY, spendPredicate.getTargetedCategory());
             attributes.put(COMPARISON_KEY, spendPredicate.getComparison().toString());
             attributes.put(VALUE_KEY, Integer.toString(spendPredicate.getTargetedValue()));
-        }  else if (predicate instanceof PrimeBenefitTargetingPredicate) {
+        } else if (predicate instanceof PrimeBenefitTargetingPredicate) {
             PrimeBenefitTargetingPredicate primePredicate = (PrimeBenefitTargetingPredicate) predicate;
             attributes.put(BENEFIT_KEY, primePredicate.getBenefitToHave());
         }

@@ -5,11 +5,9 @@ import com.amazon.ata.advertising.service.model.requests.UpdateClickThroughRateR
 import com.amazon.ata.advertising.service.model.responses.UpdateClickThroughRateResponse;
 import com.amazon.ata.advertising.service.model.translator.TargetingGroupTranslator;
 import com.amazon.ata.advertising.service.targeting.TargetingGroup;
-
+import javax.inject.Inject;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-
-import javax.inject.Inject;
 
 public class UpdateClickThroughRateActivity {
     private static final Logger LOG = LogManager.getLogger(UpdateClickThroughRateActivity.class);
@@ -18,6 +16,7 @@ public class UpdateClickThroughRateActivity {
 
     /**
      * Instantiates an UpdateClickThroughRateActivity.
+     *
      * @param targetingGroupDao The source of data for targeting groups
      */
     @Inject
@@ -27,7 +26,9 @@ public class UpdateClickThroughRateActivity {
 
     /**
      * Updates the click through rate that has been calculated for a targeting group based on the targetingGroupId.
+     *
      * @param request The service request to update the CTR
+     *
      * @return The updated targeting group
      */
     public UpdateClickThroughRateResponse updateClickThroughRate(UpdateClickThroughRateRequest request) {
@@ -38,7 +39,7 @@ public class UpdateClickThroughRateActivity {
         TargetingGroup group = targetingGroupDao.update(targetingGroupId, ctr);
 
         return UpdateClickThroughRateResponse.builder()
-                .withTargetingGroup(TargetingGroupTranslator.toCoral(group))
-                .build();
+                       .withTargetingGroup(TargetingGroupTranslator.toCoral(group))
+                       .build();
     }
 }

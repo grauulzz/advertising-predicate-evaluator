@@ -43,7 +43,9 @@ public class AdvertisingContent {
         this.content = builder.content;
     }
 
-    public static Builder builder() {return new Builder();}
+    public static Builder builder() {
+        return new Builder();
+    }
 
     public static final class Builder {
         private String id;
@@ -69,7 +71,9 @@ public class AdvertisingContent {
             return this;
         }
 
-        public AdvertisingContent build() { return new AdvertisingContent(this); }
+        public AdvertisingContent build() {
+            return new AdvertisingContent(this);
+        }
     }
 
     @Override

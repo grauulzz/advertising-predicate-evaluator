@@ -35,7 +35,9 @@ public class UpdateContentRequest {
         this.advertisingContent = builder.advertisingContent;
     }
 
-    public static Builder builder() {return new Builder();}
+    public static Builder builder() {
+        return new Builder();
+    }
 
     public static final class Builder {
         private String contentId;
@@ -55,6 +57,8 @@ public class UpdateContentRequest {
             return this;
         }
 
-        public UpdateContentRequest build() { return new UpdateContentRequest(this); }
+        public UpdateContentRequest build() {
+            return new UpdateContentRequest(this);
+        }
     }
 }

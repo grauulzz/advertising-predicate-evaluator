@@ -13,17 +13,21 @@ public abstract class FutureMonitor {
     private static final Consumer<String> cyan = s -> System.out.println("\u001B[36m" + s + DEFAULT);
     private static final Consumer<String> red = s -> System.out.println("\u001b[31m" + s + DEFAULT);
 
-    private FutureMonitor() {}
+    private FutureMonitor() {
+    }
 
     public enum ConsoleLogger {
         MAGENTA(magenta), YELLOW(yellow), GREEN(green), CYAN(cyan), RED(red);
         private final Consumer<String> color;
+
         ConsoleLogger(Consumer<String> color) {
             this.color = color;
         }
+
         public Consumer<String> getColor() {
             return color;
         }
+
         public void log(String message) {
             color.accept(message);
         }

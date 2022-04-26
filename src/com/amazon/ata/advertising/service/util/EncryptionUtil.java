@@ -1,11 +1,14 @@
 package com.amazon.ata.advertising.service.util;
 
 public class EncryptionUtil {
-    private EncryptionUtil() {}
+    private EncryptionUtil() {
+    }
 
     /**
      * Encrypts a marketplaceId if it is not already encrypted.
+     *
      * @param marketplaceId The marketplace ID to encrypt
+     *
      * @return the encrypted marketplace ID
      */
     public static String encryptMarketplaceId(String marketplaceId) {
