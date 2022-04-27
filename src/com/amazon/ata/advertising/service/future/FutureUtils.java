@@ -38,7 +38,6 @@ public class FutureUtils {
             return future.get();
         } catch (ExecutionException | InterruptedException e) {
             ConsoleLogger.RED.log("Exception while getting future result, shutting down executor");
-            EXECUTOR_SERVICE.shutdown();
             throw new RuntimeException(e);
         }
     }
@@ -62,11 +61,11 @@ public class FutureUtils {
 
     /**
      * Callable async processing list.
-     *
+     * @param <G>       the type parameter
      * @param future    the CompletableFuture
      * @param color     the console output color
      */
-    private static <G> void monitor(CompletableFuture<G> future, Consumer<String> color) {
+    public static <G> void monitor(CompletableFuture<G> future, Consumer<String> color) {
         if (!future.isDone()) {
             color.accept(String.format("[%s][%s]", Thread.currentThread().getName(),
                     Thread.currentThread().getState()));
@@ -74,11 +73,7 @@ public class FutureUtils {
         }
 
         future.whenComplete((G g, Throwable t) -> {
-            if (t != null) {
-                ConsoleLogger.RED.log(String.format("Future -> {%s} exception {%s}", future, t));
-            }
-
-            if (future.isCompletedExceptionally() || future.join() == null) {
+            if (t != null && future.isCompletedExceptionally() || future.join() == null) {
                 ConsoleLogger.RED.log(String.format("Future completed with errors -> {%s}%n", future));
             }
             ConsoleLogger.GREEN.getColor().accept(String.format("Completed future -> {%s}%n", g));

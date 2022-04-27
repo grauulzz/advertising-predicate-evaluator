@@ -6,13 +6,13 @@ import com.amazon.ata.advertising.service.targeting.predicate.CategorySpendValue
 import com.amazon.ata.advertising.service.targeting.predicate.ParentPredicate;
 import com.amazon.ata.advertising.service.targeting.predicate.PrimeBenefitTargetingPredicate;
 import com.amazon.ata.advertising.service.targeting.predicate.RecognizedTargetingPredicate;
-import com.amazon.ata.advertising.service.targeting.predicate.TargetingPredicate;
+
 import dagger.MembersInjector;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
+import org.mockito.Mockito;
 
-import static org.mockito.Mockito.*;
 import static org.mockito.MockitoAnnotations.initMocks;
 
 public class TargetingPredicateInjectorTest {
@@ -51,103 +51,103 @@ public class TargetingPredicateInjectorTest {
     @Test
     public void inject_agePredicate_isInject() {
         // GIVEN
-        TargetingPredicate predicate = new AgeTargetingPredicate();
+        AgeTargetingPredicate predicate = new AgeTargetingPredicate();
 
         // WHEN
         targetingPredicateInjector.inject(predicate);
 
         // THEN
-        verify(agePredicateInjector).injectMembers((AgeTargetingPredicate) predicate);
-        verifyNoInteractions(spendFrequencyPredicateInjector);
-        verifyNoInteractions(spendValuePredicateInjector);
-        verifyNoInteractions(primePredicateInjector);
-        verifyNoInteractions(parentPredicateInjector);
-        verifyNoInteractions(recognizedPredicateInjector);
+        Mockito.verify(agePredicateInjector).injectMembers(predicate);
+        Mockito.verifyNoInteractions(spendFrequencyPredicateInjector);
+        Mockito.verifyNoInteractions(spendValuePredicateInjector);
+        Mockito.verifyNoInteractions(primePredicateInjector);
+        Mockito.verifyNoInteractions(parentPredicateInjector);
+        Mockito.verifyNoInteractions(recognizedPredicateInjector);
     }
 
     @Test
     public void inject_spendFrequencyPredicate_isInject() {
         // GIVEN
-        TargetingPredicate predicate = new CategorySpendFrequencyTargetingPredicate();
+        CategorySpendFrequencyTargetingPredicate predicate = new CategorySpendFrequencyTargetingPredicate();
 
         // WHEN
         targetingPredicateInjector.inject(predicate);
 
         // THEN
-        verify(spendFrequencyPredicateInjector).injectMembers((CategorySpendFrequencyTargetingPredicate) predicate);
-        verifyNoInteractions(agePredicateInjector);
-        verifyNoInteractions(spendValuePredicateInjector);
-        verifyNoInteractions(primePredicateInjector);
-        verifyNoInteractions(parentPredicateInjector);
-        verifyNoInteractions(recognizedPredicateInjector);
+        Mockito.verify(spendFrequencyPredicateInjector).injectMembers(predicate);
+        Mockito.verifyNoInteractions(agePredicateInjector);
+        Mockito.verifyNoInteractions(spendValuePredicateInjector);
+        Mockito.verifyNoInteractions(primePredicateInjector);
+        Mockito.verifyNoInteractions(parentPredicateInjector);
+        Mockito.verifyNoInteractions(recognizedPredicateInjector);
     }
 
     @Test
     public void inject_spendValuePredicate_isInject() {
         // GIVEN
-        TargetingPredicate predicate = new CategorySpendValueTargetingPredicate();
+        CategorySpendValueTargetingPredicate predicate = new CategorySpendValueTargetingPredicate();
 
         // WHEN
         targetingPredicateInjector.inject(predicate);
 
         // THEN
-        verify(spendValuePredicateInjector).injectMembers((CategorySpendValueTargetingPredicate) predicate);
-        verifyNoInteractions(spendFrequencyPredicateInjector);
-        verifyNoInteractions(agePredicateInjector);
-        verifyNoInteractions(primePredicateInjector);
-        verifyNoInteractions(parentPredicateInjector);
-        verifyNoInteractions(recognizedPredicateInjector);
+        Mockito.verify(spendValuePredicateInjector).injectMembers(predicate);
+        Mockito.verifyNoInteractions(spendFrequencyPredicateInjector);
+        Mockito.verifyNoInteractions(agePredicateInjector);
+        Mockito.verifyNoInteractions(primePredicateInjector);
+        Mockito.verifyNoInteractions(parentPredicateInjector);
+        Mockito.verifyNoInteractions(recognizedPredicateInjector);
     }
 
     @Test
     public void inject_primePredicate_isInject() {
         // GIVEN
-        TargetingPredicate predicate = new PrimeBenefitTargetingPredicate();
+        PrimeBenefitTargetingPredicate predicate = new PrimeBenefitTargetingPredicate();
 
         // WHEN
         targetingPredicateInjector.inject(predicate);
 
         // THEN
-        verify(primePredicateInjector).injectMembers((PrimeBenefitTargetingPredicate) predicate);
-        verifyNoInteractions(spendFrequencyPredicateInjector);
-        verifyNoInteractions(spendValuePredicateInjector);
-        verifyNoInteractions(agePredicateInjector);
-        verifyNoInteractions(parentPredicateInjector);
-        verifyNoInteractions(recognizedPredicateInjector);
+        Mockito.verify(primePredicateInjector).injectMembers(predicate);
+        Mockito.verifyNoInteractions(spendFrequencyPredicateInjector);
+        Mockito.verifyNoInteractions(spendValuePredicateInjector);
+        Mockito.verifyNoInteractions(agePredicateInjector);
+        Mockito.verifyNoInteractions(parentPredicateInjector);
+        Mockito.verifyNoInteractions(recognizedPredicateInjector);
     }
 
     @Test
     public void inject_parentPredicate_isInject() {
         // GIVEN
-        TargetingPredicate predicate = new ParentPredicate();
+        ParentPredicate predicate = new ParentPredicate();
 
         // WHEN
         targetingPredicateInjector.inject(predicate);
 
         // THEN
-        verify(parentPredicateInjector).injectMembers((ParentPredicate) predicate);
-        verifyNoInteractions(spendFrequencyPredicateInjector);
-        verifyNoInteractions(spendValuePredicateInjector);
-        verifyNoInteractions(primePredicateInjector);
-        verifyNoInteractions(agePredicateInjector);
-        verifyNoInteractions(recognizedPredicateInjector);
+        Mockito.verify(parentPredicateInjector).injectMembers(predicate);
+        Mockito.verifyNoInteractions(spendFrequencyPredicateInjector);
+        Mockito.verifyNoInteractions(spendValuePredicateInjector);
+        Mockito.verifyNoInteractions(primePredicateInjector);
+        Mockito.verifyNoInteractions(agePredicateInjector);
+        Mockito.verifyNoInteractions(recognizedPredicateInjector);
     }
 
     @Test
     public void inject_recognizedPredicate_isInject() {
         // GIVEN
-        TargetingPredicate predicate = new RecognizedTargetingPredicate();
+        RecognizedTargetingPredicate predicate = new RecognizedTargetingPredicate();
 
         // WHEN
         targetingPredicateInjector.inject(predicate);
 
         // THEN
-        verify(recognizedPredicateInjector).injectMembers((RecognizedTargetingPredicate) predicate);
-        verifyNoInteractions(spendFrequencyPredicateInjector);
-        verifyNoInteractions(spendValuePredicateInjector);
-        verifyNoInteractions(primePredicateInjector);
-        verifyNoInteractions(parentPredicateInjector);
-        verifyNoInteractions(agePredicateInjector);
+        Mockito.verify(recognizedPredicateInjector).injectMembers(predicate);
+        Mockito.verifyNoInteractions(spendFrequencyPredicateInjector);
+        Mockito.verifyNoInteractions(spendValuePredicateInjector);
+        Mockito.verifyNoInteractions(primePredicateInjector);
+        Mockito.verifyNoInteractions(parentPredicateInjector);
+        Mockito.verifyNoInteractions(agePredicateInjector);
     }
 
 }

@@ -120,11 +120,6 @@ public class AdvertisingContent {
                 content1.getMarketplaceId()) && Objects.equal(getContent(), content1.getContent());
     }
 
-    @Override
-    public int hashCode() {
-        return Objects.hashCode(getId(), getMarketplaceId(), getContent());
-    }
-
     /**
      * The type Builder.
      */
