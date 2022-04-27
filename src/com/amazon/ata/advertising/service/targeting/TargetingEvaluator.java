@@ -34,7 +34,7 @@ public class TargetingEvaluator {
     public TargetingPredicateResult evaluate(TargetingGroup targetingGroup) {
         // TargetingEvaluator's evaluate method determines if all the TargetingPredicates
         // in a given TargetingGroup are true for the given RequestContext
-        return targetingGroup.getTargetingPredicates().stream()
+        return targetingGroup.getTargetingPredicates().stream().parallel()
                        .map(targetingPredicate -> targetingPredicate.evaluate(requestContext))
                        .allMatch(TargetingPredicateResult::isTrue) ? TRUE : FALSE;
     }

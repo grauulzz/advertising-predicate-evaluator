@@ -8,8 +8,6 @@ import java.util.List;
 import java.util.Optional;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutionException;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
 import java.util.function.Consumer;
 import java.util.function.Function;
 
@@ -18,8 +16,6 @@ import java.util.function.Function;
  * The type Future utils.
  */
 public class FutureUtils {
-    public static final ExecutorService EXECUTOR_SERVICE =
-            Executors.newCachedThreadPool();
 
     private FutureUtils() {
     }
@@ -37,7 +33,7 @@ public class FutureUtils {
         try {
             return future.get();
         } catch (ExecutionException | InterruptedException e) {
-            ConsoleLogger.RED.log("Exception while getting future result, shutting down executor");
+            ConsoleLogger.RED.log("Exception while getting future result");
             throw new RuntimeException(e);
         }
     }
@@ -54,7 +50,7 @@ public class FutureUtils {
             Function<List<TargetingGroup>, Optional<List<AdvertisementContent>>> function, List<TargetingGroup> groups
     ) {
         CompletableFuture<Optional<List<AdvertisementContent>>> future =
-                CompletableFuture.supplyAsync(() -> function.apply(groups), EXECUTOR_SERVICE);
+                CompletableFuture.supplyAsync(() -> function.apply(groups));
         monitor(future, ConsoleLogger.MAGENTA.getColor());
         return get(future.thenApply(Optional::get));
     }
@@ -67,9 +63,7 @@ public class FutureUtils {
      */
     public static <G> void monitor(CompletableFuture<G> future, Consumer<String> color) {
         if (!future.isDone()) {
-            color.accept(String.format("[%s][%s]", Thread.currentThread().getName(),
-                    Thread.currentThread().getState()));
-            ConsoleLogger.YELLOW.getColor().accept(String.format("Waiting for {%s} %n", future));
+            color.accept(String.format("Waiting for {%s} %n", future));
         }
 
         future.whenComplete((G g, Throwable t) -> {

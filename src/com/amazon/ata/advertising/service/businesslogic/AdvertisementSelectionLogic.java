@@ -33,19 +33,15 @@ public class AdvertisementSelectionLogic {
     private final ReadableDao<String, List<AdvertisementContent>> contentDao;
     private final ReadableDao<String, List<TargetingGroup>> targetingGroupDao;
     private Predicate<TargetingGroup> evalTruePredicate;
-    private Predicate<TargetingGroup> evalFalsePredicate;
-    private Predicate<TargetingGroup> evalIndeterminate;
     private final BiConsumer<String, String> initializePredicates = (customerId, marketPlaceId) -> {
         RequestContext context = new RequestContext(customerId, marketPlaceId);
         TargetingEvaluator evaluator = new TargetingEvaluator(context);
         evalTruePredicate = p -> evaluator.evaluate(p).equals(TargetingPredicateResult.TRUE);
-        evalFalsePredicate = p -> evaluator.evaluate(p).equals(TargetingPredicateResult.FALSE);
-        evalIndeterminate = p -> evaluator.evaluate(p).equals(TargetingPredicateResult.INDETERMINATE);
     };
     private final Function<TargetingGroup, AdvertisementContent> loadAdContent =
             targetingGroup -> db.load(AdvertisementContent.class, targetingGroup.getContentId());
     private final Function<List<TargetingGroup>, Optional<List<AdvertisementContent>>> mapHighestCtrToContentId =
-            targetingGroups -> Optional.of(targetingGroups.stream().filter(this.evalTruePredicate).reduce(
+            targetingGroups -> Optional.of(targetingGroups.stream().filter(getEvalTruePredicate()).reduce(
                             (group1, group2) -> group1.getClickThroughRate() >
                                                         group2.getClickThroughRate() ? group1 : group2)
                                                    .stream().map(loadAdContent).collect(Collectors.toList()));
@@ -102,24 +98,4 @@ public class AdvertisementSelectionLogic {
     public Predicate<TargetingGroup> getEvalTruePredicate() {
         return evalTruePredicate;
     }
-
-    /**
-     * Gets eval indeterminate.
-     *
-     * @return the eval indeterminate
-     */
-    public Predicate<TargetingGroup> getEvalIndeterminate() {
-        return evalIndeterminate;
-    }
-
-    /**
-     * Gets eval false predicate.
-     *
-     * @return the eval false predicate
-     */
-    public Predicate<TargetingGroup> getEvalFalsePredicate() {
-        return evalFalsePredicate;
-    }
-
-
 }

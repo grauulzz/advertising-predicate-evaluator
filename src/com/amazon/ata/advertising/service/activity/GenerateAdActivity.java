@@ -10,7 +10,6 @@ import com.amazon.ata.advertising.service.model.translator.AdvertisementTranslat
 import java.util.concurrent.CompletableFuture;
 import javax.inject.Inject;
 
-import static com.amazon.ata.advertising.service.future.FutureUtils.EXECUTOR_SERVICE;
 
 /**
  * Activity class for generate ad operation.
@@ -43,9 +42,8 @@ public class GenerateAdActivity {
         String marketplaceId = request.getMarketplaceId();
 
         CompletableFuture<GenerateAdvertisementResponse> future =
-                CompletableFuture.supplyAsync(() -> adSelector.selectAdvertisement(customerId, marketplaceId),
-                        EXECUTOR_SERVICE).handleAsync(
-                                (generatedAd, throwable) -> {
+                CompletableFuture.supplyAsync(() -> adSelector.selectAdvertisement(customerId, marketplaceId))
+                        .handleAsync((generatedAd, throwable) -> {
                                     if (throwable != null) {
                                         return new GenerateAdvertisementResponse(AdvertisementTranslator.toCoral(
                                                 new EmptyGeneratedAdvertisement()));
