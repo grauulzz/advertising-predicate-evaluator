@@ -19,7 +19,7 @@ import java.util.function.Function;
  */
 public class FutureUtils {
     public static final ExecutorService EXECUTOR_SERVICE =
-            Executors.newFixedThreadPool(Runtime.getRuntime().availableProcessors());
+            Executors.newCachedThreadPool();
 
     private FutureUtils() {
     }

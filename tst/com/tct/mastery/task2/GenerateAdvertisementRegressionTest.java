@@ -20,7 +20,7 @@ public class GenerateAdvertisementRegressionTest {
 
     @Test
     public void generateAdvertisement_withTargetCustomerIdInMarketplace_returnsAdvertisement() {
-        GenerateAdvertisementRequest request = new GenerateAdvertisementRequest().builder()
+        GenerateAdvertisementRequest request = GenerateAdvertisementRequest.builder()
                 .withCustomerId(PARENT_PROFILE_CUSTOMER_ID)
                 .withMarketplaceId(US_MARKETPLACE_ID)
                 .build();
