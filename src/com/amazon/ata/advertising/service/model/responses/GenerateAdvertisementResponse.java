@@ -61,30 +61,6 @@ public class GenerateAdvertisementResponse {
         return new Builder();
     }
 
-    @Override
-    public String toString() {
-        return "GenerateAdvertisementResponse{" +
-                       "advertisement=" + advertisement +
-                       '}';
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) {
-            return true;
-        }
-        if (o == null || getClass() != o.getClass()) {
-            return false;
-        }
-        GenerateAdvertisementResponse response = (GenerateAdvertisementResponse) o;
-        return Objects.equal(getAdvertisement(), response.getAdvertisement());
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hashCode(getAdvertisement());
-    }
-
     /**
      * The type Builder.
      */
