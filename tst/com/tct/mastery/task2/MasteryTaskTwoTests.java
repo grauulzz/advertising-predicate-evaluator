@@ -30,7 +30,7 @@ public class MasteryTaskTwoTests {
 
     @Test
     public void generateAdvertisement_withTargetCustomerIdInMarketplace_returnsAdvertisement() {
-        GenerateAdvertisementRequest request = new GenerateAdvertisementRequest().builder()
+        GenerateAdvertisementRequest request = GenerateAdvertisementRequest.builder()
             .withCustomerId(PARENT_PROFILE_CUSTOMER_ID)
             .withMarketplaceId(US_MARKETPLACE_ID)
             .build();
@@ -43,7 +43,7 @@ public class MasteryTaskTwoTests {
         LOG.info("GenerateAdvertisement request took {} milliseconds to complete, " +
                     "expected less than {} ms. GenerateAdvertisement should " +
                     "evaluate predicates concurrently!",
-                elapsed, SERIAL_MINIMUM_EXECUTION_DURATION);
+                elapsed, CONCURRENT_APPROXIMATE_EXECUTION_DURATION);
 
         assertNotNull(result.getAdvertisement(), "Expected a non null advertisement in the response.");
         assertNotNull(result.getAdvertisement().getId(), "Expected the advertisement to have a non-null " +
