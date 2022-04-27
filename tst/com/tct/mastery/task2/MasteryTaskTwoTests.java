@@ -43,7 +43,7 @@ public class MasteryTaskTwoTests {
         LOG.info("GenerateAdvertisement request took {} milliseconds to complete, " +
                     "expected less than {} ms. GenerateAdvertisement should " +
                     "evaluate predicates concurrently!",
-                elapsed, CONCURRENT_APPROXIMATE_EXECUTION_DURATION);
+                elapsed, SERIAL_MINIMUM_EXECUTION_DURATION);
 
         assertNotNull(result.getAdvertisement(), "Expected a non null advertisement in the response.");
         assertNotNull(result.getAdvertisement().getId(), "Expected the advertisement to have a non-null " +
@@ -51,5 +51,30 @@ public class MasteryTaskTwoTests {
         assertFalse(StringUtils.isBlank(result.getAdvertisement().getContent()), "Expected a non-empty " +
             "advertisement content when generating an advertisement for a customer ID with a parent profile " +
             "in marketplace ID: " + request.getMarketplaceId());
+    }
+
+    @Test
+    public void generateAdvertisement_withTargetCustomerIdInMarketplace_returnsAdvertisement2() {
+        GenerateAdvertisementRequest request = GenerateAdvertisementRequest.builder()
+                                                       .withCustomerId(PARENT_PROFILE_CUSTOMER_ID)
+                                                       .withMarketplaceId(US_MARKETPLACE_ID)
+                                                       .build();
+
+        long start = System.currentTimeMillis();
+        GenerateAdvertisementResponse result = new GenerateAdActivityDagger().handleRequest(request, null);
+        long finish = System.currentTimeMillis();
+
+        long elapsed = finish - start;
+        LOG.info("GenerateAdvertisement request took {} milliseconds to complete, " +
+                         "expected less than {} ms. GenerateAdvertisement should " +
+                         "evaluate predicates concurrently!",
+                elapsed, CONCURRENT_APPROXIMATE_EXECUTION_DURATION);
+
+        assertNotNull(result.getAdvertisement(), "Expected a non null advertisement in the response.");
+        assertNotNull(result.getAdvertisement().getId(), "Expected the advertisement to have a non-null " +
+                                                                 "content ID.");
+        assertFalse(StringUtils.isBlank(result.getAdvertisement().getContent()), "Expected a non-empty " +
+                                                                                         "advertisement content when generating an advertisement for a customer ID with a parent profile " +
+                                                                                         "in marketplace ID: " + request.getMarketplaceId());
     }
 }
