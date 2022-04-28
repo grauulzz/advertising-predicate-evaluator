@@ -10,6 +10,7 @@ import com.amazon.ata.advertising.service.activity.UpdateContentActivity;
 import com.amazon.ata.advertising.service.dao.ContentDao;
 import com.amazon.ata.advertising.service.dao.TargetingGroupDao;
 
+import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBMapper;
 import dagger.Component;
 
 import javax.inject.Singleton;
@@ -87,4 +88,6 @@ public interface LambdaComponent {
      * @return the targeting group dao
      */
     TargetingGroupDao provideTargetingGroupDao();
+
+    DynamoDBMapper provideDynamoDBMapper();
 }

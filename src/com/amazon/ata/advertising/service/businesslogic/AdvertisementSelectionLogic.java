@@ -1,7 +1,9 @@
 package com.amazon.ata.advertising.service.businesslogic;
 
 import com.amazon.ata.advertising.service.dao.ReadableDao;
+import com.amazon.ata.advertising.service.dependency.DaggerLambdaComponent;
 import com.amazon.ata.advertising.service.dependency.DynamoDBModule;
+import com.amazon.ata.advertising.service.dependency.LambdaComponent;
 import com.amazon.ata.advertising.service.future.FutureMonitor;
 import com.amazon.ata.advertising.service.future.FutureUtils;
 import com.amazon.ata.advertising.service.model.AdvertisementContent;
@@ -20,10 +22,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import java.util.Random;
-import java.util.concurrent.CompletableFuture;
-import java.util.function.BiConsumer;
 import java.util.function.Function;
-import java.util.function.Predicate;
 import java.util.stream.Collectors;
 import javax.inject.Inject;
 
@@ -31,7 +30,7 @@ import javax.inject.Inject;
  * The type Advertisement selection logic.
  */
 public class AdvertisementSelectionLogic {
-    private final DynamoDBMapper db = new DynamoDBModule().provideDynamoDBMapper();
+    private final DynamoDBMapper db;
     private final Random r = new Random();
     private final ReadableDao<String, List<AdvertisementContent>> contentDao;
     private final ReadableDao<String, List<TargetingGroup>> targetingGroupDao;
@@ -44,9 +43,11 @@ public class AdvertisementSelectionLogic {
      */
     @Inject
     public AdvertisementSelectionLogic(ReadableDao<String, List<AdvertisementContent>> contentDao,
-                                       ReadableDao<String, List<TargetingGroup>> targetingGroupDao) {
+                                       ReadableDao<String, List<TargetingGroup>> targetingGroupDao,
+                                       DynamoDBMapper db) {
         this.contentDao = contentDao;
         this.targetingGroupDao = targetingGroupDao;
+        this.db = db;
     }
 
     /**
@@ -78,27 +79,21 @@ public class AdvertisementSelectionLogic {
 
         final Function<List<TargetingGroup>, Optional<List<AdvertisementContent>>> mapHighestCtrToContentId =
                 targetingGroups -> Optional.of(targetingGroups.stream().filter(
-                                p -> evaluator.evaluate(p).equals(TargetingPredicateResult.TRUE)).reduce(
+                                tg -> evaluator.evaluteTgConcurently(tg).equals(TargetingPredicateResult.TRUE)).reduce(
                                 (group1, group2) -> group1.getClickThroughRate() >
                                                             group2.getClickThroughRate() ? group1 : group2)
-                                                       .stream()
-                                                       .map(targetingGroup ->
-                                                                    db.load(AdvertisementContent.class,
-                                                                            targetingGroup.getContentId()))
+                                                       .stream().map(TargetingGroup::getContentId)
+                                                       .map(id -> db.load(AdvertisementContent.class, id))
                                                        .collect(Collectors.toList()));
 
 
 
-        List<AdvertisementContent> l = callableAsyncProcessing(mapHighestCtrToContentId, groups);
+        List<AdvertisementContent> l = mapHighestCtrToContentId.apply(groups).orElse(Collections.emptyList());
+
+        if (CollectionUtils.isNullOrEmpty(l)) {
+            return new EmptyGeneratedAdvertisement();
+        }
 
         return new GeneratedAdvertisement(l.get(r.nextInt(l.size())));
-    }
-
-    private static List<AdvertisementContent> callableAsyncProcessing(
-            Function<List<TargetingGroup>, Optional<List<AdvertisementContent>>> function, List<TargetingGroup> groups
-    ) {
-        CompletableFuture<Optional<List<AdvertisementContent>>> future =
-                CompletableFuture.supplyAsync(() -> function.apply(groups));
-        return future.thenApply(Optional::get).join();
     }
 }
