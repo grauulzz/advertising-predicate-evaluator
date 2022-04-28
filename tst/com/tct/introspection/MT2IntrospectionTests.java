@@ -14,11 +14,11 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 @Tag("MT02")
 public class MT2IntrospectionTests {
-    private static final Logger LOG = LogManager.getLogger(MT2IntrospectionTests.class);
     private static final String IMPLEMENTED_CONCURRENCY_FIELD_NAME = "IMPLEMENTED_CONCURRENCY";
 
     @Test
-    public void targetingEvaluator_concurrencyFlag_isSet() throws Exception {
+    public void targetingEvaluator_concurrencyFlag_isSet() throws SecurityException, IllegalArgumentException,
+                                                                              IllegalAccessException {
         // GIVEN
         Class<?> targetingEvaluator = ClassQuery.inExactPackage("com.amazon.ata.advertising.service.targeting")
             .withExactSimpleName("TargetingEvaluator")

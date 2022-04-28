@@ -14,12 +14,11 @@ import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBMapper;
 import com.amazonaws.util.CollectionUtils;
 import com.amazonaws.util.StringUtils;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import java.util.Random;
-import java.util.function.BiConsumer;
 import java.util.function.Function;
-import java.util.function.Predicate;
 import java.util.stream.Collectors;
 import javax.inject.Inject;
 
@@ -81,8 +80,12 @@ public class AdvertisementSelectionLogic {
         if (StringUtils.isNullOrEmpty(marketplaceId)) {
             return new EmptyGeneratedAdvertisement();
         }
-        this.initializePredicates.accept(customerId, marketplaceId);
-        List<AdvertisementContent> contents = contentDao.get(marketplaceId);
+        RequestContext context = new RequestContext(customerId, marketplaceId);
+        TargetingEvaluator evaluator = new TargetingEvaluator(context);
+        final List<AdvertisementContent> contents = contentDao.get(marketplaceId);
+        final List<TargetingGroup> groups = contents.stream().map(AdvertisementContent::getContentId)
+                        .map(targetingGroupDao::get).flatMap(List::stream)
+                        .collect(Collectors.toList());
 
         if (CollectionUtils.isNullOrEmpty(contents)) {
             return new EmptyGeneratedAdvertisement();
@@ -93,38 +96,23 @@ public class AdvertisementSelectionLogic {
                         .collect(Collectors.toList());
         List<AdvertisementContent> l = FutureUtils.sequenceFutures(mapHighestCtrToContentId, groups);
 
-        return new GeneratedAdvertisement(l.get(r.nextInt(l.size())));
-    }
+        final Function<List<TargetingGroup>, Optional<List<AdvertisementContent>>> mapHighestCtrToContentId =
+                targetingGroups -> Optional.of(targetingGroups.stream().filter(
+                                tg -> evaluator.evaluteTgConcurently(tg).equals(TargetingPredicateResult.TRUE)).reduce(
+                                (group1, group2) -> group1.getClickThroughRate() >
+                                                            group2.getClickThroughRate() ? group1 : group2)
+                                                       .stream().map(TargetingGroup::getContentId)
+                                                       .map(id -> db.load(AdvertisementContent.class, id))
+                                                       .collect(Collectors.toList()));
 
-    /**
-     * Gets eval true predicate.
-     *
-     * @return the eval true predicate
-     */
-    public Predicate<TargetingGroup> getEvalTruePredicate() {
-        return evalTruePredicate;
-    }
 
-    /**
-     * Gets eval indeterminate.
-     *
-     * @return the eval indeterminate
-     */
-    public Predicate<TargetingGroup> getEvalIndeterminate() {
-        return evalIndeterminate;
-    }
 
-    /**
-     * Gets eval false predicate.
-     *
-     * @return the eval false predicate
-     */
-    public Predicate<TargetingGroup> getEvalFalsePredicate() {
-        return evalFalsePredicate;
-    }
+        List<AdvertisementContent> l = mapHighestCtrToContentId.apply(groups).orElse(Collections.emptyList());
 
     private DynamoDBMapper getDb() {
         return db;
     }
 
+        return new GeneratedAdvertisement(l.get(r.nextInt(l.size())));
+    }
 }

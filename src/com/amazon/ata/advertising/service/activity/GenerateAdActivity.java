@@ -3,14 +3,15 @@ package com.amazon.ata.advertising.service.activity;
 import com.amazon.ata.advertising.service.businesslogic.AdvertisementSelectionLogic;
 import com.amazon.ata.advertising.service.future.FutureUtils;
 import com.amazon.ata.advertising.service.model.EmptyGeneratedAdvertisement;
+import com.amazon.ata.advertising.service.model.GeneratedAdvertisement;
 import com.amazon.ata.advertising.service.model.requests.GenerateAdvertisementRequest;
 import com.amazon.ata.advertising.service.model.responses.GenerateAdvertisementResponse;
 import com.amazon.ata.advertising.service.model.translator.AdvertisementTranslator;
 
+import java.util.Optional;
 import java.util.concurrent.CompletableFuture;
 import javax.inject.Inject;
 
-import static com.amazon.ata.advertising.service.future.FutureUtils.EXECUTOR_SERVICE;
 
 /**
  * Activity class for generate ad operation.
@@ -42,19 +43,12 @@ public class GenerateAdActivity {
         String customerId = request.getCustomerId();
         String marketplaceId = request.getMarketplaceId();
 
-        CompletableFuture<GenerateAdvertisementResponse> future =
-                CompletableFuture.supplyAsync(() -> adSelector.selectAdvertisement(customerId, marketplaceId),
-                        EXECUTOR_SERVICE).handleAsync(
-                                (generatedAd, throwable) -> {
-                                    if (throwable != null) {
-                                        return new GenerateAdvertisementResponse(AdvertisementTranslator.toCoral(
-                                                new EmptyGeneratedAdvertisement()));
-                                    }
-                                    return new GenerateAdvertisementResponse(
-                                            AdvertisementTranslator.toCoral(generatedAd));
-                                });
+        Optional<GeneratedAdvertisement> adv =
+                Optional.ofNullable(adSelector.selectAdvertisement(customerId, marketplaceId));
 
-        return FutureUtils.get(future);
+        return new GenerateAdvertisementResponse(AdvertisementTranslator.toCoral(
+                adv.orElse(new EmptyGeneratedAdvertisement())));
+
     }
 
 }
