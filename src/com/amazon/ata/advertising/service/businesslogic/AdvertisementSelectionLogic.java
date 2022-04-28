@@ -2,6 +2,7 @@ package com.amazon.ata.advertising.service.businesslogic;
 
 import com.amazon.ata.advertising.service.dao.ReadableDao;
 import com.amazon.ata.advertising.service.dependency.DynamoDBModule;
+import com.amazon.ata.advertising.service.future.FutureMonitor;
 import com.amazon.ata.advertising.service.future.FutureUtils;
 import com.amazon.ata.advertising.service.model.AdvertisementContent;
 import com.amazon.ata.advertising.service.model.EmptyGeneratedAdvertisement;
@@ -15,9 +16,11 @@ import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBMapper;
 import com.amazonaws.util.CollectionUtils;
 import com.amazonaws.util.StringUtils;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import java.util.Random;
+import java.util.concurrent.CompletableFuture;
 import java.util.function.BiConsumer;
 import java.util.function.Function;
 import java.util.function.Predicate;
@@ -32,19 +35,6 @@ public class AdvertisementSelectionLogic {
     private final Random r = new Random();
     private final ReadableDao<String, List<AdvertisementContent>> contentDao;
     private final ReadableDao<String, List<TargetingGroup>> targetingGroupDao;
-    private Predicate<TargetingGroup> evalTruePredicate;
-    private final BiConsumer<String, String> initializePredicates = (customerId, marketPlaceId) -> {
-        RequestContext context = new RequestContext(customerId, marketPlaceId);
-        TargetingEvaluator evaluator = new TargetingEvaluator(context);
-        evalTruePredicate = p -> evaluator.evaluate(p).equals(TargetingPredicateResult.TRUE);
-    };
-    private final Function<TargetingGroup, AdvertisementContent> loadAdContent =
-            targetingGroup -> db.load(AdvertisementContent.class, targetingGroup.getContentId());
-    private final Function<List<TargetingGroup>, Optional<List<AdvertisementContent>>> mapHighestCtrToContentId =
-            targetingGroups -> Optional.of(targetingGroups.stream().filter(getEvalTruePredicate()).reduce(
-                            (group1, group2) -> group1.getClickThroughRate() >
-                                                        group2.getClickThroughRate() ? group1 : group2)
-                                                   .stream().map(loadAdContent).collect(Collectors.toList()));
 
     /**
      * Instantiates a new Advertisement selection logic.
@@ -75,27 +65,40 @@ public class AdvertisementSelectionLogic {
         if (StringUtils.isNullOrEmpty(marketplaceId)) {
             return new EmptyGeneratedAdvertisement();
         }
-        this.initializePredicates.accept(customerId, marketplaceId);
-        List<AdvertisementContent> contents = contentDao.get(marketplaceId);
+        RequestContext context = new RequestContext(customerId, marketplaceId);
+        TargetingEvaluator evaluator = new TargetingEvaluator(context);
+        final List<AdvertisementContent> contents = contentDao.get(marketplaceId);
+        final List<TargetingGroup> groups = contents.stream().map(AdvertisementContent::getContentId)
+                        .map(targetingGroupDao::get).flatMap(List::stream)
+                        .collect(Collectors.toList());
 
         if (CollectionUtils.isNullOrEmpty(contents)) {
             return new EmptyGeneratedAdvertisement();
         }
-        List<TargetingGroup> groups =
-                contents.stream().map(AdvertisementContent::getContentId)
-                        .map(targetingGroupDao::get).flatMap(List::stream)
-                        .collect(Collectors.toList());
-        List<AdvertisementContent> l = FutureUtils.callableAsyncProcessing(mapHighestCtrToContentId, groups);
+
+        final Function<List<TargetingGroup>, Optional<List<AdvertisementContent>>> mapHighestCtrToContentId =
+                targetingGroups -> Optional.of(targetingGroups.stream().filter(
+                                p -> evaluator.evaluate(p).equals(TargetingPredicateResult.TRUE)).reduce(
+                                (group1, group2) -> group1.getClickThroughRate() >
+                                                            group2.getClickThroughRate() ? group1 : group2)
+                                                       .stream()
+                                                       .map(targetingGroup ->
+                                                                    db.load(AdvertisementContent.class,
+                                                                            targetingGroup.getContentId()))
+                                                       .collect(Collectors.toList()));
+
+
+
+        List<AdvertisementContent> l = callableAsyncProcessing(mapHighestCtrToContentId, groups);
 
         return new GeneratedAdvertisement(l.get(r.nextInt(l.size())));
     }
 
-    /**
-     * Gets eval true predicate.
-     *
-     * @return the eval true predicate
-     */
-    public Predicate<TargetingGroup> getEvalTruePredicate() {
-        return evalTruePredicate;
+    private static List<AdvertisementContent> callableAsyncProcessing(
+            Function<List<TargetingGroup>, Optional<List<AdvertisementContent>>> function, List<TargetingGroup> groups
+    ) {
+        CompletableFuture<Optional<List<AdvertisementContent>>> future =
+                CompletableFuture.supplyAsync(() -> function.apply(groups));
+        return future.thenApply(Optional::get).join();
     }
 }

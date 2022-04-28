@@ -45,10 +45,10 @@ public class MasteryTaskTwoTests {
         long finish = System.currentTimeMillis();
 
         long elapsed = finish - start;
-        LOG.info("GenerateAdvertisement request took {} milliseconds to complete, " +
-                    "expected less than {} ms. GenerateAdvertisement should " +
+        LOG.info(System.out.printf("GenerateAdvertisement request took {%s} milliseconds to complete, " +
+                    "expected less than {%s} ms. GenerateAdvertisement should " +
                     "evaluate predicates concurrently!",
-                elapsed, SERIAL_MINIMUM_EXECUTION_DURATION);
+                elapsed, SERIAL_MINIMUM_EXECUTION_DURATION));
 
         assertNotNull(result.getAdvertisement(), "Expected a non null advertisement in the response.");
         assertNotNull(result.getAdvertisement().getId(), "Expected the advertisement to have a non-null " +
