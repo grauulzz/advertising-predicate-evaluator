@@ -10,6 +10,7 @@ import com.amazon.ata.advertising.service.model.EmptyGeneratedAdvertisement;
 import com.amazon.ata.advertising.service.model.GeneratedAdvertisement;
 import com.amazon.ata.advertising.service.model.requests.GenerateAdvertisementRequest;
 import com.amazon.ata.advertising.service.model.responses.GenerateAdvertisementResponse;
+import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBMapper;
 import java.util.*;
 import java.util.concurrent.ExecutionException;
 import java.util.function.Function;
@@ -20,14 +21,16 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
 
 
-public class AdvertisementSelectionLogicTest {
+class AdvertisementSelectionLogicTest {
 
     private final LambdaComponent daggerLambdaComponent = DaggerLambdaComponent.create();
     private final Function<GenerateAdvertisementRequest, GenerateAdvertisementResponse>
             handleWithDagger = request -> daggerLambdaComponent.provideGenerateAdActivity().generateAd(request);
     private final ContentDao cd = daggerLambdaComponent.provideContentDao();
     private final TargetingGroupDao td = daggerLambdaComponent.provideTargetingGroupDao();
-    private final AdvertisementSelectionLogic adSelectionService = new AdvertisementSelectionLogic(cd, td);
+
+    private final DynamoDBMapper db = daggerLambdaComponent.provideDynamoDBMapper();
+    private final AdvertisementSelectionLogic adSelectionService = new AdvertisementSelectionLogic(cd, td, db);
 
     @Test
     void whenGenerateAdRequest_returnHandledAdvertisement_withCorrectContent1() {
