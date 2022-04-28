@@ -59,26 +59,3 @@ public class TargetingEvaluator {
                        .allMatch(TargetingPredicateResult::isTrue) ? TRUE : FALSE;
     }
 }
-
-
-
-
-
-
-
-
-//     public TargetingPredicateResult evaluate(TargetingGroup targetingGroup) {
-//        // TargetingEvaluator's evaluate method determines if all the TargetingPredicates
-//        // in a given TargetingGroup are true for the given RequestContext
-//        List<TargetingPredicateResult> t = targetingGroup.getTargetingPredicates().stream().parallel()
-//                                                   .map(predicate -> {
-//            try {
-//                Future<TargetingPredicateResult> res = executor.submit(() -> predicate.evaluate(requestContext));
-//                return res.get().equals(TRUE) ? TRUE : FALSE;
-//            } catch (ExecutionException | InterruptedException e) {
-//                throw new RuntimeException(e);
-//            }
-//        }).collect(Collectors.toList());
-//
-//        return t.stream().allMatch(TargetingPredicateResult::isTrue) ? TRUE : FALSE;
-//    }
