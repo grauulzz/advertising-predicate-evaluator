@@ -46,7 +46,7 @@ public class FutureUtils {
      *
      * @return the list
      */
-    public static List<AdvertisementContent> callableAsyncProcessing(
+    public static List<AdvertisementContent> sequenceFutures(
             Function<List<TargetingGroup>, Optional<List<AdvertisementContent>>> function, List<TargetingGroup> groups
     ) {
         CompletableFuture<Optional<List<AdvertisementContent>>> future =

@@ -1,10 +1,6 @@
 package com.amazon.ata.advertising.service.businesslogic;
 
 import com.amazon.ata.advertising.service.dao.ReadableDao;
-import com.amazon.ata.advertising.service.dependency.DaggerLambdaComponent;
-import com.amazon.ata.advertising.service.dependency.DynamoDBModule;
-import com.amazon.ata.advertising.service.dependency.LambdaComponent;
-import com.amazon.ata.advertising.service.future.FutureMonitor;
 import com.amazon.ata.advertising.service.future.FutureUtils;
 import com.amazon.ata.advertising.service.model.AdvertisementContent;
 import com.amazon.ata.advertising.service.model.EmptyGeneratedAdvertisement;
@@ -34,6 +30,24 @@ public class AdvertisementSelectionLogic {
     private final Random r = new Random();
     private final ReadableDao<String, List<AdvertisementContent>> contentDao;
     private final ReadableDao<String, List<TargetingGroup>> targetingGroupDao;
+    private Predicate<TargetingGroup> evalTruePredicate;
+    private Predicate<TargetingGroup> evalFalsePredicate;
+    private Predicate<TargetingGroup> evalIndeterminate;
+    private final BiConsumer<String, String> initializePredicates = (customerId, marketPlaceId) -> {
+        RequestContext context = new RequestContext(customerId, marketPlaceId);
+        TargetingEvaluator evaluator = new TargetingEvaluator(context);
+        evalTruePredicate = p -> evaluator.evaluate(p).equals(TargetingPredicateResult.TRUE);
+        evalFalsePredicate = p -> evaluator.evaluate(p).equals(TargetingPredicateResult.FALSE);
+        evalIndeterminate = p -> evaluator.evaluate(p).equals(TargetingPredicateResult.INDETERMINATE);
+    };
+
+    private final Function<List<TargetingGroup>, Optional<List<AdvertisementContent>>> mapHighestCtrToContentId =
+            tg -> Optional.of(tg.stream().filter(getEvalTruePredicate()).reduce(
+                            (tg1, tg2) -> tg1.getClickThroughRate() > tg2.getClickThroughRate() ? tg1 : tg2)
+                                      .stream()
+                                      .map(TargetingGroup::getContentId)
+                                      .map(id -> getDb().load(AdvertisementContent.class, id))
+                                      .collect(Collectors.toList()));
 
     /**
      * Instantiates a new Advertisement selection logic.
@@ -76,6 +90,11 @@ public class AdvertisementSelectionLogic {
         if (CollectionUtils.isNullOrEmpty(contents)) {
             return new EmptyGeneratedAdvertisement();
         }
+        List<TargetingGroup> groups =
+                contents.stream().map(AdvertisementContent::getContentId)
+                        .map(targetingGroupDao::get).flatMap(List::stream)
+                        .collect(Collectors.toList());
+        List<AdvertisementContent> l = FutureUtils.sequenceFutures(mapHighestCtrToContentId, groups);
 
         final Function<List<TargetingGroup>, Optional<List<AdvertisementContent>>> mapHighestCtrToContentId =
                 targetingGroups -> Optional.of(targetingGroups.stream().filter(
@@ -90,9 +109,9 @@ public class AdvertisementSelectionLogic {
 
         List<AdvertisementContent> l = mapHighestCtrToContentId.apply(groups).orElse(Collections.emptyList());
 
-        if (CollectionUtils.isNullOrEmpty(l)) {
-            return new EmptyGeneratedAdvertisement();
-        }
+    private DynamoDBMapper getDb() {
+        return db;
+    }
 
         return new GeneratedAdvertisement(l.get(r.nextInt(l.size())));
     }
