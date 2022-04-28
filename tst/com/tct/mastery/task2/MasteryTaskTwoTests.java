@@ -1,6 +1,8 @@
 package com.tct.mastery.task2;
 
 import com.amazon.ata.advertising.service.activity.dagger.GenerateAdActivityDagger;
+import com.amazon.ata.advertising.service.dependency.DaggerLambdaComponent;
+import com.amazon.ata.advertising.service.dependency.LambdaComponent;
 import com.amazon.ata.advertising.service.model.requests.GenerateAdvertisementRequest;
 import com.amazon.ata.advertising.service.model.responses.GenerateAdvertisementResponse;
 import org.apache.commons.lang3.StringUtils;
@@ -28,6 +30,9 @@ public class MasteryTaskTwoTests {
         HARDCODED_SLEEP_DURATION * NUMBER_OF_TARGETING_GROUPS;
     private static final int SERIAL_MINIMUM_EXECUTION_DURATION = HARDCODED_SLEEP_DURATION * NUMBER_OF_PREDICATES;
 
+    LambdaComponent l = DaggerLambdaComponent.create();
+
+
     @Test
     public void generateAdvertisement_withTargetCustomerIdInMarketplace_returnsAdvertisement() {
         GenerateAdvertisementRequest request = GenerateAdvertisementRequest.builder()
@@ -36,7 +41,7 @@ public class MasteryTaskTwoTests {
             .build();
 
         long start = System.currentTimeMillis();
-        GenerateAdvertisementResponse result = new GenerateAdActivityDagger().handleRequest(request, null);
+        GenerateAdvertisementResponse result = l.provideGenerateAdActivity().generateAd(request);
         long finish = System.currentTimeMillis();
 
         long elapsed = finish - start;
