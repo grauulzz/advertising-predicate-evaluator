@@ -12,7 +12,6 @@ import javax.inject.Singleton;
 
 @Module
 public class DynamoDBModule {
-
     /**
      * Provides a singleton instance of DynamoDBMapper.
      *

@@ -36,8 +36,6 @@ jacocoTestCoverageVerification {
     violationRules {
         rule {
             limit {
-                // I literally had to change this because everything was covered except for object equals methods
-                // and other POJO methods
                 minimum = 0.79
             }
         }
@@ -92,9 +90,7 @@ dependencies {
     implementation project('LibrariesAndUtilities:ATAPrimeClubServiceLambda')
     implementation project('LibrariesAndUtilities:ATACustomerServiceLambda')
 
-
     implementation group: 'com.google.code.gson', name: 'gson', version: '2.7'
-   // implementation group: 'com.google.dagger', name: 'dagger', version: '2.15'
 
     implementation group: 'org.apache.commons', name: 'commons-collections4', version: '4.4'
 
